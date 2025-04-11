@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class GhostShooter : MonoBehaviour
@@ -8,6 +9,12 @@ public class GhostShooter : MonoBehaviour
     public Transform firePoint;
     public float bulletSpeed = 10f;
     public BulletPool bulletPool;
+
+    [Header("Ghost Tank")]
+    public Transform ghostTank;
+    public int ghostCount = 10;
+    public float ghostSpacingTime = 0.1f;
+    public Vector2 firePointOffset = Vector2.zero;
 
     [Header("Trajectory Dot Settings")]
     public GameObject dotPrefab;
@@ -21,18 +28,21 @@ public class GhostShooter : MonoBehaviour
     [Header("Trajectory Collision")]
     public LayerMask wallMask;
 
+    [Header("Managers")]
+    public TargetManager targetManager;
+
+    private List<BouncingBullet> tankGhosts = new List<BouncingBullet>();
+    private List<BouncingBullet> activeGhosts = new List<BouncingBullet>();
     private List<GameObject> dots = new List<GameObject>();
     private List<SpriteRenderer> renderers = new List<SpriteRenderer>();
 
     private Vector2 aimTarget;
     private bool isAiming = false;
-    private bool bulletReady = true;
-
-    private BouncingBullet currentBullet; // 👻 The one true ghost
+    private bool isShotInProgress = false;
+    private bool canShoot = true;
 
     void Start()
     {
-        // Setup dot preview objects
         for (int i = 0; i < dotCount; i++)
         {
             GameObject dot = Instantiate(dotPrefab, transform);
@@ -41,15 +51,27 @@ public class GhostShooter : MonoBehaviour
             renderers.Add(dot.GetComponent<SpriteRenderer>());
         }
 
-        // Spawn ghost bullet at fire point and keep it idle
-        GameObject bullet = bulletPool.GetBullet();
-        currentBullet = bullet.GetComponent<BouncingBullet>();
-        currentBullet.SetShooter(this);
-        currentBullet.PrepareAtHome(firePoint.position); // idle ghost at start
+        for (int i = 0; i < ghostCount; i++)
+        {
+            GameObject ghost = bulletPool.GetBullet();
+            BouncingBullet script = ghost.GetComponent<BouncingBullet>();
+            script.SetShooter(this);
+            script.SetGhostTank(ghostTank);
+
+            Vector2 offset = new Vector2(Random.Range(-0.6f, 0.6f), Random.Range(-0.2f, 0.3f));
+            ghost.transform.position = ghostTank.position + (Vector3)offset;
+            script.PrepareAtHome(ghost.transform.position);
+
+            tankGhosts.Add(script);
+        }
+
+        targetManager.SpawnTargetsInArea1();
     }
 
     void Update()
     {
+        if (!canShoot || isShotInProgress) return;
+
 #if UNITY_EDITOR
         HandleMouseInput();
 #else
@@ -59,14 +81,14 @@ public class GhostShooter : MonoBehaviour
 
     void HandleMouseInput()
     {
-        if (Input.GetMouseButtonDown(0) && bulletReady)
-            isAiming = true;
+        if (Input.GetMouseButtonDown(0)) isAiming = true;
 
         if (Input.GetMouseButton(0) && isAiming)
         {
             aimTarget = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 velocity = (aimTarget - (Vector2)firePoint.position).normalized * bulletSpeed;
-            ShowTrajectory(firePoint.position, velocity);
+            Vector2 firePos = (Vector2)firePoint.position + firePointOffset;
+            Vector2 velocity = (aimTarget - firePos).normalized * bulletSpeed;
+            ShowTrajectory(firePos, velocity);
         }
 
         if (Input.GetMouseButtonUp(0) && isAiming)
@@ -79,43 +101,86 @@ public class GhostShooter : MonoBehaviour
 
     void HandleTouchInput()
     {
-        if (Input.touchCount > 0)
+        if (Input.touchCount == 0) return;
+
+        Touch t = Input.GetTouch(0);
+        if (t.phase == TouchPhase.Began) isAiming = true;
+
+        else if ((t.phase == TouchPhase.Moved || t.phase == TouchPhase.Stationary) && isAiming)
         {
-            Touch t = Input.GetTouch(0);
+            aimTarget = Camera.main.ScreenToWorldPoint(t.position);
+            Vector2 firePos = (Vector2)firePoint.position + firePointOffset;
+            Vector2 velocity = (aimTarget - firePos).normalized * bulletSpeed;
+            ShowTrajectory(firePos, velocity);
+        }
 
-            if (t.phase == TouchPhase.Began && bulletReady)
-                isAiming = true;
-
-            else if ((t.phase == TouchPhase.Moved || t.phase == TouchPhase.Stationary) && isAiming)
-            {
-                aimTarget = Camera.main.ScreenToWorldPoint(t.position);
-                Vector2 velocity = (aimTarget - (Vector2)firePoint.position).normalized * bulletSpeed;
-                ShowTrajectory(firePoint.position, velocity);
-            }
-
-            else if (t.phase == TouchPhase.Ended && isAiming)
-            {
-                FireBullet();
-                HideTrajectory();
-                isAiming = false;
-            }
+        else if (t.phase == TouchPhase.Ended && isAiming)
+        {
+            FireBullet();
+            HideTrajectory();
+            isAiming = false;
         }
     }
 
     void FireBullet()
     {
-        if (!bulletReady || currentBullet == null) return;
+        if (isShotInProgress || tankGhosts.Count == 0) return;
 
-        bulletReady = false;
-
-        Vector2 direction = (aimTarget - (Vector2)firePoint.position).normalized;
-        currentBullet.Fire(firePoint.position, direction);
+        isShotInProgress = true;
+        StartCoroutine(FireGhostsFromTank());
     }
 
-    public void NotifyBulletReady()
+    IEnumerator FireGhostsFromTank()
     {
-        bulletReady = true;
+        Vector2 dir = (aimTarget - ((Vector2)firePoint.position + firePointOffset)).normalized;
+        activeGhosts.Clear();
+
+        while (tankGhosts.Count > 0)
+        {
+            BouncingBullet ghost = tankGhosts[0];
+            tankGhosts.RemoveAt(0);
+
+            Vector2 firePos = (Vector2)firePoint.position + firePointOffset;
+            ghost.Fire(firePos, dir);
+
+            activeGhosts.Add(ghost);
+            yield return new WaitForSeconds(ghostSpacingTime);
+        }
     }
+
+    public void NotifyBulletReady(BouncingBullet ghost)
+    {
+        activeGhosts.Remove(ghost);
+        tankGhosts.Add(ghost);
+
+        Vector2 offset = new Vector2(Random.Range(-0.6f, 0.6f), Random.Range(-0.2f, 0.3f));
+        ghost.transform.position = ghostTank.position + (Vector3)offset;
+
+        if (activeGhosts.Count == 0)
+        {
+            isShotInProgress = false;
+            StartCoroutine(MoveTargetsAndRespawn());
+        }
+    }
+
+    IEnumerator MoveTargetsAndRespawn()
+    {
+        if (targetManager == null) yield break;
+
+        yield return StartCoroutine(targetManager.MoveTargetsDown());
+
+        if (targetManager.CheckForGameOver())
+        {
+            Debug.Log("Game Over!");
+            DisableGun();
+            yield break;
+        }
+
+        targetManager.SpawnTargetsInArea1();
+    }
+
+    public void EnableGun() => canShoot = true;
+    public void DisableGun() => canShoot = false;
 
     void ShowTrajectory(Vector2 startPos, Vector2 initialVelocity)
     {
@@ -159,9 +224,7 @@ public class GhostShooter : MonoBehaviour
         }
 
         for (int i = dotIndex; i < dots.Count; i++)
-        {
             dots[i].SetActive(false);
-        }
     }
 
     void HideTrajectory()

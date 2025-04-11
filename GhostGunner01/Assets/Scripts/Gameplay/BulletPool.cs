@@ -3,10 +3,12 @@ using System.Collections.Generic;
 
 public class BulletPool : MonoBehaviour
 {
+    [Header("Bullet Pool Settings")]
     public GameObject bulletPrefab;
     public int poolSize = 10;
+    public int maxPoolSize = 20;
 
-    private List<GameObject> pool = new List<GameObject>();
+    private Queue<GameObject> pool = new Queue<GameObject>();
 
     void Awake()
     {
@@ -14,7 +16,7 @@ public class BulletPool : MonoBehaviour
         {
             GameObject bullet = Instantiate(bulletPrefab, transform);
             bullet.SetActive(false);
-            pool.Add(bullet);
+            pool.Enqueue(bullet);
         }
     }
 
@@ -23,14 +25,33 @@ public class BulletPool : MonoBehaviour
         foreach (GameObject bullet in pool)
         {
             if (!bullet.activeInHierarchy)
+            {
+                ResetBullet(bullet);
                 return bullet;
+            }
         }
 
-        // Optional: Expand pool
+        if (pool.Count >= maxPoolSize)
+        {
+            Debug.LogWarning("Bullet pool limit reached. Reusing oldest bullet.");
+            GameObject recycled = pool.Dequeue();
+            ResetBullet(recycled);
+            pool.Enqueue(recycled);
+            return recycled;
+        }
+
         GameObject newBullet = Instantiate(bulletPrefab, transform);
         newBullet.SetActive(false);
-        pool.Add(newBullet);
+        ResetBullet(newBullet);
+        pool.Enqueue(newBullet);
         return newBullet;
     }
-}
 
+    private void ResetBullet(GameObject bullet)
+    {
+        bullet.transform.SetParent(transform);
+        bullet.transform.localPosition = Vector3.zero;
+        bullet.transform.rotation = Quaternion.identity;
+        bullet.SetActive(false);
+    }
+}
