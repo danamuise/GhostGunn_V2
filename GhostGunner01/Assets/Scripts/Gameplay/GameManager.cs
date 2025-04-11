@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
         else
         {
             targetManager.SpawnTargetsInArea1();
-            gun.EnableGun(); // or whatever your gun activation method is
+            gun.EnableGun(true); // or whatever your gun activation method is
         }
     }
 

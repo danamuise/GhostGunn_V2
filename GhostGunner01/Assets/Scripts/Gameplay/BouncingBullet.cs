@@ -3,6 +3,7 @@ using System.Collections;
 
 public class BouncingBullet : MonoBehaviour
 {
+    /*
     [Header("Settings")]
     public float speed = 10f;
     public float maxLifetime = 5f;
@@ -20,6 +21,7 @@ public class BouncingBullet : MonoBehaviour
     private bool hasBounced = false;
     private float floatOffset;
     private TrailRenderer trail;
+    private Rigidbody2D rb;
 
     public void Fire(Vector2 startPos, Vector2 dir)
     {
@@ -36,6 +38,13 @@ public class BouncingBullet : MonoBehaviour
         hasBounced = false;
         isActive = true;
         gameObject.SetActive(true);
+
+        if (rb == null)
+            rb = GetComponent<Rigidbody2D>();
+
+        rb.gravityScale = -1f;
+        rb.AddForce(dir.normalized * speed, ForceMode2D.Impulse);
+
     }
 
     void Update()
@@ -46,12 +55,12 @@ public class BouncingBullet : MonoBehaviour
             transform.position += new Vector3(0f, bob, 0f) * Time.deltaTime;
             return;
         }
-
+        
         if (hasBounced)
         {
-            velocity.y += invertedGravity * Time.deltaTime;
+           // velocity.y += invertedGravity * Time.deltaTime;
         }
-
+        
         Vector2 move = velocity * Time.deltaTime;
         RaycastHit2D hit = Physics2D.Raycast(transform.position, velocity.normalized, move.magnitude, wallMask);
 
@@ -62,15 +71,15 @@ public class BouncingBullet : MonoBehaviour
             Vector2 incoming = velocity;
             Vector2 reflected = Vector2.Reflect(incoming, hit.normal);
 
-            // Preserve vertical or horizontal velocity based on surface
+
             if (Mathf.Abs(hit.normal.x) > Mathf.Abs(hit.normal.y))
             {
-                // Hit wall — reflect X, preserve Y
+              
                 velocity = new Vector2(reflected.x, incoming.y);
             }
             else
             {
-                // Hit floor or ceiling — reflect Y, preserve X
+                
                 velocity = new Vector2(incoming.x, reflected.y);
             }
 
@@ -144,6 +153,13 @@ public class BouncingBullet : MonoBehaviour
 
     public void PrepareAtHome(Vector2 homePosition)
     {
+        if (rb == null)
+            rb = GetComponent<Rigidbody2D>();
+
+        rb.linearVelocity = Vector2.zero;
+        rb.gravityScale = 0f; 
+
+
         if (trail == null)
             trail = GetComponent<TrailRenderer>();
 
@@ -155,4 +171,5 @@ public class BouncingBullet : MonoBehaviour
         if (trail != null)
             trail.enabled = false;
     }
+    */
 }
