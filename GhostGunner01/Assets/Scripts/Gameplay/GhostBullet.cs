@@ -98,8 +98,8 @@ public class GhostBullet : MonoBehaviour
         if (!inGhostMode)
         {
             Vector2 normal = (transform.position - other.transform.position).normalized;
-            Vector2 reflected = Vector2.Reflect(rb.velocity, normal);
-            rb.velocity = reflected;
+            Vector2 reflected = Vector2.Reflect(rb.linearVelocity, normal);
+            rb.linearVelocity = reflected;
         }
 
         if (other.CompareTag("Target"))
