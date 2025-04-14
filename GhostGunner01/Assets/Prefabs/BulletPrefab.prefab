@@ -139,9 +139,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a81515557b34c94d8edc69ce41cb221, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launchForce: 1
-  maxLifetime: 5
-  gravityStrength: 9.81
+  launchForce: 3
+  maxLifetime: 20
+  wallDropSpeed: 5
+  wallDropDuration: 1.9
+  floatMagnitude: 0.2
+  floatSpeed: 2
+  jitterAmount: 0.05
+  gravityStrength: 10
 --- !u!96 &4696288291118276324
 TrailRenderer:
   serializedVersion: 3

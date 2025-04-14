@@ -9,6 +9,6 @@ PhysicsMaterial2D:
   m_Name: Bullet Physics Material 2D
   serializedVersion: 2
   friction: 0
-  bounciness: 0.9
+  bounciness: 0.35
   m_FrictionCombine: 1
   m_BounceCombine: 4

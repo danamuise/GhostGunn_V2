@@ -8,6 +8,9 @@ TagManager:
   - Wall
   - Bullet
   - Target
+  - Endzone
+  - Wall_Left
+  - Wall_Right
   layers:
   - Default
   - TransparentFX

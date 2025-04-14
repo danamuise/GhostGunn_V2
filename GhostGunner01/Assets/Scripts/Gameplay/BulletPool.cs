@@ -8,7 +8,7 @@ public class BulletPool : MonoBehaviour
     public int poolSize = 10;
     public int maxPoolSize = 20;
 
-    private Queue<GameObject> pool = new Queue<GameObject>();
+    private List<GameObject> pool = new List<GameObject>();
 
     void Awake()
     {
@@ -16,7 +16,7 @@ public class BulletPool : MonoBehaviour
         {
             GameObject bullet = Instantiate(bulletPrefab, transform);
             bullet.SetActive(false);
-            pool.Enqueue(bullet);
+            pool.Add(bullet);
         }
     }
 
@@ -33,17 +33,16 @@ public class BulletPool : MonoBehaviour
 
         if (pool.Count >= maxPoolSize)
         {
-            Debug.LogWarning("Bullet pool limit reached. Reusing oldest bullet.");
-            GameObject recycled = pool.Dequeue();
+            Debug.LogWarning("Bullet pool limit reached. Reusing first bullet.");
+            GameObject recycled = pool[0];
             ResetBullet(recycled);
-            pool.Enqueue(recycled);
             return recycled;
         }
 
         GameObject newBullet = Instantiate(bulletPrefab, transform);
         newBullet.SetActive(false);
         ResetBullet(newBullet);
-        pool.Enqueue(newBullet);
+        pool.Add(newBullet);
         return newBullet;
     }
 

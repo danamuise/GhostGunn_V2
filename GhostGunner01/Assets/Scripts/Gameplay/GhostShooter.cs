@@ -2,26 +2,11 @@
 
 public class GhostShooter : MonoBehaviour
 {
-    public GhostBullet bulletPrefab;
-    public Transform firePoint; // where bullets spawn from
-    public int poolSize = 10;
-    public LaserTrajectoryPreview trajectoryPreview; // Updated reference
+    public BulletPool bulletPool; // Link to your BulletPool GameObject
+    public Transform firePoint; // Where bullets spawn from
+    public LaserTrajectoryPreview trajectoryPreview;
 
-    private GhostBullet[] pool;
-    private int currentIndex = 0;
     private bool canShoot = true;
-
-    void Start()
-    {
-        // Simple object pool setup
-        pool = new GhostBullet[poolSize];
-        for (int i = 0; i < poolSize; i++)
-        {
-            GhostBullet b = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
-            b.gameObject.SetActive(false);
-            pool[i] = b;
-        }
-    }
 
     void Update()
     {
@@ -64,12 +49,12 @@ public class GhostShooter : MonoBehaviour
 
     void FireBullet(Vector2 direction)
     {
-        GhostBullet bullet = pool[currentIndex];
-        bullet.transform.position = firePoint.position;
-        bullet.gameObject.SetActive(true);
-        bullet.Fire(direction);
+        GameObject bulletGO = bulletPool.GetBullet();
+        bulletGO.transform.position = firePoint.position;
+        bulletGO.SetActive(true);
 
-        currentIndex = (currentIndex + 1) % pool.Length;
+        GhostBullet bullet = bulletGO.GetComponent<GhostBullet>();
+        bullet.Fire(direction);
     }
 
     public void EnableGun(bool enable)
