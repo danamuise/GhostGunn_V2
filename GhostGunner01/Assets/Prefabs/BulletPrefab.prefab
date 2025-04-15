@@ -145,12 +145,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1216
   gravityStrength: 10
+  bulletSize: 0.15
   wallDropSpeed: 25
   wallDropDuration: 0.4
   floatMagnitude: 0.11
   floatSpeed: 2
   jitterAmount: 0.1
-  verticalOffset: -0.0781
+  verticalOffset: -0.08
 --- !u!96 &4696288291118276324
 TrailRenderer:
   serializedVersion: 3

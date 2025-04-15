@@ -8,6 +8,7 @@ public class GhostBullet : MonoBehaviour
     public float maxLaserDistance = 100f;
     public LayerMask laserCollisionMask;
     public float gravityStrength = 9.81f;
+    [Range(0.001f, 1.0f)] public float bulletSize = 1f;
 
     [Header("Return to Tank Settings")]
     public float wallDropSpeed = 25f;
@@ -38,6 +39,7 @@ public class GhostBullet : MonoBehaviour
 
     private Vector2 wallSlideDirection;
     private bool isFired = false;
+    private GameManager gameManager;
 
     public bool IsInTank => isInTank;
 
@@ -63,6 +65,8 @@ public class GhostBullet : MonoBehaviour
 
     private void Awake()
     {
+        gameManager = Object.FindFirstObjectByType<GameManager>();
+        transform.localScale = Vector3.one * bulletSize;
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0f;
         rb.linearVelocity = Vector2.zero;
@@ -79,8 +83,16 @@ public class GhostBullet : MonoBehaviour
 
             if (hit.collider != null)
             {
+                // 🔁 Replace this block:
                 if (hit.collider.CompareTag("Target"))
                 {
+                    TargetBehavior tb = hit.collider.GetComponentInParent<TargetBehavior>();
+                    if (tb != null)
+                    {
+                        tb.TakeDamage(1);
+                        Debug.Log($"{name} hit {hit.collider.name} — health reduced");
+                    }
+
                     EnterGhostMode();
                     return;
                 }
@@ -152,6 +164,17 @@ public class GhostBullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // For ghost-mode target hits
+        if (inGhostMode && collision.gameObject.CompareTag("Target"))
+        {
+            TargetBehavior tb = collision.gameObject.GetComponentInParent<TargetBehavior>();
+            if (tb != null)
+            {
+                tb.TakeDamage(1);
+                Debug.Log($"{name} | Ghost Mode hit: {collision.gameObject.name} — health reduced");
+            }
+        }
+
         if (isSlidingToWall &&
             (collision.gameObject.CompareTag("Wall_Left") || collision.gameObject.CompareTag("Wall_Right")))
         {
@@ -218,6 +241,16 @@ public class GhostBullet : MonoBehaviour
         {
             Debug.LogWarning(name + " | StorageTank not found in scene.");
         }
+
+        if (gameManager != null)
+        {
+            BulletPool pool = Object.FindFirstObjectByType<BulletPool>();
+            if (pool != null && pool.AllBulletsReturned())
+            {
+                gameManager.OnShotComplete();
+            }
+        }
+
     }
 
     private void ExitTank()

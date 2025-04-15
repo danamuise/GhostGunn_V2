@@ -88,7 +88,7 @@ public class GhostShooter : MonoBehaviour
 
             if (!bullet.IsInTank)
             {
-                Debug.Log($"⛔ Bullet '{bulletGO.name}' is still active and not in tank.");
+                //Debug.Log($"⛔ Bullet '{bulletGO.name}' is still active and not in tank.");
                 return false;
             }
         }

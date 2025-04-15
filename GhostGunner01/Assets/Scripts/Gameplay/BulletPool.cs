@@ -61,4 +61,18 @@ public class BulletPool : MonoBehaviour
     {
         return pool;
     }
+
+    public bool AllBulletsReturned()
+    {
+        foreach (GameObject bulletGO in pool)
+        {
+            if (bulletGO.activeInHierarchy)
+            {
+                GhostBullet bullet = bulletGO.GetComponent<GhostBullet>();
+                if (bullet != null && !bullet.IsInTank)
+                    return false;
+            }
+        }
+        return true;
+    }
 } 

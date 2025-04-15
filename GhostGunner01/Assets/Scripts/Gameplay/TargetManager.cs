@@ -8,6 +8,8 @@ public class TargetManager : MonoBehaviour
     public int columns = 5;
     public float columnSpacing = 1.5f;
     public float startX;
+    [Header("Target Scale Range")]
+    [Range(0.1f, 1f)] public float targetScale = 0.5f;
 
     public float[] gridRowYPositions = new float[]
     {
@@ -66,6 +68,10 @@ public class TargetManager : MonoBehaviour
 
             GameObject prefab = targetPrefabs[Random.Range(0, targetPrefabs.Length)];
             GameObject newTarget = Instantiate(prefab, spawnPos, rot);
+
+            // Apply random scale
+            float scale = targetScale;
+            newTarget.transform.localScale = Vector3.one * scale;
 
             activeTargets.Add(newTarget);
             targetRowLookup[newTarget] = 0;
@@ -169,4 +175,17 @@ public class TargetManager : MonoBehaviour
         }
         return false;
     }
+
+    public void ClearAllTargets()
+    {
+        foreach (GameObject target in GetActiveTargets())
+        {
+            if (target != null)
+                Destroy(target);
+        }
+
+        activeTargets.Clear();
+        targetRowLookup.Clear();
+    }
+
 }

@@ -1,10 +1,12 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 public class GameManager : MonoBehaviour
 {
     public TargetManager targetManager;
     public GhostShooter gun;
+    public GameObject gameOverPopup;
+
 
     public void OnShotComplete()
     {
@@ -29,8 +31,16 @@ public class GameManager : MonoBehaviour
     private void TriggerGameOver()
     {
         Debug.Log("GAME OVER!");
-        gun.DisableGun(); // You�ll create this next
-                                   // Optional: Show UI, restart level, etc.
+        gun.DisableGun();
+
+        if (gameOverPopup != null)
+        {
+            Debug.Log("✅ Showing Game Over Popup");
+            gameOverPopup.SetActive(true);
+        }
+
+        targetManager.ClearAllTargets();
     }
+
 
 }
