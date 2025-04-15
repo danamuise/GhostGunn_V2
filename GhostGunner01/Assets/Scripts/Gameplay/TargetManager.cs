@@ -11,6 +11,9 @@ public class TargetManager : MonoBehaviour
     public int columns = 5;
     public float columnSpacing = 1.5f;
     public float startX;
+    [Header("Spawn Bounds")]
+    public float horizontalSpawnMargin = 0.5f; // margin to prevent bullet-trapping at walls
+
     [Header("Target Scale Range")]
     [Range(0.1f, 1f)] public float targetScale = 0.5f;
 
@@ -53,34 +56,64 @@ public class TargetManager : MonoBehaviour
 
     }
 
-    public void SpawnTargetsInArea1()
+    public void SpawnTargetsInArea(int rowIndex)
     {
-        int spawnCount = Random.Range(minTargets, maxTargets + 1);
-        List<int> availableCols = new List<int>();
-        for (int i = 0; i < columns; i++) availableCols.Add(i);
+        if (Camera.main == null) return;
+        if (rowIndex < 0 || rowIndex >= gridRowYPositions.Length) return;
 
-        for (int i = 0; i < spawnCount && availableCols.Count > 0; i++)
+        float baseY = gridRowYPositions[rowIndex] + gridYOffset;
+        float verticalJitter = Mathf.Min(rowSpacing / 2f - targetRadius, 0.1f);
+
+        float leftBound = Camera.main.ViewportToWorldPoint(new Vector3(0f, 0f, 0f)).x;
+        float rightBound = Camera.main.ViewportToWorldPoint(new Vector3(1f, 0f, 0f)).x;
+
+        float usableWidth = (rightBound - leftBound) - (2f * horizontalSpawnMargin);
+        float minX = leftBound + horizontalSpawnMargin;
+        float maxX = rightBound - horizontalSpawnMargin;
+
+        int maxFittable = Mathf.Max(3, Mathf.FloorToInt(usableWidth / (targetRadius * 2.5f)));
+        int targetCount = Random.Range(3, Mathf.Min(5, maxFittable + 1));
+
+        List<Vector2> spawnPositions = new List<Vector2>();
+        int maxAttempts = 300;
+        int attempts = 0;
+
+        while (spawnPositions.Count < targetCount && attempts < maxAttempts)
         {
-            int colIndex = availableCols[Random.Range(0, availableCols.Count)];
-            availableCols.Remove(colIndex);
+            attempts++;
 
-            float x = startX + colIndex * columnSpacing;
-            float y = gridRowYPositions[0] + gridYOffset; // Apply grid offset here
+            float x = Random.Range(minX + targetRadius, maxX - targetRadius);
+            float y = baseY + Random.Range(-verticalJitter, verticalJitter);
+            Vector2 candidate = new Vector2(x, y);
 
-            Vector2 spawnPos = new Vector2(x, y);
-            Quaternion rot = Quaternion.Euler(0, 0, Random.Range(-30f, 30f));
+            bool overlaps = false;
+            foreach (var pos in spawnPositions)
+            {
+                if (Vector2.Distance(pos, candidate) < targetRadius * 2f)
+                {
+                    overlaps = true;
+                    break;
+                }
+            }
 
-            GameObject prefab = targetPrefabs[Random.Range(0, targetPrefabs.Length)];
-            GameObject newTarget = Instantiate(prefab, spawnPos, rot);
-
-            // Apply random scale
-            float scale = targetScale;
-            newTarget.transform.localScale = Vector3.one * scale;
-
-            activeTargets.Add(newTarget);
-            targetRowLookup[newTarget] = 0;
+            if (!overlaps)
+            {
+                spawnPositions.Add(candidate);
+            }
         }
+
+        foreach (var pos in spawnPositions)
+        {
+            CreateTarget(pos, rowIndex);
+        }
+
+#if UNITY_EDITOR
+        Debug.Log($"[TargetManager] Randomly spawned {spawnPositions.Count} targets in row {rowIndex} after {attempts} attempts");
+#endif
     }
+
+
+
 
     GameObject SpawnTarget(Vector3 spawnPos)
     {
@@ -146,16 +179,6 @@ public class TargetManager : MonoBehaviour
         }
     }
 
-
-    private bool IsPositionFree(Vector2 pos)
-    {
-        foreach (var target in activeTargets)
-        {
-            if (Vector2.Distance(target.transform.position, pos) < targetRadius * 2f)
-                return false;
-        }
-        return true;
-    }
 
     private void ClearDeadTargets()
     {
@@ -261,6 +284,28 @@ public class TargetManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void CreateTarget(Vector2 pos, int rowIndex)
+    {
+        Quaternion rot = Quaternion.Euler(0, 0, Random.Range(-30f, 30f));
+        GameObject prefab = targetPrefabs[Random.Range(0, targetPrefabs.Length)];
+        GameObject newTarget = Instantiate(prefab, pos, rot);
+        newTarget.transform.localScale = Vector3.one * targetScale;
+
+        activeTargets.Add(newTarget);
+        targetRowLookup[newTarget] = rowIndex;
+    }
+
+    private bool IsPositionFree(Vector2 pos)
+    {
+        foreach (var target in activeTargets)
+        {
+            if (target == null) continue;
+            if (Vector2.Distance(target.transform.position, pos) < targetRadius * 2f)
+                return false;
+        }
+        return true;
     }
 
 

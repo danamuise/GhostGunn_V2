@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
 
         yield return StartCoroutine(targetManager.MoveTargetsDown());
 
-        targetManager.SpawnTargetsInArea1();
+        targetManager.SpawnTargetsInArea(0);
         gun.EnableGun(true);
 
     }
