@@ -1,71 +1,89 @@
 ﻿using UnityEngine;
 using TMPro;
 using System.Collections;
-
 public class TargetBehavior : MonoBehaviour
 {
-    [Header("Health Settings")]
-    public int maxHealth = 20;
-    private int currentHealth;
+    [Header("Target Settings")]
+    public int health = 20;
+    public SpriteRenderer targetSprite;
+    public TextMeshPro label;
 
-    [Header("Visual References")]
-    public SpriteRenderer sr;               // Assign TargetSprite manually or via GetComponentInChildren
-    public TextMeshProUGUI healthLabel;     // Auto-found by name "TargetHealth"
-
-    void Start()
+    private void Awake()
     {
-        currentHealth = maxHealth;
+        // Auto-assign SpriteRenderer if missing
+        if (targetSprite == null)
+            targetSprite = GetComponentInChildren<SpriteRenderer>();
 
-        // Auto-find SpriteRenderer if not assigned
-        if (sr == null)
-            sr = GetComponentInChildren<SpriteRenderer>();
-
-        // Auto-find TextMeshProUGUI by name
-        if (healthLabel == null)
+        // Auto-assign TMP label by name if missing
+        if (label == null)
         {
-            foreach (TextMeshProUGUI tmp in GetComponentsInChildren<TextMeshProUGUI>(true))
-            {
-                if (tmp.name == "TargetHealth")
-                {
-                    healthLabel = tmp;
-                    break;
-                }
-            }
-
-            if (healthLabel == null)
-                Debug.LogWarning($"{name} | ⚠️ Could not find TextMeshProUGUI named 'TargetHealth'");
+            Transform labelTransform = transform.Find("Canvas/TargetHealth");
+            if (labelTransform != null)
+                label = labelTransform.GetComponent<TextMeshPro>();
         }
 
+        if (label == null)
+            Debug.LogWarning($"{name} | TargetBehavior could not find TextMeshPro 'TargetHealth'");
+
+        if (targetSprite == null)
+            Debug.LogWarning($"{name} | TargetBehavior could not find SpriteRenderer");
 
         UpdateVisuals();
     }
 
-    public void TakeDamage(int damage)
+    public void SetHealth(int value)
     {
-        currentHealth -= damage;
-        Debug.Log($"{name} | Took damage. Current health: {currentHealth}");
-        currentHealth = Mathf.Max(0, currentHealth);
+        health = value;
         UpdateVisuals();
+    }
 
-        if (currentHealth == 0)
+    public void TakeDamage(int amount)
+    {
+        health -= amount;
+        Debug.Log($"{name} | Took {amount} damage — new health: {health}");
+
+        if (health <= 0)
         {
-            StartCoroutine(Die());
+            Destroy(gameObject);
+        }
+        else
+        {
+            UpdateVisuals();
         }
     }
 
     private void UpdateVisuals()
     {
-        float healthPercent = (float)currentHealth / maxHealth;
-        if (sr != null)
-            sr.color = new Color(1f - healthPercent, healthPercent, 0f);
+        if (label != null)
+            label.text = health.ToString();
 
-        if (healthLabel != null)
-            healthLabel.text = currentHealth.ToString();
+        if (targetSprite != null)
+        {
+            float t = Mathf.InverseLerp(0, 20, health); // 0 = green, 20 = red
+            targetSprite.color = Color.Lerp(Color.green, Color.red, t);
+        }
     }
 
-    private IEnumerator Die()
+    public void AnimateToPosition(Vector2 targetPosition, float duration = 0.5f)
     {
-        yield return new WaitForSeconds(0.2f);
-        Destroy(gameObject);
+        Vector2 startPosition = new Vector2(targetPosition.x, 5.35f);
+        transform.position = startPosition;
+        StartCoroutine(SlideToPosition(targetPosition, duration));
     }
+
+    private IEnumerator SlideToPosition(Vector2 endPos, float duration)
+    {
+        Vector2 startPos = transform.position;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            transform.position = Vector2.Lerp(startPos, endPos, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = endPos;
+    }
+
 }

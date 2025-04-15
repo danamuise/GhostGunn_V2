@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using System.Collections;
+
 public class GameManager : MonoBehaviour
 {
     public TargetManager targetManager;
     public GhostShooter gun;
     public GameObject gameOverPopup;
-
 
     public void OnShotComplete()
     {
@@ -21,11 +20,20 @@ public class GameManager : MonoBehaviour
             yield break;
         }
 
-        yield return StartCoroutine(targetManager.MoveTargetsDown());
+        // Begin moving targets down
+        Coroutine moveRoutine = StartCoroutine(targetManager.MoveTargetsDown());
 
+        // Short delay to stagger the animation slightly, tweak as needed
+        yield return new WaitForSeconds(0.05f);
+
+        // Spawn new targets into Area 1 while others are still moving
         targetManager.SpawnTargetsInArea(0);
-        gun.EnableGun(true);
 
+        // Wait for movement to finish
+        yield return moveRoutine;
+
+        // Re-enable the gun
+        gun.EnableGun(true);
     }
 
     private void TriggerGameOver()
@@ -41,6 +49,4 @@ public class GameManager : MonoBehaviour
 
         targetManager.ClearAllTargets();
     }
-
-
 }

@@ -290,12 +290,21 @@ public class TargetManager : MonoBehaviour
     {
         Quaternion rot = Quaternion.Euler(0, 0, Random.Range(-30f, 30f));
         GameObject prefab = targetPrefabs[Random.Range(0, targetPrefabs.Length)];
-        GameObject newTarget = Instantiate(prefab, pos, rot);
+
+        Vector2 spawnAbovePos = new Vector2(pos.x, 5.35f); // Offscreen spawn
+        GameObject newTarget = Instantiate(prefab, spawnAbovePos, rot);
         newTarget.transform.localScale = Vector3.one * targetScale;
+
+        TargetBehavior behavior = newTarget.GetComponent<TargetBehavior>();
+        if (behavior != null)
+        {
+            behavior.AnimateToPosition(pos); // Slide into Area 1
+        }
 
         activeTargets.Add(newTarget);
         targetRowLookup[newTarget] = rowIndex;
     }
+
 
     private bool IsPositionFree(Vector2 pos)
     {
