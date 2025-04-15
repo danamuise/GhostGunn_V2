@@ -3,103 +3,138 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class GhostBullet : MonoBehaviour
 {
-    public float launchForce = 10f;
-    public float maxLifetime = 5f;
+    [Header("Bullet Settings")]
+    public float laserSpeed = 10f;
+    public float maxLaserDistance = 100f;
+    public LayerMask laserCollisionMask;
+    public float gravityStrength = 9.81f;
 
-    [Header("Wall Drop Settings")]
-    public float wallDropSpeed = 25.0f;
-    public float wallDropDuration = 10.0f;
+    [Header("Return to Tank Settings")]
+    public float wallDropSpeed = 25f;
+    public float wallDropDuration = 0.4f;
 
-    [Header("Tank Floating")]
+    [Header("Tank Floating Settings")]
     public float floatMagnitude = 0.2f;
     public float floatSpeed = 2f;
     public float jitterAmount = 0.05f;
+    public float verticalOffset = 0f;
 
-    private bool isDroppingDown = false;
+    private Rigidbody2D rb;
+    private Vector2 laserDirection;
+
+    private bool isInLaserMode = false;
+    private bool inGhostMode = false;
     private bool isSlidingToWall = false;
+    private bool isDroppingDown = false;
     private bool isInTank = false;
 
-    private float dropTimeElapsed = 0f;
+    private float remainingDistance;
     private float dropStartTime = -1f;
-
-    private Vector2 wallSlideDirection;
-    private Rigidbody2D rb;
     private float lifetime;
-    private bool isFired = false;
-    private bool inGhostMode = false;
-    public float gravityStrength = 9.81f;
 
     private Vector3 tankBasePosition;
     private float tankTimeOffset;
     private Transform tankTransform;
 
-    private Collider2D bulletCollider;
+    private Vector2 wallSlideDirection;
+    private bool isFired = false;
 
-    void Awake()
+    public bool IsInTank => isInTank;
+
+    public void Fire(Vector2 direction)
+    {
+        ExitTank();
+
+        isInLaserMode = true;
+        inGhostMode = false;
+        isSlidingToWall = false;
+        isDroppingDown = false;
+        dropStartTime = -1f;
+        isFired = true;
+
+        laserDirection = direction.normalized;
+        remainingDistance = maxLaserDistance;
+        lifetime = 0f;
+
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.gravityScale = 0f;
+        rb.linearVelocity = Vector2.zero;
+    }
+
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0f;
         rb.linearVelocity = Vector2.zero;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-
-        bulletCollider = GetComponent<Collider2D>();
-
-        // Debug: Assign unique name
-        gameObject.name = "GhostBullet_" + Random.Range(1000, 9999);
     }
 
-    public void Fire(Vector2 direction)
+    private void FixedUpdate()
     {
-        if (rb == null) rb = GetComponent<Rigidbody2D>();
-
-        inGhostMode = false;
-        isFired = true;
-        isSlidingToWall = false;
-        isDroppingDown = false;
-        isInTank = false;
-        dropStartTime = -1f;
-
-        rb.gravityScale = 0f;
-        rb.linearVelocity = direction.normalized * launchForce * 7f;
-
-        Debug.Log(gameObject.name + " | FIRING in laser mode");
-    }
-
-    void Update()
-    {
-        if (!isFired && !isInTank) return;
-
-        if (inGhostMode)
+        if (isInLaserMode)
         {
-            rb.linearVelocity += new Vector2(0, -1f * Time.deltaTime * gravityStrength);
-        }
+            float stepDistance = laserSpeed * Time.fixedDeltaTime;
+            Vector2 currentPosition = transform.position;
+            RaycastHit2D hit = Physics2D.Raycast(currentPosition, laserDirection, stepDistance, laserCollisionMask);
 
-        if (isSlidingToWall)
+            if (hit.collider != null)
+            {
+                if (hit.collider.CompareTag("Target"))
+                {
+                    EnterGhostMode();
+                    return;
+                }
+
+                if (hit.collider.CompareTag("Endzone"))
+                {
+                    rb.bodyType = RigidbodyType2D.Dynamic;
+                    rb.gravityScale = 0f;
+                    rb.linearVelocity = Vector2.zero;
+
+                    inGhostMode = false;
+                    isInLaserMode = false;
+
+                    float distToLeft = Mathf.Abs(transform.position.x - GetWallX("Wall_Left"));
+                    float distToRight = Mathf.Abs(transform.position.x - GetWallX("Wall_Right"));
+                    wallSlideDirection = distToLeft < distToRight ? Vector2.left : Vector2.right;
+                    isSlidingToWall = true;
+                    return;
+                }
+
+                laserDirection = Vector2.Reflect(laserDirection, hit.normal);
+                transform.position = hit.point + laserDirection * 0.01f;
+                return;
+            }
+
+            transform.position += (Vector3)(laserDirection * stepDistance);
+            remainingDistance -= stepDistance;
+
+            if (remainingDistance <= 0f)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+        else if (inGhostMode)
         {
-            rb.linearVelocity = wallSlideDirection * launchForce;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+            rb.linearVelocity += Vector2.up * gravityStrength * Time.fixedDeltaTime;
         }
-
-        if (isDroppingDown)
+        else if (isSlidingToWall)
+        {
+            rb.linearVelocity = new Vector2(wallSlideDirection.x * laserSpeed, 0f);
+        }
+        else if (isDroppingDown)
         {
             rb.linearVelocity = Vector2.down * wallDropSpeed;
 
             if (dropStartTime < 0f)
-            {
                 dropStartTime = Time.time;
-            }
-
-            Debug.Log(gameObject.name + " | Timer: " + (Time.time - dropStartTime) + " duration: " + wallDropDuration);
 
             if (Time.time - dropStartTime >= wallDropDuration)
             {
-                Debug.Log(gameObject.name + " | ⏱️ Drop duration complete — entering tank");
-                isDroppingDown = false;
                 EnterTank();
             }
         }
-
-        if (isInTank)
+        else if (isInTank)
         {
             if (tankTransform == null)
             {
@@ -111,108 +146,55 @@ public class GhostBullet : MonoBehaviour
             float sineOffset = Mathf.Sin(t) * floatMagnitude;
             float jitterX = Mathf.PerlinNoise(t, tankTimeOffset) * jitterAmount;
 
-            transform.position = tankBasePosition + new Vector3(jitterX, sineOffset, 0f);
-        }
-
-        lifetime += Time.deltaTime;
-        if (lifetime >= maxLifetime)
-        {
-            ResetBullet();
+            transform.position = tankBasePosition + new Vector3(jitterX, sineOffset + verticalOffset, 0f);
         }
     }
 
-    private void ResetBullet()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        rb.gravityScale = 0f;
-        rb.linearVelocity = Vector2.zero;
-        isFired = false;
-        gameObject.SetActive(false);
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log(gameObject.name + " | Collided with: " + collision.gameObject.name);
-
-        if (collision.gameObject.CompareTag("Endzone"))
-        {
-            Debug.Log(gameObject.name + " | 💀 Bullet hit Endzone — moving to nearest wall");
-
-            rb.gravityScale = 0f;
-            rb.linearVelocity = Vector2.zero;
-            inGhostMode = false;
-            isFired = true;
-
-            float distToLeft = Mathf.Abs(transform.position.x - GetWallX("Wall_Left"));
-            float distToRight = Mathf.Abs(transform.position.x - GetWallX("Wall_Right"));
-
-            wallSlideDirection = distToLeft < distToRight ? Vector2.left : Vector2.right;
-            isSlidingToWall = true;
-            return;
-        }
-
         if (isSlidingToWall &&
             (collision.gameObject.CompareTag("Wall_Left") || collision.gameObject.CompareTag("Wall_Right")))
         {
-            Debug.Log(gameObject.name + " | ⬇️ Reached wall — beginning wall drop");
-            rb.linearVelocity = Vector2.down * wallDropSpeed;
             isSlidingToWall = false;
             isDroppingDown = true;
             dropStartTime = -1f;
-            return;
         }
 
-        if (collision.gameObject.CompareTag("Target"))
+        if (inGhostMode && collision.gameObject.CompareTag("Endzone"))
         {
-            Debug.Log(gameObject.name + " | Hit target — switching to ghost mode");
-            inGhostMode = true;
-            rb.gravityScale = -1f;
-            return;
-        }
+            Debug.Log(name + " | ?? Hit Endzone during Ghost Mode � start return path");
 
-        if (!inGhostMode)
-        {
-            Vector2 normal = collision.contacts[0].normal;
-            Vector2 reflected = Vector2.Reflect(rb.linearVelocity, normal);
-            rb.linearVelocity = reflected;
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            rb.gravityScale = 0f;
+            rb.linearVelocity = Vector2.zero;
 
-            Debug.Log(gameObject.name + " | Reflected off: " + collision.gameObject.name);
+            inGhostMode = false;
+            isInLaserMode = false;
+
+            float distToLeft = Mathf.Abs(transform.position.x - GetWallX("Wall_Left"));
+            float distToRight = Mathf.Abs(transform.position.x - GetWallX("Wall_Right"));
+            wallSlideDirection = distToLeft < distToRight ? Vector2.left : Vector2.right;
+
+            isSlidingToWall = true;
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void EnterGhostMode()
     {
-        Debug.Log(gameObject.name + " | Trigger hit: " + other.name);
+        isInLaserMode = false;
+        inGhostMode = true;
 
-        if (!inGhostMode)
-        {
-            Vector2 normal = (transform.position - other.transform.position).normalized;
-            Vector2 reflected = Vector2.Reflect(rb.linearVelocity, normal);
-            rb.linearVelocity = reflected;
-        }
-
-        if (other.CompareTag("Target"))
-        {
-            inGhostMode = true;
-            rb.gravityScale = -1f;
-        }
-
-        if (other.CompareTag("Ceiling"))
-        {
-            ResetBullet();
-        }
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.gravityScale = 0f;
+        rb.linearVelocity = laserDirection * laserSpeed * 0.75f;
     }
 
-    float GetWallX(string tag)
-    {
-        GameObject wall = GameObject.FindGameObjectWithTag(tag);
-        return wall != null ? wall.transform.position.x : 0f;
-    }
-
-    void EnterTank()
+    public void EnterTank()
     {
         isFired = false;
         isInTank = true;
         inGhostMode = false;
+        isDroppingDown = false;
         dropStartTime = -1f;
 
         rb.gravityScale = 0f;
@@ -234,7 +216,22 @@ public class GhostBullet : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning(gameObject.name + " | StorageTank not found in scene.");
+            Debug.LogWarning(name + " | StorageTank not found in scene.");
         }
+    }
+
+    private void ExitTank()
+    {
+        isInTank = false;
+
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.linearVelocity = Vector2.zero;
+        rb.gravityScale = 0f;
+    }
+
+    private float GetWallX(string tag)
+    {
+        GameObject wall = GameObject.FindGameObjectWithTag(tag);
+        return wall != null ? wall.transform.position.x : 0f;
     }
 }

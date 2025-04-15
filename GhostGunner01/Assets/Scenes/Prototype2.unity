@@ -370,19 +370,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4258328524864681971, guid: 9e0302a6d9783d0478da7b3c10bb10ca, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.99444705
       objectReference: {fileID: 0}
     - target: {fileID: 4258328524864681971, guid: 9e0302a6d9783d0478da7b3c10bb10ca, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4258328524864681971, guid: 9e0302a6d9783d0478da7b3c10bb10ca, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4258328524864681971, guid: 9e0302a6d9783d0478da7b3c10bb10ca, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.105238155
       objectReference: {fileID: 0}
     - target: {fileID: 4258328524864681971, guid: 9e0302a6d9783d0478da7b3c10bb10ca, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -394,7 +394,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4258328524864681971, guid: 9e0302a6d9783d0478da7b3c10bb10ca, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: -12.082
       objectReference: {fileID: 0}
     - target: {fileID: 7070116735412167458, guid: 9e0302a6d9783d0478da7b3c10bb10ca, type: 3}
       propertyPath: m_Name
@@ -402,7 +402,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7070116735412167458, guid: 9e0302a6d9783d0478da7b3c10bb10ca, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1045,7 +1045,7 @@ MonoBehaviour:
   maxReflections: 3
   reflectionMask:
     serializedVersion: 2
-    m_Bits: 1088
+    m_Bits: 1216
   wiggleIntensity: 0.03
   wiggleSpeed: 8
   phaseOffset: 1
@@ -1209,7 +1209,7 @@ GameObject:
   - component: {fileID: 1528866425}
   - component: {fileID: 1528866424}
   - component: {fileID: 1528866423}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Endzone
   m_TagString: Endzone
   m_Icon: {fileID: 0}
@@ -1432,7 +1432,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 5643233726399587055, guid: 385a55bed6d9caf43a1ee26044631b1e, type: 3}
   poolSize: 10
-  maxPoolSize: 20
+  startingBullets: 1
+  tankVerticalOffset: 0
 --- !u!4 &1824429565
 Transform:
   m_ObjectHideFlags: 0

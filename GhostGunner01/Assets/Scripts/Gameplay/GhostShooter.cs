@@ -12,6 +12,12 @@ public class GhostShooter : MonoBehaviour
     {
         if (!canShoot) return;
 
+        if (!AllBulletsAreInTank())
+        {
+            trajectoryPreview?.ClearDots();
+            return;
+        }
+
 #if UNITY_EDITOR
         Vector3 inputPos = Input.mousePosition;
         bool inputDown = Input.GetMouseButton(0);
@@ -66,4 +72,30 @@ public class GhostShooter : MonoBehaviour
     {
         canShoot = false;
     }
+
+    private bool AllBulletsAreInTank()
+    {
+        foreach (GameObject bulletGO in bulletPool.GetAllBullets())
+        {
+            if (!bulletGO.activeInHierarchy) continue;
+
+            GhostBullet bullet = bulletGO.GetComponent<GhostBullet>();
+            if (bullet == null)
+            {
+                Debug.LogWarning($"Bullet GameObject '{bulletGO.name}' is missing GhostBullet component.");
+                continue;
+            }
+
+            if (!bullet.IsInTank)
+            {
+                Debug.Log($"⛔ Bullet '{bulletGO.name}' is still active and not in tank.");
+                return false;
+            }
+        }
+
+        // All active bullets are in the tank
+        return true;
+    }
+
+
 }
