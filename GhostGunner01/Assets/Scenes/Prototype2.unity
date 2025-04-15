@@ -1023,17 +1023,9 @@ MonoBehaviour:
   columnSpacing: 1
   startX: -2
   targetScale: 0.544
-  gridRowYPositions:
-  - 4.5
-  - 3.5
-  - 2.5
-  - 1.5
-  - 0.5
-  - -0.5
-  - -1.5
-  - -2.5
-  - -3.5
-  - -4.5
+  numberOfRows: 10
+  rowSpacing: 0.7
+  topRowY: 4.5
   gridYOffset: -1
   targetPrefabs:
   - {fileID: 4313810961233702181, guid: 99476cc3d00f276448fef7417f861674, type: 3}

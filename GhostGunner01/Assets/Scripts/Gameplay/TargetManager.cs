@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class TargetManager : MonoBehaviour
 {
@@ -11,19 +14,13 @@ public class TargetManager : MonoBehaviour
     [Header("Target Scale Range")]
     [Range(0.1f, 1f)] public float targetScale = 0.5f;
 
-    public float[] gridRowYPositions = new float[]
-    {
-        4.5f, // Area 1
-        3.5f,
-        2.5f,
-        1.5f,
-        0.5f,
-        -0.5f,
-        -1.5f,
-        -2.5f,
-        -3.5f,
-        -4.5f  // Area 10
-    };
+    [Header("Vertical Grid Settings")]
+    public int numberOfRows = 10;
+    public float rowSpacing = 0.75f;
+    public float topRowY = 4.5f;
+
+    private float[] gridRowYPositions;
+
 
     [Header("Grid Position Offset")]
     public float gridYOffset = 0f; // Shift the entire grid up or down
@@ -47,6 +44,13 @@ public class TargetManager : MonoBehaviour
     private void Start()
     {
         startX = -((columns - 1) * columnSpacing) / 2f;
+
+        gridRowYPositions = new float[numberOfRows];
+        for (int i = 0; i < numberOfRows; i++)
+        {
+            gridRowYPositions[i] = topRowY - i * rowSpacing;
+        }
+
     }
 
     public void SpawnTargetsInArea1()
@@ -187,5 +191,77 @@ public class TargetManager : MonoBehaviour
         activeTargets.Clear();
         targetRowLookup.Clear();
     }
+
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying)
+        {
+            // Regenerate gridRowYPositions for editor-time preview
+            gridRowYPositions = new float[numberOfRows];
+            for (int i = 0; i < numberOfRows; i++)
+            {
+                gridRowYPositions[i] = topRowY - i * rowSpacing;
+            }
+        }
+
+        float yMin = gridRowYPositions[gridRowYPositions.Length - 1] + gridYOffset;
+        float yMax = gridRowYPositions[0] + gridYOffset;
+
+        // 🔶 Draw horizontal area lines and labels
+        for (int i = 0; i < gridRowYPositions.Length; i++)
+        {
+            float y = gridRowYPositions[i] + gridYOffset;
+
+            // Color-code: red = danger, yellow = middle, green = safe
+            if (i >= numberOfRows - 2)
+                Gizmos.color = new Color(1f, 0.3f, 0.3f); // red
+            else if (i >= numberOfRows - 4)
+                Gizmos.color = new Color(1f, 0.8f, 0.2f); // orange-yellow
+            else
+                Gizmos.color = new Color(0.6f, 1f, 0.6f); // greenish
+
+            Vector3 start = new Vector3(-10f, y, 0f);
+            Vector3 end = new Vector3(10f, y, 0f);
+
+            Gizmos.DrawLine(start, end);
+
+#if UNITY_EDITOR
+            UnityEditor.Handles.Label(new Vector3(start.x, y + 0.2f, 0f), $"Area {i + 1}");
+#endif
+        }
+
+        // 🟦 Draw vertical column lines
+        Gizmos.color = new Color(0.2f, 0.8f, 1f); // light blue
+        for (int i = 0; i < columns; i++)
+        {
+            float x = startX + i * columnSpacing;
+            Vector3 top = new Vector3(x, yMax, 0f);
+            Vector3 bottom = new Vector3(x, yMin, 0f);
+
+            Gizmos.DrawLine(top, bottom);
+
+#if UNITY_EDITOR
+            UnityEditor.Handles.Label(new Vector3(x - 0.2f, yMax + 0.2f, 0f), $"Col {i + 1}");
+#endif
+        }
+    }
+
+    public bool WillMoveIntoGameOverZone()
+    {
+        foreach (var target in GetActiveTargets())
+        {
+            if (target == null || !targetRowLookup.ContainsKey(target))
+                continue;
+
+            int currentRow = targetRowLookup[target];
+            int nextRow = currentRow + 1;
+
+            if (nextRow >= numberOfRows)
+                return true; // Will move into Area 10 (or beyond)
+        }
+
+        return false;
+    }
+
 
 }

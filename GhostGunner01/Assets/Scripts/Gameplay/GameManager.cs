@@ -15,17 +15,17 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator HandleTargetMovementAndRespawn()
     {
-        yield return StartCoroutine(targetManager.MoveTargetsDown());
-
-        if (targetManager.CheckForGameOver())
+        if (targetManager.WillMoveIntoGameOverZone())
         {
             TriggerGameOver();
+            yield break;
         }
-        else
-        {
-            targetManager.SpawnTargetsInArea1();
-            gun.EnableGun(true); // or whatever your gun activation method is
-        }
+
+        yield return StartCoroutine(targetManager.MoveTargetsDown());
+
+        targetManager.SpawnTargetsInArea1();
+        gun.EnableGun(true);
+
     }
 
     private void TriggerGameOver()
