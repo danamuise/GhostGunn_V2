@@ -1,9 +1,10 @@
-﻿using UnityEngine;
-
+﻿using System.Collections.Generic;
+using UnityEngine;
+using System.Collections;
 public class GhostShooter : MonoBehaviour
 {
-    public BulletPool bulletPool; // Link to your BulletPool GameObject
-    public Transform firePoint; // Where bullets spawn from
+    public BulletPool bulletPool;
+    public Transform firePoint;
     public LaserTrajectoryPreview trajectoryPreview;
 
     private bool canShoot = true;
@@ -12,7 +13,7 @@ public class GhostShooter : MonoBehaviour
     {
         if (!canShoot) return;
 
-        if (bulletPool == null || !AllBulletsAreInTank())
+        if (!AllBulletsAreInTank())
         {
             trajectoryPreview?.ClearDots();
             return;
@@ -49,13 +50,25 @@ public class GhostShooter : MonoBehaviour
             Debug.DrawLine(firePoint.position, worldPoint, Color.red, 2f);
             Debug.Log("Direction: " + direction);
 
-            FireBullet(direction);
+            StartCoroutine(FireAllBullets(direction));
+            DisableGun();
         }
     }
 
     void FireBullet(Vector2 direction)
     {
+        Debug.Log($"🔫 FireBullet() called at {Time.time:F2}");
+
         GameObject bulletGO = bulletPool.GetBullet();
+
+        if (bulletGO == null)
+        {
+            Debug.LogWarning("🚫 No available bullet to fire!");
+            return;
+        }
+
+        Debug.Log($"✅ Firing bullet: {bulletGO.name}");
+
         bulletGO.transform.position = firePoint.position;
         bulletGO.SetActive(true);
 
@@ -75,35 +88,45 @@ public class GhostShooter : MonoBehaviour
 
     private bool AllBulletsAreInTank()
     {
-        if (bulletPool == null)
-        {
-            Debug.LogError("❌ bulletPool is not assigned in GhostShooter!");
-            return false;
-        }
+        int inTank = 0;
+        int total = 0;
 
         foreach (GameObject bulletGO in bulletPool.GetAllBullets())
         {
-            if (bulletGO == null)
-            {
-                Debug.LogWarning("⚠️ Found null bullet in bullet pool!");
-                continue;
-            }
+            if (!bulletGO.activeInHierarchy) continue;
 
+            total++;
+            GhostBullet bullet = bulletGO.GetComponent<GhostBullet>();
+            if (bullet != null && bullet.IsInTank)
+                inTank++;
+        }
+
+        Debug.Log($"🔎 AllBulletsAreInTank(): {inTank} in tank / {total} total");
+
+        return inTank == total;
+    }
+
+
+    private IEnumerator FireAllBullets(Vector2 direction)
+    {
+        List<GameObject> bullets = bulletPool.GetAllBullets();
+
+        foreach (GameObject bulletGO in bullets)
+        {
             if (!bulletGO.activeInHierarchy) continue;
 
             GhostBullet bullet = bulletGO.GetComponent<GhostBullet>();
-            if (bullet == null)
+            if (bullet != null && bullet.IsInTank)
             {
-                Debug.LogWarning($"Bullet GameObject '{bulletGO.name}' is missing GhostBullet component.");
-                continue;
-            }
+                bulletGO.transform.position = firePoint.position;
+                bulletGO.SetActive(true);
+                bullet.Fire(direction);
 
-            if (!bullet.IsInTank)
-            {
-                return false;
+                Debug.Log($"🚀 Fired bullet: {bulletGO.name} at {Time.time:F2}");
+
+                yield return new WaitForSeconds(0.15f); // delay between shots
             }
         }
-
-        return true;
     }
+
 }

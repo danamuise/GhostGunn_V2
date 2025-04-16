@@ -214,6 +214,8 @@ public class GhostBullet : MonoBehaviour
 
     public void EnterTank()
     {
+        Debug.Log($"📤 {name} → EnterTank() called at {Time.time:F2}");
+
         isFired = false;
         isInTank = true;
         inGhostMode = false;
@@ -239,19 +241,36 @@ public class GhostBullet : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning(name + " | StorageTank not found in scene.");
+            Debug.LogWarning($"{name} | 🚨 StorageTank not found in scene at {Time.time:F2}");
         }
 
         if (gameManager != null)
         {
             BulletPool pool = Object.FindFirstObjectByType<BulletPool>();
-            if (pool != null && pool.AllBulletsReturned())
+            if (pool != null)
             {
-                gameManager.OnShotComplete();
+                Debug.Log($"📤 {name} is checking AllBulletsReturned() → {pool.AllBulletsReturned()} at {Time.time:F2}");
+
+                if (pool.AllBulletsReturned())
+                {
+                    if (pool != null && pool.AllBulletsReturned())
+                    {
+                        Debug.Log($"⚠️ {name} is calling OnShotComplete() from GhostBullet.cs at {Time.time:F2} BEFORE firing.");
+                        gameManager.OnShotComplete();
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"{name} | 🚨 BulletPool not found during EnterTank() at {Time.time:F2}");
             }
         }
-
+        else
+        {
+            Debug.LogWarning($"{name} | 🚨 gameManager is null in EnterTank() at {Time.time:F2}");
+        }
     }
+
 
     private void ExitTank()
     {

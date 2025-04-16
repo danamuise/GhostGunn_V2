@@ -45,6 +45,8 @@ public class TargetManager : MonoBehaviour
     private Dictionary<GameObject, int> targetRowLookup = new Dictionary<GameObject, int>();
     private List<GameObject> activeTargets = new List<GameObject>();
 
+
+
     private void Start()
     {
         startX = -((columns - 1) * columnSpacing) / 2f;
@@ -54,11 +56,18 @@ public class TargetManager : MonoBehaviour
         {
             gridRowYPositions[i] = topRowY - i * rowSpacing;
         }
-
+        //FindObjectOfType<TargetManager>()?.SpawnInitialRow();
     }
 
     public void SpawnTargetsInArea(int rowIndex)
     {
+        Debug.Log($"📦 SpawnTargetsInArea({rowIndex}) called at {Time.time:F2} seconds");
+
+        if (rowIndex == 0)
+        {
+            Debug.LogWarning($"🚨 Area 1 spawn triggered from: {System.Environment.StackTrace}");
+        }
+
         if (Camera.main == null) return;
         if (rowIndex < 0 || rowIndex >= gridRowYPositions.Length) return;
 
@@ -304,6 +313,7 @@ public class TargetManager : MonoBehaviour
 
         activeTargets.Add(newTarget);
         targetRowLookup[newTarget] = rowIndex;
+        Debug.Log($"🟢 Spawning new target: {newTarget.name} from CreateTarget (row {rowIndex})");
     }
 
 
@@ -318,5 +328,10 @@ public class TargetManager : MonoBehaviour
         return true;
     }
 
-
+/*
+public void SpawnInitialRow()
+{
+    SpawnTargetsInArea(0); // or whatever your starting row index is
+}
+*/
 }

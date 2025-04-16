@@ -6,11 +6,13 @@ public class BulletPool : MonoBehaviour
     [Header("Bullet Pool Settings")]
     public GameObject bulletPrefab;
     public int poolSize = 10;
-    public int startingBullets = 1; // Number of bullets to show at game start
-    public Transform bulletParent;
+    public int startingBullets = 1;
 
     [Header("Tank Settings")]
-    public float tankVerticalOffset = 0f; // Vertical offset for floating bullets in tank
+    public float tankVerticalOffset = 0f;
+
+    [Header("Hierarchy")]
+    public Transform bulletParent;
 
     private List<GameObject> pool = new List<GameObject>();
 
@@ -27,7 +29,6 @@ public class BulletPool : MonoBehaviour
             {
                 ghost.EnterTank();
 
-                // Apply vertical offset after entering tank
                 Vector3 pos = bullet.transform.position;
                 bullet.transform.position = new Vector3(pos.x, pos.y + tankVerticalOffset, pos.z);
             }
@@ -49,6 +50,7 @@ public class BulletPool : MonoBehaviour
                 GhostBullet ghost = bullet.GetComponent<GhostBullet>();
                 if (ghost != null && ghost.IsInTank)
                 {
+                    Debug.Log($"🎯 GetBullet() returning: {bullet.name}");
                     return bullet;
                 }
             }
@@ -76,4 +78,4 @@ public class BulletPool : MonoBehaviour
         }
         return true;
     }
-} 
+}

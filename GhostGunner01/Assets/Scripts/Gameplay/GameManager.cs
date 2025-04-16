@@ -6,11 +6,32 @@ public class GameManager : MonoBehaviour
     public TargetManager targetManager;
     public GhostShooter gun;
     public GameObject gameOverPopup;
+    private bool roundInProgress;
 
+    private void Awake()
+    {
+        roundInProgress = false;
+    }
+    void Start()
+    {
+        Debug.Log("🧠 GameManager.Start() running");
+        // First spawn at game start
+        targetManager.SpawnTargetsInArea(0);
+        gun.EnableGun(true);
+    }
     public void OnShotComplete()
     {
+        if (roundInProgress)
+        {
+            Debug.Log("⛔ OnShotComplete() skipped — round already in progress.");
+            return;
+        }
+
+        Debug.Log($"🧪 OnShotComplete() triggered at {Time.time:F2}");
+        roundInProgress = true;
         StartCoroutine(HandleTargetMovementAndRespawn());
     }
+
 
     private IEnumerator HandleTargetMovementAndRespawn()
     {
@@ -34,6 +55,8 @@ public class GameManager : MonoBehaviour
 
         // Re-enable the gun
         gun.EnableGun(true);
+
+        roundInProgress = false;
     }
 
     private void TriggerGameOver()
