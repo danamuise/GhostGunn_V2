@@ -6,7 +6,7 @@ public class TargetBehavior : MonoBehaviour
     [Header("Target Settings")]
     public int health = 20;
     public SpriteRenderer targetSprite;
-    public TextMeshPro label;
+    public TextMeshProUGUI label;
 
     private void Awake()
     {
@@ -19,7 +19,7 @@ public class TargetBehavior : MonoBehaviour
         {
             Transform labelTransform = transform.Find("Canvas/TargetHealth");
             if (labelTransform != null)
-                label = labelTransform.GetComponent<TextMeshPro>();
+                label = labelTransform.GetComponent<TextMeshProUGUI>();
         }
 
         if (label == null)
