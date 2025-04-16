@@ -12,7 +12,7 @@ public class GhostShooter : MonoBehaviour
     {
         if (!canShoot) return;
 
-        if (!AllBulletsAreInTank())
+        if (bulletPool == null || !AllBulletsAreInTank())
         {
             trajectoryPreview?.ClearDots();
             return;
@@ -75,8 +75,20 @@ public class GhostShooter : MonoBehaviour
 
     private bool AllBulletsAreInTank()
     {
+        if (bulletPool == null)
+        {
+            Debug.LogError("❌ bulletPool is not assigned in GhostShooter!");
+            return false;
+        }
+
         foreach (GameObject bulletGO in bulletPool.GetAllBullets())
         {
+            if (bulletGO == null)
+            {
+                Debug.LogWarning("⚠️ Found null bullet in bullet pool!");
+                continue;
+            }
+
             if (!bulletGO.activeInHierarchy) continue;
 
             GhostBullet bullet = bulletGO.GetComponent<GhostBullet>();
@@ -88,14 +100,10 @@ public class GhostShooter : MonoBehaviour
 
             if (!bullet.IsInTank)
             {
-                //Debug.Log($"⛔ Bullet '{bulletGO.name}' is still active and not in tank.");
                 return false;
             }
         }
 
-        // All active bullets are in the tank
         return true;
     }
-
-
 }

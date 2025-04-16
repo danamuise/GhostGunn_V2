@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 public class BulletPool : MonoBehaviour
@@ -7,6 +7,7 @@ public class BulletPool : MonoBehaviour
     public GameObject bulletPrefab;
     public int poolSize = 10;
     public int startingBullets = 1; // Number of bullets to show at game start
+    public Transform bulletParent;
 
     [Header("Tank Settings")]
     public float tankVerticalOffset = 0f; // Vertical offset for floating bullets in tank
@@ -17,7 +18,7 @@ public class BulletPool : MonoBehaviour
     {
         for (int i = 0; i < poolSize; i++)
         {
-            GameObject bullet = Instantiate(bulletPrefab, transform);
+            GameObject bullet = Instantiate(bulletPrefab, Vector3.zero, Quaternion.identity, bulletParent);
             GhostBullet ghost = bullet.GetComponent<GhostBullet>();
 
             bullet.SetActive(true);

@@ -13,6 +13,7 @@ public class TargetManager : MonoBehaviour
     public float startX;
     [Header("Spawn Bounds")]
     public float horizontalSpawnMargin = 0.5f; // margin to prevent bullet-trapping at walls
+    public Transform targetsParent; // Drag TargetsParent GO here in the Inspector
 
     [Header("Target Scale Range")]
     [Range(0.1f, 1f)] public float targetScale = 0.5f;
@@ -121,7 +122,7 @@ public class TargetManager : MonoBehaviour
         float angle = Random.Range(0f, 360f);
         Quaternion rot = Quaternion.Euler(0, 0, angle);
 
-        GameObject newTarget = Instantiate(prefab, spawnPos, rot);
+        GameObject newTarget = Instantiate(prefab, spawnPos, rot, targetsParent);
         return newTarget;
     }
 
@@ -292,7 +293,7 @@ public class TargetManager : MonoBehaviour
         GameObject prefab = targetPrefabs[Random.Range(0, targetPrefabs.Length)];
 
         Vector2 spawnAbovePos = new Vector2(pos.x, 5.35f); // Offscreen spawn
-        GameObject newTarget = Instantiate(prefab, spawnAbovePos, rot);
+        GameObject newTarget = Instantiate(prefab, spawnAbovePos, rot, targetsParent);
         newTarget.transform.localScale = Vector3.one * targetScale;
 
         TargetBehavior behavior = newTarget.GetComponent<TargetBehavior>();

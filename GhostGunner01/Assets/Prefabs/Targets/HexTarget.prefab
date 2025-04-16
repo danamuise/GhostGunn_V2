@@ -273,9 +273,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5954860008565479505}
   - component: {fileID: 5932361816659672642}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: HexTargetSprite
-  m_TagString: Target
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

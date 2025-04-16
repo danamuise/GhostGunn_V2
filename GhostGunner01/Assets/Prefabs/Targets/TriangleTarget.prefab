@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 4601974738567842924}
   m_Layer: 0
   m_Name: TriangleTargetSprite
-  m_TagString: Target
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

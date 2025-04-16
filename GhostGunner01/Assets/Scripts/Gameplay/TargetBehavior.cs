@@ -31,12 +31,14 @@ public class TargetBehavior : MonoBehaviour
         UpdateVisuals();
     }
 
+    /*
     public void SetHealth(int value)
     {
         health = value;
         UpdateVisuals();
     }
 
+    */
     public void TakeDamage(int amount)
     {
         health -= amount;
@@ -51,7 +53,7 @@ public class TargetBehavior : MonoBehaviour
             UpdateVisuals();
         }
     }
-
+    
     private void UpdateVisuals()
     {
         if (label != null)
