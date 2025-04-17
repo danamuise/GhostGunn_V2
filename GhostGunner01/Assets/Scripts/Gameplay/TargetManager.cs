@@ -313,7 +313,7 @@ public class TargetManager : MonoBehaviour
 
         activeTargets.Add(newTarget);
         targetRowLookup[newTarget] = rowIndex;
-        Debug.Log($"🟢 Spawning new target: {newTarget.name} from CreateTarget (row {rowIndex})");
+        //Debug.Log($"🟢 Spawning new target: {newTarget.name} from CreateTarget (row {rowIndex})");
     }
 
 

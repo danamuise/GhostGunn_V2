@@ -55,6 +55,7 @@ public class GhostShooter : MonoBehaviour
         }
     }
 
+    /*
     void FireBullet(Vector2 direction)
     {
         Debug.Log($"🔫 FireBullet() called at {Time.time:F2}");
@@ -73,9 +74,13 @@ public class GhostShooter : MonoBehaviour
         bulletGO.SetActive(true);
 
         GhostBullet bullet = bulletGO.GetComponent<GhostBullet>();
-        bullet.Fire(direction);
-    }
+        Vector2 randomized = AddSpreadToDirection(direction, 5f); // 2 degrees of spread
+        Debug.Log($"🔄 Randomized dir: {randomized} from base: {direction}");
 
+        bullet.Fire(randomized);
+
+    }
+    */ 
     public void EnableGun(bool enable)
     {
         canShoot = enable;
@@ -101,7 +106,7 @@ public class GhostShooter : MonoBehaviour
                 inTank++;
         }
 
-        Debug.Log($"🔎 AllBulletsAreInTank(): {inTank} in tank / {total} total");
+        //Debug.Log($"🔎 AllBulletsAreInTank(): {inTank} in tank / {total} total");
 
         return inTank == total;
     }
@@ -120,13 +125,30 @@ public class GhostShooter : MonoBehaviour
             {
                 bulletGO.transform.position = firePoint.position;
                 bulletGO.SetActive(true);
-                bullet.Fire(direction);
+                Vector2 randomized = AddSpreadToDirection(direction, 2.4f);
+                Debug.Log($"🚀 Spread direction for {bulletGO.name}: {randomized}");
+                bullet.Fire(randomized);
 
                 Debug.Log($"🚀 Fired bullet: {bulletGO.name} at {Time.time:F2}");
 
-                yield return new WaitForSeconds(0.15f); // delay between shots
+                yield return new WaitForSeconds(0.1f); // delay between shots
             }
         }
+    }
+    private Vector2 AddSpreadToDirection(Vector2 baseDirection, float maxAngleDegrees)
+    {
+        Debug.Log($"🚀 ADDING SPREAD TO DIRECTION ***************************************************");
+        float angle = Random.Range(-maxAngleDegrees, maxAngleDegrees);
+        float radians = angle * Mathf.Deg2Rad;
+
+        // Rotate the direction vector by a small angle
+        float cos = Mathf.Cos(radians);
+        float sin = Mathf.Sin(radians);
+
+        float newX = baseDirection.x * cos - baseDirection.y * sin;
+        float newY = baseDirection.x * sin + baseDirection.y * cos;
+
+        return new Vector2(newX, newY).normalized;
     }
 
 }

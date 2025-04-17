@@ -1134,7 +1134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 5643233726399587055, guid: 385a55bed6d9caf43a1ee26044631b1e, type: 3}
-  poolSize: 10
+  poolSize: 20
   startingBullets: 6
   tankVerticalOffset: 0
   bulletParent: {fileID: 490730283}
