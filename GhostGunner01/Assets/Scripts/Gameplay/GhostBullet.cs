@@ -40,7 +40,8 @@ public class GhostBullet : MonoBehaviour
     private Vector2 wallSlideDirection;
     private bool isFired = false;
     private GameManager gameManager;
-
+    private float bulletLifeTimer = 0f;
+    private const float maxLifeTime = 8f;
     public bool IsInTank => isInTank;
 
     public void Fire(Vector2 direction)
@@ -61,6 +62,7 @@ public class GhostBullet : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.gravityScale = 0f;
         rb.velocity = Vector2.zero;
+        bulletLifeTimer = 0f;
     }
 
     private void Awake()
@@ -160,6 +162,18 @@ public class GhostBullet : MonoBehaviour
 
             transform.position = tankBasePosition + new Vector3(jitterX, sineOffset + verticalOffset, 0f);
         }
+
+        if (!isInTank)
+        {
+            bulletLifeTimer += Time.deltaTime;
+
+            if (bulletLifeTimer > maxLifeTime)
+            {
+                Debug.LogWarning($"{name} exceeded max lifetime — returning to tank");
+                EnterTank();
+            }
+        }
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -269,6 +283,8 @@ public class GhostBullet : MonoBehaviour
         {
             Debug.LogWarning($"{name} | 🚨 gameManager is null in EnterTank() at {Time.time:F2}");
         }
+
+        bulletLifeTimer = 0f;
     }
 
 
