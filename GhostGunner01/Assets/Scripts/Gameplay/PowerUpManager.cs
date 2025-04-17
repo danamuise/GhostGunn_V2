@@ -8,14 +8,10 @@ public class PowerUpManager : MonoBehaviour
     [Header("Scene References")]
     public Transform powerUpParent;      // Assign the 'PowerUps' GO in scene
 
-    //[Header("Test Spawn Settings")]
-    ///public Vector2 testSpawnPosition = new Vector2(0f, 3f);  // Area 1 test position
-    //public int testPrefabIndex = 0;  // 0 = AddBulletPU
 
     void Start()
     {
-        // TEMP: Manual test spawn of AddBulletPU (optional for dev-only verification)
-        //TrySpawnPowerUp(testPrefabIndex, testSpawnPosition);
+
     }
 
 

@@ -328,10 +328,44 @@ public class TargetManager : MonoBehaviour
         return true;
     }
 
-/*
-public void SpawnInitialRow()
-{
-    SpawnTargetsInArea(0); // or whatever your starting row index is
-}
-*/
+
+    public void CheckForPowerUpSpace(int moveCount)
+    {
+        float requiredGap = targetRadius * 1.2f; // Slightly more than half a target
+        List<GameObject> targetsInRow = new List<GameObject>();
+
+        // Filter active targets in Area 1 (row 0)
+        foreach (var target in GetActiveTargets())
+        {
+            if (target != null && targetRowLookup.ContainsKey(target) && targetRowLookup[target] == 0)
+            {
+                targetsInRow.Add(target);
+            }
+        }
+
+        if (targetsInRow.Count < 2)
+        {
+            Debug.Log($"<color=orange>🟠 [Move {moveCount}] Not enough targets to test for PU spacing.</color>");
+            return;
+        }
+
+        // Sort targets by X position
+        targetsInRow.Sort((a, b) => a.transform.position.x.CompareTo(b.transform.position.x));
+
+        for (int i = 0; i < targetsInRow.Count - 1; i++)
+        {
+            GameObject t1 = targetsInRow[i];
+            GameObject t2 = targetsInRow[i + 1];
+
+            float distance = Mathf.Abs(t2.transform.position.x - t1.transform.position.x);
+            if (distance >= requiredGap)
+            {
+                Debug.Log($"<color=orange>🟠 There is free space between {t1.name} and {t2.name} in move {moveCount}</color>");
+                return;
+            }
+        }
+
+        Debug.Log($"❌ There is no space for PU in move {moveCount}");
+    }
+
 }
