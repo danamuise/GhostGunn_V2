@@ -48,7 +48,7 @@ public class GhostShooter : MonoBehaviour
                 trajectoryPreview.ClearDots();
 
             Debug.DrawLine(firePoint.position, worldPoint, Color.red, 2f);
-            Debug.Log("Direction: " + direction);
+            //Debug.Log("Direction: " + direction);
 
             StartCoroutine(FireAllBullets(direction));
             DisableGun();
@@ -126,7 +126,7 @@ public class GhostShooter : MonoBehaviour
                 bulletGO.transform.position = firePoint.position;
                 bulletGO.SetActive(true);
                 Vector2 randomized = AddSpreadToDirection(direction, 2.4f);
-                Debug.Log($"🚀 Spread direction for {bulletGO.name}: {randomized}");
+                //Debug.Log($"🚀 Spread direction for {bulletGO.name}: {randomized}");
                 bullet.Fire(randomized);
 
                 Debug.Log($"🚀 Fired bullet: {bulletGO.name} at {Time.time:F2}");
@@ -137,7 +137,7 @@ public class GhostShooter : MonoBehaviour
     }
     private Vector2 AddSpreadToDirection(Vector2 baseDirection, float maxAngleDegrees)
     {
-        Debug.Log($"🚀 ADDING SPREAD TO DIRECTION ***************************************************");
+        //Debug.Log($"🚀 ADDING SPREAD TO DIRECTION ***************************************************");
         float angle = Random.Range(-maxAngleDegrees, maxAngleDegrees);
         float radians = angle * Mathf.Deg2Rad;
 

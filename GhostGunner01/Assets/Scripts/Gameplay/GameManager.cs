@@ -7,14 +7,15 @@ public class GameManager : MonoBehaviour
     public GhostShooter gun;
     public GameObject gameOverPopup;
     private bool roundInProgress;
-
+    private int moveCount = 1;
+    public PowerUpManager powerUpManager;
     private void Awake()
     {
         roundInProgress = false;
     }
     void Start()
     {
-        Debug.Log("🧠 GameManager.Start() running");
+        //Debug.Log("🧠 GameManager.Start() running");
         // First spawn at game start
         targetManager.SpawnTargetsInArea(0);
         gun.EnableGun(true);
@@ -35,7 +36,18 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator HandleTargetMovementAndRespawn()
     {
-        if (targetManager.WillMoveIntoGameOverZone())
+        if (moveCount % 2 == 0)
+        {
+            Debug.Log($"<color=green>🌟 MOVE {moveCount} initiating</color> Include Power Up");
+            Vector2 spawnPos = new Vector2(0f, moveCount-2); // TEMP: basic center Area 1 test
+            powerUpManager.TrySpawnPowerUp(0, spawnPos);
+        }
+        else
+        {
+            Debug.Log($"<color=green>🌟 MOVE {moveCount} initiating</color>");
+        }
+
+            if (targetManager.WillMoveIntoGameOverZone())
         {
             TriggerGameOver();
             yield break;
@@ -57,6 +69,7 @@ public class GameManager : MonoBehaviour
         gun.EnableGun(true);
 
         roundInProgress = false;
+        moveCount++;
     }
 
     private void TriggerGameOver()
