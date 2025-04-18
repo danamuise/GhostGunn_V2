@@ -49,17 +49,11 @@ public class TargetManager : MonoBehaviour
 
     private void Start()
     {
-        startX = -((columns - 1) * columnSpacing) / 2f;
-
-        gridRowYPositions = new float[numberOfRows];
-        for (int i = 0; i < numberOfRows; i++)
-        {
-            gridRowYPositions[i] = topRowY - i * rowSpacing;
-        }
+       
         //FindObjectOfType<TargetManager>()?.SpawnInitialRow();
     }
 
-    public void SpawnTargetsInArea(int rowIndex)
+    public void SpawnTargetsInArea(int rowIndex, int moveCount)
     {
         Debug.Log($"📦 SpawnTargetsInArea({rowIndex}) called at {Time.time:F2} seconds");
 
@@ -114,7 +108,7 @@ public class TargetManager : MonoBehaviour
 
         foreach (var pos in spawnPositions)
         {
-            CreateTarget(pos, rowIndex);
+            CreateTarget(pos, rowIndex, moveCount);
         }
 
 #if UNITY_EDITOR
@@ -296,24 +290,25 @@ public class TargetManager : MonoBehaviour
         return false;
     }
 
-    private void CreateTarget(Vector2 pos, int rowIndex)
+    private void CreateTarget(Vector2 pos, int rowIndex, int moveCount)
     {
         Quaternion rot = Quaternion.Euler(0, 0, Random.Range(-30f, 30f));
         GameObject prefab = targetPrefabs[Random.Range(0, targetPrefabs.Length)];
 
-        Vector2 spawnAbovePos = new Vector2(pos.x, 5.35f); // Offscreen spawn
+        Vector2 spawnAbovePos = new Vector2(pos.x, 5.35f);
         GameObject newTarget = Instantiate(prefab, spawnAbovePos, rot, targetsParent);
         newTarget.transform.localScale = Vector3.one * targetScale;
 
         TargetBehavior behavior = newTarget.GetComponent<TargetBehavior>();
         if (behavior != null)
         {
-            behavior.AnimateToPosition(pos); // Slide into Area 1
+            behavior.SetHealth(GetHealthForMove(moveCount));
+            //Debug.Log($"🎯 Target spawned with health {behavior.SetHealth} on move {moveCount}");
+            behavior.AnimateToPosition(pos);
         }
 
         activeTargets.Add(newTarget);
         targetRowLookup[newTarget] = rowIndex;
-        //Debug.Log($"🟢 Spawning new target: {newTarget.name} from CreateTarget (row {rowIndex})");
     }
 
 
@@ -328,10 +323,25 @@ public class TargetManager : MonoBehaviour
         return true;
     }
 
-/*
-public void SpawnInitialRow()
-{
-    SpawnTargetsInArea(0); // or whatever your starting row index is
-}
-*/
+    public void InitializeGrid()
+    {
+        gridRowYPositions = new float[numberOfRows];
+        for (int i = 0; i < numberOfRows; i++)
+        {
+            gridRowYPositions[i] = topRowY - i * rowSpacing;
+        }
+
+        startX = -((columns - 1) * columnSpacing) / 2f;
+    }
+
+    private int GetHealthForMove(int move)
+    {
+        if (move <= 3) return 1;
+        if (move <= 6) return Random.Range(3, 6);
+        if (move <= 10) return Random.Range(5, 11);
+        if (move <= 20) return Random.Range(5, 31);
+        if (move <= 30) return Random.Range(10, 101);
+        return Random.Range(10, 201);
+    }
+
 }

@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     {
         //Debug.Log("🧠 GameManager.Start() running");
         // First spawn at game start
-        targetManager.SpawnTargetsInArea(0);
+        targetManager.InitializeGrid();
         gun.EnableGun(true);
     }
     public void OnShotComplete()
@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.05f);
 
         // Spawn new targets into Area 1 while others are still moving
-        targetManager.SpawnTargetsInArea(0);
+        targetManager.SpawnTargetsInArea(0, moveCount);
 
         // Wait for movement to finish
         yield return moveRoutine;

@@ -4,7 +4,7 @@ using System.Collections;
 public class TargetBehavior : MonoBehaviour
 {
     [Header("Target Settings")]
-    public int health = 20;
+    private int health;
     public SpriteRenderer targetSprite;
     public TextMeshProUGUI label;
 
@@ -31,14 +31,14 @@ public class TargetBehavior : MonoBehaviour
         UpdateVisuals();
     }
 
-    /*
+    
     public void SetHealth(int value)
     {
         health = value;
         UpdateVisuals();
     }
 
-    */
+    
     public void TakeDamage(int amount)
     {
         health -= amount;
@@ -46,14 +46,21 @@ public class TargetBehavior : MonoBehaviour
 
         if (health <= 0)
         {
-            Destroy(gameObject);
+            StartCoroutine(DestroyAfterDelay(0.1f));  // ⏱ Delay destruction
         }
         else
         {
             UpdateVisuals();
         }
     }
-    
+
+    private IEnumerator DestroyAfterDelay(float delay)
+    {
+        //This causes the bullet to bounce off the target as it's being destroyed.
+        yield return new WaitForSeconds(delay);
+        Destroy(gameObject);
+    }
+
     private void UpdateVisuals()
     {
         if (label != null)
