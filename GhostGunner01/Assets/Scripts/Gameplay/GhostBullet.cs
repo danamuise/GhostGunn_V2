@@ -20,6 +20,13 @@ public class GhostBullet : MonoBehaviour
     public float jitterAmount = 0.05f;
     public float verticalOffset = 0f;
 
+    [Header("Corner Stuck Detection")]
+    public float ceilingYThreshold = 4.9f;   // Y position considered ceiling
+    public float wallXThreshold = 2.7f;      // X position near left/right wall
+    public float stuckCheckTime = 0.1f;        // Seconds before triggering return
+    private float stuckTimer = 0f;
+
+
     private Rigidbody2D rb;
     private Vector2 laserDirection;
 
@@ -174,6 +181,20 @@ public class GhostBullet : MonoBehaviour
             }
         }
 
+        if (IsStuckInCorner())
+        {
+            stuckTimer += Time.deltaTime;
+
+            if (stuckTimer >= stuckCheckTime)
+            {
+                Debug.Log($"🔄 Bullet stuck in corner for {stuckCheckTime}s — forcing return to tank.");
+                EnterTank();  // or however you reclaim bullets
+            }
+        }
+        else
+        {
+            stuckTimer = 0f; // Reset when free
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -302,4 +323,17 @@ public class GhostBullet : MonoBehaviour
         GameObject wall = GameObject.FindGameObjectWithTag(tag);
         return wall != null ? wall.transform.position.x : 0f;
     }
+
+    private bool IsStuckInCorner()
+    {
+        float x = transform.position.x;
+        float y = transform.position.y;
+
+        bool nearCeiling = y >= ceilingYThreshold;
+        bool nearLeftWall = x <= -wallXThreshold;
+        bool nearRightWall = x >= wallXThreshold;
+
+        return nearCeiling && (nearLeftWall || nearRightWall);
+    }
+
 }
