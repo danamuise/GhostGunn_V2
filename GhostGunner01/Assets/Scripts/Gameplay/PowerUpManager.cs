@@ -1,41 +1,55 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class PowerUpManager : MonoBehaviour
 {
-    [Header("Power-Up Prefabs")]
-    public GameObject[] powerUpPrefabs;  // 0: AddBulletPU, others later
-
     [Header("Scene References")]
-    public Transform powerUpParent;      // Assign the 'PowerUps' GO in scene
+    public Transform powerUpParent; // Assign the 'PowerUps' GO in scene
+    public List<PowerUpData> powerUpList; // Assign in Inspector
 
-    //[Header("Test Spawn Settings")]
-    ///public Vector2 testSpawnPosition = new Vector2(0f, 3f);  // Area 1 test position
-    //public int testPrefabIndex = 0;  // 0 = AddBulletPU
-
+    private int currentMove = 0;
     void Start()
     {
-        // TEMP: Manual test spawn of AddBulletPU (optional for dev-only verification)
-        //TrySpawnPowerUp(testPrefabIndex, testSpawnPosition);
+        // 🔧 TEMP: Simulate power-ups having been used recently
+        foreach (var pu in powerUpList)
+        {
+            if (pu.powerUpName == "AddBulletPU")
+            {
+                pu.lastUsedMove = currentMove - 1; // Simulate usage last move
+                pu.timesUsed = 1;
+            }
+            else if (pu.powerUpName == "ProximityBombPU")
+            {
+                pu.lastUsedMove = currentMove - 3; // Used 3 moves ago
+                pu.timesUsed = 1;
+            }
+        }
     }
 
-
-    // Manual spawn method (used for test or future logic)
-    public void TrySpawnPowerUp(int prefabIndex, Vector2 spawnPosition)
+    public void OnNewMove(int moveNumber)
     {
-        if (powerUpPrefabs == null || prefabIndex < 0 || prefabIndex >= powerUpPrefabs.Length)
-        {
-            Debug.LogWarning($"⚠️ Invalid prefab index {prefabIndex} — cannot spawn PowerUp.");
-            return;
-        }
+        currentMove = moveNumber;
+        Debug.Log($"<color=green>🔁 PowerUpManager | Move number: {currentMove}</color>");
 
-        if (powerUpParent == null)
-        {
-            Debug.LogWarning("⚠️ PowerUpParent not assigned in PowerUpManager.");
-            return;
-        }
-
-        GameObject prefab = powerUpPrefabs[prefabIndex];
-        GameObject instance = Instantiate(prefab, spawnPosition, Quaternion.identity, powerUpParent);
-        Debug.Log($"✅ Spawned PowerUp: {prefab.name} at {spawnPosition} under {powerUpParent.name}");
+        DebugCheckAvailablePowerUps(currentMove); // 🔍 Hook the debug check here
     }
+
+
+    public int GetCurrentMove()
+    {
+        return currentMove;
+    }
+
+    public void DebugCheckAvailablePowerUps(int move)
+    {
+        foreach (var pu in powerUpList)
+        {
+            bool isValid = pu.IsAvailable(move);
+            Debug.Log($"<color={(isValid ? "green" : "red")}>" +
+                $"[Check] {pu.powerUpName} | Move: {move} | " +
+                $"Used: {pu.timesUsed} | LastUsed: {pu.lastUsedMove} | " +
+                $"Cooldown: {pu.cooldown} | Prob Roll: {(isValid ? "✅ PASS" : "❌ FAIL")}</color>");
+        }
+    }
+
 }
