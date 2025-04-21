@@ -12,8 +12,8 @@ public class PowerUpData : ScriptableObject
     [Header("Probability")]
     [Range(0f, 1f)]
     public float probability = 1.0f; // Higher = more frequent appearance
-
-    [HideInInspector] public int timesUsed = 0;
+    
+    public int timesUsed = 0;
     public int lastUsedMove = -1000; // Used for cooldown check
 
     // Determines whether this power-up can be used on the current move

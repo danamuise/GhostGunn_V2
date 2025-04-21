@@ -44,17 +44,34 @@ public class GameManager : MonoBehaviour
             yield break;
         }
 
+        // Start moving targets down
         Coroutine moveRoutine = StartCoroutine(targetManager.MoveTargetsDown());
-        yield return new WaitForSeconds(0.05f);
 
+        // Move power-ups down by one row
+        powerUpManager.MovePowerUpsDown(targetManager.GetRowSpacing());
+
+        yield return new WaitForSeconds(0.05f); // Slight buffer
+
+        // Spawn new targets into Area 1
         targetManager.SpawnTargetsInArea(0, moveCount);
+
+        yield return new WaitForSeconds(0.25f); // Let targets animate into place
+
+        // Try to spawn a power-up
+        powerUpManager.TrySpawnSelectedPowerUp(targetManager);
+
+        // Wait for all target movement to finish
         yield return moveRoutine;
 
         gun.EnableGun(true);
         roundInProgress = false;
+
         powerUpManager.OnNewMove(moveCount);
         moveCount++;
     }
+
+
+
 
     private void TriggerGameOver()
     {
@@ -69,4 +86,5 @@ public class GameManager : MonoBehaviour
 
         targetManager.ClearAllTargets();
     }
+
 }

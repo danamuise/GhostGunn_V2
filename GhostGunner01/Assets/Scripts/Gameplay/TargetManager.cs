@@ -134,8 +134,7 @@ public class TargetManager : MonoBehaviour
         List<GameObject> targets = GetActiveTargets();
         List<Vector3> startPositions = new List<Vector3>();
         List<Vector3> endPositions = new List<Vector3>();
-
-        List<GameObject> validTargets = new List<GameObject>(); // <--- new: parallel list
+        List<GameObject> validTargets = new List<GameObject>();
 
         foreach (GameObject target in targets)
         {
@@ -153,7 +152,7 @@ public class TargetManager : MonoBehaviour
             Vector3 end = new Vector3(start.x, newY, start.z);
 
             if (float.IsNaN(newY) || float.IsNaN(start.x) || float.IsNaN(start.y))
-                continue; // ❌ Skip if values are corrupted
+                continue;
 
             validTargets.Add(target);
             startPositions.Add(start);
@@ -161,6 +160,26 @@ public class TargetManager : MonoBehaviour
             targetRowLookup[target] = nextRow;
         }
 
+        // Power-up movement setup
+        List<Transform> powerUps = new List<Transform>();
+        List<Vector3> puStartPositions = new List<Vector3>();
+        List<Vector3> puEndPositions = new List<Vector3>();
+/*
+        if (powerUpParent != null)
+        {
+            foreach (Transform pu in powerUpParent)
+            {
+                if (pu == null) continue;
+
+                Vector3 start = pu.position;
+                Vector3 end = new Vector3(start.x, start.y - rowSpacing, start.z);
+
+                powerUps.Add(pu);
+                puStartPositions.Add(start);
+                puEndPositions.Add(end);
+            }
+        }
+*/
         float t = 0f;
         while (t < 1f)
         {
@@ -179,9 +198,26 @@ public class TargetManager : MonoBehaviour
                 }
             }
 
+            for (int i = 0; i < powerUps.Count; i++)
+            {
+                if (powerUps[i] != null)
+                {
+                    Vector3 puInterpolated = Vector3.Lerp(puStartPositions[i], puEndPositions[i], eased);
+                    powerUps[i].position = puInterpolated;
+                }
+            }
+
             yield return null;
         }
+
+        // Final snap to end positions (optional)
+        for (int i = 0; i < powerUps.Count; i++)
+        {
+            if (powerUps[i] != null)
+                powerUps[i].position = puEndPositions[i];
+        }
     }
+
 
 
     private void ClearDeadTargets()
@@ -343,5 +379,55 @@ public class TargetManager : MonoBehaviour
         if (move <= 30) return Random.Range(10, 101);
         return Random.Range(10, 201);
     }
+
+
+    public Vector2? GetAvailablePowerUpPosition(int rowIndex)
+    {
+        List<GameObject> rowTargets = GetActiveTargets().FindAll(t => targetRowLookup.ContainsKey(t) && targetRowLookup[t] == rowIndex);
+
+        if (rowTargets.Count < 2)
+        {
+            Debug.Log($"<color=orange>🟠 Not enough targets to test for PU spacing in row {rowIndex}.</color>");
+            return null;
+        }
+
+        // Sort targets left-to-right
+        rowTargets.Sort((a, b) => a.transform.position.x.CompareTo(b.transform.position.x));
+
+        for (int i = 0; i < rowTargets.Count - 1; i++)
+        {
+            Vector3 a = rowTargets[i].transform.position;
+            Vector3 b = rowTargets[i + 1].transform.position;
+            float spacing = Vector2.Distance(a, b);
+
+            if (spacing > 0.8f)
+            {
+                float centerX = (a.x + b.x) / 2f;
+                float centerY = GetRowYPosition(rowIndex); // 👈 Use target row Y, not their actual Y
+                Vector2 spawnPos = new Vector2(centerX, centerY);
+
+                Debug.Log($"<color=orange>🟠 Space found for PU between {rowTargets[i].name} and {rowTargets[i + 1].name} at {spawnPos}</color>");
+                return spawnPos;
+            }
+        }
+
+        Debug.Log($"<color=orange>🟠 No space found for PU in row {rowIndex}</color>");
+        return null;
+    }
+
+    // Add this anywhere inside the TargetManager class
+    public float GetRowYPosition(int rowIndex)
+    {
+        if (rowIndex < 0 || rowIndex >= numberOfRows)
+            return 0f;
+
+        return gridRowYPositions[rowIndex] + gridYOffset;
+    }
+
+    public float GetRowSpacing()
+    {
+        return rowSpacing;
+    }
+
 
 }
