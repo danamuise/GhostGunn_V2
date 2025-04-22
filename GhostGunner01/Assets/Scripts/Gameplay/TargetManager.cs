@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -45,11 +47,12 @@ public class TargetManager : MonoBehaviour
     private Dictionary<GameObject, int> targetRowLookup = new Dictionary<GameObject, int>();
     private List<GameObject> activeTargets = new List<GameObject>();
 
-
+    private HashSet<Vector2Int> recentPowerUpPositions = new HashSet<Vector2Int>();
+    private const int maxRecentPositions = 5; // Track last 5 placements to avoid repetition
 
     private void Start()
     {
-       
+
         //FindObjectOfType<TargetManager>()?.SpawnInitialRow();
     }
 
@@ -74,9 +77,11 @@ public class TargetManager : MonoBehaviour
         float usableWidth = (rightBound - leftBound) - (2f * horizontalSpawnMargin);
         float minX = leftBound + horizontalSpawnMargin;
         float maxX = rightBound - horizontalSpawnMargin;
+   
+        int maxFittable = Mathf.Max(4, Mathf.FloorToInt(usableWidth / (targetRadius * 2.0f)));
 
-        int maxFittable = Mathf.Max(3, Mathf.FloorToInt(usableWidth / (targetRadius * 2.5f)));
-        int targetCount = Random.Range(3, Mathf.Min(5, maxFittable + 1));
+        Debug.LogWarning($"🚨 MAX FITTABLE***********************: "+ maxFittable);
+        int targetCount = Random.Range(3, maxFittable + 1);
 
         List<Vector2> spawnPositions = new List<Vector2>();
         int maxAttempts = 300;
@@ -93,7 +98,7 @@ public class TargetManager : MonoBehaviour
             bool overlaps = false;
             foreach (var pos in spawnPositions)
             {
-                if (Vector2.Distance(pos, candidate) < targetRadius * 2f)
+                if (Vector2.Distance(pos, candidate) < targetRadius * 1.6f) // 👈 This is your overlap logic
                 {
                     overlaps = true;
                     break;
@@ -164,22 +169,22 @@ public class TargetManager : MonoBehaviour
         List<Transform> powerUps = new List<Transform>();
         List<Vector3> puStartPositions = new List<Vector3>();
         List<Vector3> puEndPositions = new List<Vector3>();
-/*
-        if (powerUpParent != null)
-        {
-            foreach (Transform pu in powerUpParent)
-            {
-                if (pu == null) continue;
+        /*
+                if (powerUpParent != null)
+                {
+                    foreach (Transform pu in powerUpParent)
+                    {
+                        if (pu == null) continue;
 
-                Vector3 start = pu.position;
-                Vector3 end = new Vector3(start.x, start.y - rowSpacing, start.z);
+                        Vector3 start = pu.position;
+                        Vector3 end = new Vector3(start.x, start.y - rowSpacing, start.z);
 
-                powerUps.Add(pu);
-                puStartPositions.Add(start);
-                puEndPositions.Add(end);
-            }
-        }
-*/
+                        powerUps.Add(pu);
+                        puStartPositions.Add(start);
+                        puEndPositions.Add(end);
+                    }
+                }
+        */
         float t = 0f;
         while (t < 1f)
         {
@@ -350,12 +355,21 @@ public class TargetManager : MonoBehaviour
 
     private bool IsPositionFree(Vector2 pos)
     {
+        float checkRadius = targetRadius * 1.4f;
+
         foreach (var target in activeTargets)
         {
             if (target == null) continue;
-            if (Vector2.Distance(target.transform.position, pos) < targetRadius * 2f)
+
+            float dist = Vector2.Distance(target.transform.position, pos);
+            if (dist < checkRadius)
+            {
+                // Optional: add debug to see what’s too close
+                Debug.Log($"<color=yellow>⚠️ PU too close to {target.name} at {target.transform.position} (dist={dist:F2})</color>");
                 return false;
+            }
         }
+
         return true;
     }
 
@@ -383,7 +397,8 @@ public class TargetManager : MonoBehaviour
 
     public Vector2? GetAvailablePowerUpPosition(int rowIndex)
     {
-        List<GameObject> rowTargets = GetActiveTargets().FindAll(t => targetRowLookup.ContainsKey(t) && targetRowLookup[t] == rowIndex);
+        List<GameObject> rowTargets = GetActiveTargets().FindAll(t =>
+            targetRowLookup.ContainsKey(t) && targetRowLookup[t] == rowIndex);
 
         if (rowTargets.Count < 2)
         {
@@ -391,29 +406,56 @@ public class TargetManager : MonoBehaviour
             return null;
         }
 
-        // Sort targets left-to-right
-        rowTargets.Sort((a, b) => a.transform.position.x.CompareTo(b.transform.position.x));
+        // Shuffle to randomize which pair we test
+        ShuffleList(rowTargets);
+
+        float rowY = gridRowYPositions[rowIndex] + gridYOffset;
 
         for (int i = 0; i < rowTargets.Count - 1; i++)
         {
             Vector3 a = rowTargets[i].transform.position;
             Vector3 b = rowTargets[i + 1].transform.position;
-            float spacing = Vector2.Distance(a, b);
+            float spacing = Mathf.Abs(b.x - a.x);
 
-            if (spacing > 0.8f)
+            Debug.Log($"<color=teal>🔍 Pair {i}: {a.x:F2} → {b.x:F2} | spacing = {spacing:F2}</color>");
+
+            if (spacing > targetRadius * 2.4f) // Use slightly more aggressive threshold
             {
-                float centerX = (a.x + b.x) / 2f;
-                float centerY = GetRowYPosition(rowIndex); // 👈 Use target row Y, not their actual Y
-                Vector2 spawnPos = new Vector2(centerX, centerY);
+                float midpointX = (a.x + b.x) / 2f;
+                float verticalJitter = Random.Range(-0.05f, 0.05f);
+                Vector2 finalPos = new Vector2(midpointX, rowY + verticalJitter);
 
-                Debug.Log($"<color=orange>🟠 Space found for PU between {rowTargets[i].name} and {rowTargets[i + 1].name} at {spawnPos}</color>");
-                return spawnPos;
+                float checkRadius = targetRadius * 0.9f; // Detection zone radius
+                Collider2D hit = Physics2D.OverlapCircle(finalPos, checkRadius);
+
+                if (hit == null || !hit.CompareTag("Target"))
+                {
+                    Debug.DrawLine(
+                        new Vector3(finalPos.x - 0.2f, finalPos.y, 0f),
+                        new Vector3(finalPos.x + 0.2f, finalPos.y, 0f),
+                        Color.green, 2f);
+
+                    Debug.Log($"<color=cyan>✅ PU midpoint clear at {finalPos} (X={midpointX:F2})</color>");
+                    return finalPos;
+                }
+                else
+                {
+                    Debug.DrawLine(
+                        new Vector3(finalPos.x - 0.2f, finalPos.y, 0f),
+                        new Vector3(finalPos.x + 0.2f, finalPos.y, 0f),
+                        Color.red, 2f);
+
+                    Debug.Log($"<color=red>❌ PU midpoint blocked by collider at {finalPos} (X={midpointX:F2})</color>");
+                }
             }
         }
 
-        Debug.Log($"<color=orange>🟠 No space found for PU in row {rowIndex}</color>");
+        Debug.Log($"<color=grey>⚪ No PU spawn space found in row {rowIndex}</color>");
         return null;
     }
+
+
+
 
     // Add this anywhere inside the TargetManager class
     public float GetRowYPosition(int rowIndex)
@@ -429,5 +471,19 @@ public class TargetManager : MonoBehaviour
         return rowSpacing;
     }
 
+    private void ShuffleList<T>(List<T> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            int randIndex = Random.Range(i, list.Count);
+            (list[i], list[randIndex]) = (list[randIndex], list[i]);
+        }
+    }
+
+    public int GetTargetCountInRow(int rowIndex)
+    {
+        return GetActiveTargets().Count(t =>
+            t != null && targetRowLookup.ContainsKey(t) && targetRowLookup[t] == rowIndex);
+    }
 
 }

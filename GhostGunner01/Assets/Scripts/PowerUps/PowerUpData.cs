@@ -15,6 +15,11 @@ public class PowerUpData : ScriptableObject
     
     public int timesUsed = 0;
     public int lastUsedMove = -1000; // Used for cooldown check
+    public void ResetRuntimeState()
+    {
+        lastUsedMove = -1000;
+        timesUsed = 0;
+    }
 
     // Determines whether this power-up can be used on the current move
     public bool IsAvailable(int currentMove)

@@ -48,20 +48,26 @@ public class GameManager : MonoBehaviour
         Coroutine moveRoutine = StartCoroutine(targetManager.MoveTargetsDown());
 
         // Move power-ups down by one row
-        powerUpManager.MovePowerUpsDown(targetManager.GetRowSpacing());
+        powerUpManager.MovePowerUpsDown(targetManager.GetRowSpacing(), 0.35f, 2.5f);
 
         yield return new WaitForSeconds(0.05f); // Slight buffer
 
         // Spawn new targets into Area 1
         targetManager.SpawnTargetsInArea(0, moveCount);
 
-        yield return new WaitForSeconds(0.25f); // Let targets animate into place
-
-        // Try to spawn a power-up
-        powerUpManager.TrySpawnSelectedPowerUp(targetManager);
-
-        // Wait for all target movement to finish
+        // Wait for all target and power-up animations to finish
         yield return moveRoutine;
+
+        // Check Area 1 target count again *after* all targets have landed
+        int targetCount = targetManager.GetTargetCountInRow(0);
+        if (targetCount < 4)
+        {
+            powerUpManager.TrySpawnSelectedPowerUp(targetManager);
+        }
+        else
+        {
+            Debug.Log("<color=grey>🛑 Skipping PU spawn — 4 targets in Area 1</color>");
+        }
 
         gun.EnableGun(true);
         roundInProgress = false;
@@ -69,7 +75,6 @@ public class GameManager : MonoBehaviour
         powerUpManager.OnNewMove(moveCount);
         moveCount++;
     }
-
 
 
 

@@ -1057,7 +1057,6 @@ MonoBehaviour:
   powerUpParent: {fileID: 1687463177}
   powerUpList:
   - {fileID: 11400000, guid: 4ba340b953a9c0c439ea62de88a2f23a, type: 2}
-  - {fileID: 11400000, guid: 8374684ae25bcfc479276b501be673fa, type: 2}
 --- !u!1 &1766850439
 GameObject:
   m_ObjectHideFlags: 0
