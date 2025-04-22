@@ -1,12 +1,17 @@
 ﻿using UnityEngine;
 using TMPro;
 using System.Collections;
+
 public class TargetBehavior : MonoBehaviour
 {
     [Header("Target Settings")]
     private int health;
     public SpriteRenderer targetSprite;
     public TextMeshProUGUI label;
+
+    // Persistent visual variation
+    private Vector2 persistentOffset = Vector2.zero;
+    private float persistentZRotation = 0f;
 
     private void Awake()
     {
@@ -31,14 +36,12 @@ public class TargetBehavior : MonoBehaviour
         UpdateVisuals();
     }
 
-    
     public void SetHealth(int value)
     {
         health = value;
         UpdateVisuals();
     }
 
-    
     public void TakeDamage(int amount)
     {
         health -= amount;
@@ -56,7 +59,6 @@ public class TargetBehavior : MonoBehaviour
 
     private IEnumerator DestroyAfterDelay(float delay)
     {
-        //This causes the bullet to bounce off the target as it's being destroyed.
         yield return new WaitForSeconds(delay);
         Destroy(gameObject);
     }
@@ -73,14 +75,26 @@ public class TargetBehavior : MonoBehaviour
         }
     }
 
-    public void AnimateToPosition(Vector2 targetPosition, float duration = 0.5f, bool fromEndzone = false)
+    /// <summary>
+    /// Call once on spawn to define the persistent visual offset/rotation.
+    /// </summary>
+    public void SetOffsetAndRotation(Vector2 offset, float zRotation)
+    {
+        persistentOffset = offset;
+        persistentZRotation = zRotation;
+        transform.rotation = Quaternion.Euler(0f, 0f, persistentZRotation);
+    }
+
+    public void AnimateToPosition(Vector2 gridAlignedPosition, float duration = 0.5f, bool fromEndzone = false)
     {
         Vector2 startPosition = fromEndzone
-            ? new Vector2(targetPosition.x, 5.35f) // use top only for new spawns
+            ? new Vector2(gridAlignedPosition.x, 5.35f)
             : (Vector2)transform.position;
 
+        Vector2 endPosition = gridAlignedPosition + persistentOffset;
+
         StopAllCoroutines();
-        StartCoroutine(SlideToPosition(startPosition, targetPosition, duration));
+        StartCoroutine(SlideToPosition(startPosition, endPosition, duration));
     }
 
     private IEnumerator SlideToPosition(Vector2 startPos, Vector2 endPos, float duration)
@@ -96,6 +110,4 @@ public class TargetBehavior : MonoBehaviour
 
         transform.position = endPos;
     }
-
-
 }

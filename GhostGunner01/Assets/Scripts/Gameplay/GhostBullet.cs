@@ -21,11 +21,10 @@ public class GhostBullet : MonoBehaviour
     public float verticalOffset = 0f;
 
     [Header("Corner Stuck Detection")]
-    public float ceilingYThreshold = 4.9f;   // Y position considered ceiling
-    public float wallXThreshold = 2.7f;      // X position near left/right wall
-    public float stuckCheckTime = 0.1f;        // Seconds before triggering return
+    public float ceilingYThreshold = 4.9f;
+    public float wallXThreshold = 2.7f;
+    public float stuckCheckTime = 0.1f;
     private float stuckTimer = 0f;
-
 
     private Rigidbody2D rb;
     private Vector2 laserDirection;
@@ -92,7 +91,6 @@ public class GhostBullet : MonoBehaviour
 
             if (hit.collider != null)
             {
-                // 🔁 Replace this block:
                 if (hit.collider.CompareTag("Target"))
                 {
                     TargetBehavior tb = hit.collider.GetComponentInParent<TargetBehavior>();
@@ -188,18 +186,17 @@ public class GhostBullet : MonoBehaviour
             if (stuckTimer >= stuckCheckTime)
             {
                 Debug.Log($"🔄 Bullet stuck in corner for {stuckCheckTime}s — forcing return to tank.");
-                EnterTank();  // or however you reclaim bullets
+                EnterTank();
             }
         }
         else
         {
-            stuckTimer = 0f; // Reset when free
+            stuckTimer = 0f;
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // For ghost-mode target hits
         if (inGhostMode && collision.gameObject.CompareTag("Target"))
         {
             TargetBehavior tb = collision.gameObject.GetComponentInParent<TargetBehavior>();
@@ -220,7 +217,7 @@ public class GhostBullet : MonoBehaviour
 
         if (inGhostMode && collision.gameObject.CompareTag("Endzone"))
         {
-            Debug.Log(name + " | ?? Hit Endzone during Ghost Mode � start return path");
+            Debug.Log(name + " | ?? Hit Endzone during Ghost Mode — start return path");
 
             rb.bodyType = RigidbodyType2D.Dynamic;
             rb.gravityScale = 0f;
@@ -234,6 +231,18 @@ public class GhostBullet : MonoBehaviour
             wallSlideDirection = distToLeft < distToRight ? Vector2.left : Vector2.right;
 
             isSlidingToWall = true;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("CornerOverride"))
+        {
+            if (!isInTank && !isSlidingToWall && !isDroppingDown)
+            {
+                Debug.Log($"⚠️ {name} collided with corner override — forcing return to tank.");
+                EnterTank();
+            }
         }
     }
 
@@ -288,11 +297,8 @@ public class GhostBullet : MonoBehaviour
 
                 if (pool.AllBulletsReturned())
                 {
-                    if (pool != null && pool.AllBulletsReturned())
-                    {
-                        Debug.Log($"⚠️ {name} is calling OnShotComplete() from GhostBullet.cs at {Time.time:F2} BEFORE firing.");
-                        gameManager.OnShotComplete();
-                    }
+                    Debug.Log($"⚠️ {name} is calling OnShotComplete() from GhostBullet.cs at {Time.time:F2} BEFORE firing.");
+                    gameManager.OnShotComplete();
                 }
             }
             else
@@ -307,7 +313,6 @@ public class GhostBullet : MonoBehaviour
 
         bulletLifeTimer = 0f;
     }
-
 
     private void ExitTank()
     {
@@ -335,5 +340,4 @@ public class GhostBullet : MonoBehaviour
 
         return nearCeiling && (nearLeftWall || nearRightWall);
     }
-
 }

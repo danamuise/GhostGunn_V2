@@ -14,6 +14,10 @@ public class GridTargetSpawner : MonoBehaviour
     public int maxTargetsPerRow = 4;
     [Range(0.1f, 1.5f)] public float targetScale = 0.5f;
 
+    [Header("Target Offset Randomization")]
+    [Range(0f, 0.5f)] public float positionOffsetRange = 55f;
+    [Range(0f, 15f)] public float rotationOffsetRange = 55f;
+    private int lastEmptyColumn = -1;
     private Transform targetParent;
 
     private void Awake()
@@ -41,40 +45,62 @@ public class GridTargetSpawner : MonoBehaviour
         int columns = grid.GetColumnCount();
         int targetsToSpawn = Random.Range(minTargetsPerRow, maxTargetsPerRow + 1);
 
+        // List of column indices
         List<int> columnIndices = new List<int>();
         for (int i = 0; i < columns; i++)
             columnIndices.Add(i);
 
-        Shuffle(columnIndices);
+        // Choose a new empty column, ensuring it's different from the last one
+        List<int> possibleEmpty = new List<int>(columnIndices);
+        if (lastEmptyColumn != -1) possibleEmpty.Remove(lastEmptyColumn);
 
+        int emptyCol = possibleEmpty[Random.Range(0, possibleEmpty.Count)];
+        lastEmptyColumn = emptyCol;
+
+        // Remove the empty column from the spawn pool
+        columnIndices.Remove(emptyCol);
+
+        // Shuffle and pick up to maxAllowed targets
+        Shuffle(columnIndices);
         int maxAllowed = Mathf.Min(targetsToSpawn, columns - 1); // ensure 1 empty space
 
         for (int i = 0; i < maxAllowed; i++)
         {
             int col = columnIndices[i];
-            Vector2 spawnPos = grid.GetWorldPosition(col, areaIndex);
+            Vector2 basePos = grid.GetWorldPosition(col, areaIndex);
+
+            // Offsets
+            Vector2 offset = new Vector2(
+                Random.Range(-positionOffsetRange, positionOffsetRange),
+                Random.Range(-positionOffsetRange, positionOffsetRange)
+            );
+            float zRotation = Random.Range(-rotationOffsetRange, rotationOffsetRange);
+
+            Vector2 spawnPos = basePos + offset;
+            Quaternion spawnRot = Quaternion.Euler(0f, 0f, zRotation);
 
             GameObject prefab = targetPrefabs[Random.Range(0, targetPrefabs.Count)];
-            GameObject newTarget = Instantiate(prefab, spawnPos, Quaternion.identity, targetParent);
+            GameObject newTarget = Instantiate(prefab, spawnPos, spawnRot, targetParent);
             newTarget.transform.localScale = Vector3.one * targetScale;
 
             TargetBehavior tb = newTarget.GetComponent<TargetBehavior>();
             if (tb != null)
             {
                 tb.SetHealth(Random.Range(1, 6));
-                tb.AnimateToPosition(spawnPos, 0.5f, fromEndzone: true);
+                tb.SetOffsetAndRotation(offset, zRotation);
+                tb.AnimateToPosition(basePos, 0.5f, fromEndzone: true);
             }
 
             grid.MarkCellOccupied(col, areaIndex, true);
         }
     }
 
+
     public void AdvanceAllTargetsAndSpawnNew(int moveCount)
     {
         int rows = grid.GetRowCount();
         int cols = grid.GetColumnCount();
 
-        // Step 1: Cache existing targets by grid position
         Dictionary<(int col, int row), GameObject> targetsToMove = new();
 
         for (int row = 0; row < rows; row++)
@@ -91,10 +117,8 @@ public class GridTargetSpawner : MonoBehaviour
             }
         }
 
-        // Step 2: Clear the grid (we’ll rebuild it as we go)
         grid.ClearGrid();
 
-        // Step 3: Move targets downward
         foreach (var kvp in targetsToMove)
         {
             int col = kvp.Key.col;
@@ -102,22 +126,20 @@ public class GridTargetSpawner : MonoBehaviour
             GameObject target = kvp.Value;
 
             int newRow = row + 1;
-
             if (newRow >= rows)
             {
-                Object.Destroy(target); // Optional: add explosion effect later
+                Object.Destroy(target); // 💥 explosion later
                 continue;
             }
 
-            Vector2 newPos = grid.GetWorldPosition(col, newRow);
+            Vector2 newBasePos = grid.GetWorldPosition(col, newRow);
             TargetBehavior tb = target.GetComponent<TargetBehavior>();
             if (tb != null)
-                tb.AnimateToPosition(newPos, 0.5f, fromEndzone: false);
+                tb.AnimateToPosition(newBasePos, 0.5f, fromEndzone: false);
 
             grid.MarkCellOccupied(col, newRow, true);
         }
 
-        // Step 4: Spawn new targets into Area 1
         SpawnTargetsInArea(0);
     }
 
