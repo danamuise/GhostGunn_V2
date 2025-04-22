@@ -73,16 +73,18 @@ public class TargetBehavior : MonoBehaviour
         }
     }
 
-    public void AnimateToPosition(Vector2 targetPosition, float duration = 0.5f)
+    public void AnimateToPosition(Vector2 targetPosition, float duration = 0.5f, bool fromEndzone = false)
     {
-        Vector2 startPosition = new Vector2(targetPosition.x, 5.35f);
-        transform.position = startPosition;
-        StartCoroutine(SlideToPosition(targetPosition, duration));
+        Vector2 startPosition = fromEndzone
+            ? new Vector2(targetPosition.x, 5.35f) // use top only for new spawns
+            : (Vector2)transform.position;
+
+        StopAllCoroutines();
+        StartCoroutine(SlideToPosition(startPosition, targetPosition, duration));
     }
 
-    private IEnumerator SlideToPosition(Vector2 endPos, float duration)
+    private IEnumerator SlideToPosition(Vector2 startPos, Vector2 endPos, float duration)
     {
-        Vector2 startPos = transform.position;
         float elapsed = 0f;
 
         while (elapsed < duration)
@@ -94,5 +96,6 @@ public class TargetBehavior : MonoBehaviour
 
         transform.position = endPos;
     }
+
 
 }

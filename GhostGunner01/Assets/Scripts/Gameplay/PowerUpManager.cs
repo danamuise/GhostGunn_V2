@@ -55,6 +55,7 @@ public class PowerUpManager : MonoBehaviour
     }
     public void TrySpawnSelectedPowerUp(TargetManager targetManager)
     {
+       /*
         PowerUpData selectedPU = GetSelectedPowerUp();
 
         if (selectedPU == null)
@@ -80,6 +81,7 @@ public class PowerUpManager : MonoBehaviour
         {
             Debug.Log($"<color=orange>🟠 No space to spawn {selectedPU.powerUpName} this move.</color>");
         }
+       */
     }
 
 

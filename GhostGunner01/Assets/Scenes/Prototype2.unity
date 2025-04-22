@@ -152,9 +152,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetManager: {fileID: 1766850440}
+  gridTargetSpawner: {fileID: 1086136298}
+  grid: {fileID: 1086136297}
   gun: {fileID: 721010759}
   gameOverPopup: {fileID: 1074917424}
-  powerUpManager: {fileID: 1687463178}
 --- !u!4 &81249632
 Transform:
   m_ObjectHideFlags: 0
@@ -522,6 +523,75 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8098248670315306485, guid: b77c97fd0206d92468237de9713a0e4d, type: 3}
   m_PrefabInstance: {fileID: 869984656}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1086136296
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1086136299}
+  - component: {fileID: 1086136298}
+  - component: {fileID: 1086136297}
+  m_Layer: 0
+  m_Name: GridSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1086136297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086136296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f92129430f0369c46908b4c992d46cf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rows: 10
+  columns: 5
+  cellWidth: 0.75
+  cellHeight: 0.75
+  gridOrigin: {x: 0, y: 3.6}
+  showGridGizmos: 1
+--- !u!114 &1086136298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086136296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 257bb17bbb28405468fb61e22de242d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetPrefabs:
+  - {fileID: 5273816985256045979, guid: 0cc428dfa62e9c84a8e6bc8bc66b5507, type: 3}
+  grid: {fileID: 1086136297}
+  minTargetsPerRow: 2
+  maxTargetsPerRow: 4
+  targetScale: 0.5
+--- !u!4 &1086136299
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086136296}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.38794726, y: 0.12998305, z: -0.02813724}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1171882189
 GameObject:
   m_ObjectHideFlags: 0
@@ -1086,25 +1156,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15d1c48b3a9c110458a8d9d4ef0762e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  columns: 4
-  columnSpacing: 1
-  startX: -2
-  horizontalSpawnMargin: 0.1
   targetsParent: {fileID: 1777398800}
-  targetScale: 0.544
-  numberOfRows: 10
-  rowSpacing: 0.7
-  topRowY: 4.5
-  gridYOffset: -1
-  targetPrefabs:
-  - {fileID: 4313810961233702181, guid: 99476cc3d00f276448fef7417f861674, type: 3}
-  - {fileID: 5273816985256045979, guid: 0cc428dfa62e9c84a8e6bc8bc66b5507, type: 3}
-  - {fileID: 7767413691039109541, guid: bf513a50af873304cb3e1f53b41fbae1, type: 3}
-  minTargets: 2
-  maxTargets: 4
-  area1Min: {x: -2, y: 4.5}
-  area1Max: {x: 3, y: 4.5}
-  targetRadius: 0.5
+  moveDuration: 0.35
+  easing: 2.5
   gameOverY: -4.5
 --- !u!4 &1766850441
 Transform:
@@ -1573,3 +1627,4 @@ SceneRoots:
   - {fileID: 490730283}
   - {fileID: 1777398800}
   - {fileID: 1687463177}
+  - {fileID: 1086136299}

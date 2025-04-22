@@ -3,10 +3,13 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Scene References")]
     public TargetManager targetManager;
+    public GridTargetSpawner gridTargetSpawner;
+    public TargetGridManager grid;
     public GhostShooter gun;
     public GameObject gameOverPopup;
-    public PowerUpManager powerUpManager;
+
     private bool roundInProgress;
     private int moveCount = 1;
 
@@ -17,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        targetManager.InitializeGrid();
+        grid.InitializeGrid();
         gun.EnableGun(true);
     }
 
@@ -38,49 +41,29 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log($"<color=green>🌟 MOVE {moveCount} initiating</color>");
 
-        if (targetManager.WillMoveIntoGameOverZone())
+        // Step 1: Animate all targets down visually (position only)
+        float rowSpacing = grid.cellHeight;
+        yield return StartCoroutine(targetManager.MoveTargetsDown(rowSpacing));
+
+        // Step 2: Shift grid state + spawn new targets into Area 1
+        gridTargetSpawner.AdvanceAllTargetsAndSpawnNew(moveCount);
+
+        // Step 3: Check if any targets are now in Area 12
+        if (targetManager.CheckForGameOver())
         {
             TriggerGameOver();
             yield break;
         }
 
-        // Start moving targets down
-        Coroutine moveRoutine = StartCoroutine(targetManager.MoveTargetsDown());
-
-        // Move power-ups down by one row
-        powerUpManager.MovePowerUpsDown(targetManager.GetRowSpacing(), 0.35f, 2.5f);
-
-        yield return new WaitForSeconds(0.05f); // Slight buffer
-
-        // Spawn new targets into Area 1
-        targetManager.SpawnTargetsInArea(0, moveCount);
-
-        // Wait for all target and power-up animations to finish
-        yield return moveRoutine;
-
-        // Check Area 1 target count again *after* all targets have landed
-        int targetCount = targetManager.GetTargetCountInRow(0);
-        if (targetCount < 4)
-        {
-            powerUpManager.TrySpawnSelectedPowerUp(targetManager);
-        }
-        else
-        {
-            Debug.Log("<color=grey>🛑 Skipping PU spawn — 4 targets in Area 1</color>");
-        }
-
+        // Step 4: Ready for next round
         gun.EnableGun(true);
         roundInProgress = false;
-
-        powerUpManager.OnNewMove(moveCount);
         moveCount++;
     }
 
-
-
     private void TriggerGameOver()
     {
-        Debug.Log("GAME OVER!");
+        Debug.Log("💀 GAME OVER!");
         gun.DisableGun();
 
         if (gameOverPopup != null)
@@ -91,5 +74,4 @@ public class GameManager : MonoBehaviour
 
         targetManager.ClearAllTargets();
     }
-
 }
