@@ -59,6 +59,9 @@ public class GridTargetSpawner : MonoBehaviour
 
         lastEmptyColumn = emptyCol;
 
+        int moveCount = FindObjectOfType<GameManager>()?.GetMoveCount() ?? 0;
+        int baseHealth = HealthAlgorithm(moveCount);
+
         for (int i = 0; i < maxAllowed; i++)
         {
             int col = selectedColumns[i];
@@ -80,7 +83,10 @@ public class GridTargetSpawner : MonoBehaviour
             var anim = newTarget.GetComponent<TargetBehavior>();
             if (anim != null)
             {
-                anim.SetHealth(Random.Range(1, 6));
+                int variation = Mathf.Clamp(baseHealth / 5, 1, 25);
+                int min = Mathf.Max(1, baseHealth - variation);
+                int max = baseHealth + variation;
+                anim.SetHealth(Random.Range(min, max + 1));
                 anim.AnimateToPosition(spawnPos, 0.5f, fromEndzone: true);
             }
 
@@ -89,9 +95,8 @@ public class GridTargetSpawner : MonoBehaviour
             grid.MarkCellOccupied(col, areaIndex, true);
         }
 
-        int move = FindObjectOfType<GameManager>()?.GetMoveCount() ?? 0;
-        if (move >= 5 && areaIndex % 2 == 1)
-            SpawnPowerUpInRow(areaIndex, move);
+        if (moveCount >= 5 && areaIndex % 2 == 1)
+            SpawnPowerUpInRow(areaIndex, moveCount);
     }
 
     public void AdvanceAllTargetsAndSpawnNew(int moveCount)
@@ -188,7 +193,6 @@ public class GridTargetSpawner : MonoBehaviour
         Debug.Log($"<color=lime>✅ Power-up spawned: {puData.powerUpName} at row {rowIndex}, col {colIndex}</color>");
     }
 
-
     private void Shuffle(List<int> list)
     {
         for (int i = 0; i < list.Count; i++)
@@ -196,5 +200,26 @@ public class GridTargetSpawner : MonoBehaviour
             int rnd = Random.Range(i, list.Count);
             (list[i], list[rnd]) = (list[rnd], list[i]);
         }
+    }
+
+    private int HealthAlgorithm(int move)
+    {
+        if (move <= 3)
+            return 1;
+
+        if ((move - 1) % 20 == 0)
+            return Random.Range(1, 5);
+
+        float floor;
+        if (move <= 20)
+            floor = 1 + Mathf.Pow(move - 3, 1.25f) * 0.4f;
+        else if (move <= 35)
+            floor = 18 + Mathf.Pow(move - 20, 1.2f) * 0.6f;
+        else
+            floor = 30 + Mathf.Pow(move - 35, 1.3f) * 1.0f;
+
+        float spike = (move % 20 == 0) ? floor * 0.15f : 0f;
+        float value = floor + spike;
+        return Mathf.Clamp(Mathf.RoundToInt(value), 1, 100);
     }
 }

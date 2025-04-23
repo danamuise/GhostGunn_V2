@@ -48,14 +48,16 @@ public class GameManager : MonoBehaviour
         // Step 2: Shift grid state + spawn new targets into Area 1
         gridTargetSpawner.AdvanceAllTargetsAndSpawnNew(moveCount);
 
-        // Step 3: If this is Move 10, trigger Game Over (after targets land visually)
-        if (moveCount == 10)
+        // Step 3: Check to see if there are targets in Area 10 (after landing visually)
+        yield return new WaitForSeconds(0.6f);
+
+        if (LeadArea() == 9)  // Assuming Area 10 = row index 9
         {
             Debug.Log("💀 Final move reached — targets are now in Area 10.");
-            yield return new WaitForSeconds(0.6f); // Delay to allow targets to visually arrive
             TriggerGameOver();
             yield break;
         }
+
         // Step 4: Ready for next round
         gun.EnableGun(true);
         roundInProgress = false;
@@ -75,6 +77,27 @@ public class GameManager : MonoBehaviour
 
         targetManager.ClearAllTargets();
     }
+
+    private int LeadArea()
+    {
+        int leadRow = -1;
+        int rows = grid.GetRowCount();
+        int cols = grid.GetColumnCount();
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < cols; col++)
+            {
+                if (grid.IsCellOccupied(col, row))
+                {
+                    leadRow = Mathf.Max(leadRow, row);
+                }
+            }
+        }
+
+        return leadRow; // Returns the highest row index that has something in it
+    }
+
 
     public int GetMoveCount()
     {
