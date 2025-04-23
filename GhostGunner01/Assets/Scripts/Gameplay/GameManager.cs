@@ -74,4 +74,10 @@ public class GameManager : MonoBehaviour
 
         targetManager.ClearAllTargets();
     }
+
+    public int GetMoveCount()
+    {
+        return moveCount;
+    }
+
 }

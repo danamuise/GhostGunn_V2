@@ -240,8 +240,23 @@ public class GhostBullet : MonoBehaviour
         {
             if (!isInTank && !isSlidingToWall && !isDroppingDown)
             {
-                Debug.Log($"⚠️ {name} collided with corner override — forcing return to tank.");
-                EnterTank();
+               
+
+                rb.bodyType = RigidbodyType2D.Dynamic;
+                rb.gravityScale = 0f;
+                rb.velocity = Vector2.zero;
+
+                isInLaserMode = false;
+                inGhostMode = false;
+
+                // Determine wall direction based on position
+                float distToLeft = Mathf.Abs(transform.position.x - GetWallX("Wall_Left"));
+                float distToRight = Mathf.Abs(transform.position.x - GetWallX("Wall_Right"));
+                wallSlideDirection = distToLeft < distToRight ? Vector2.left : Vector2.right;
+
+                isSlidingToWall = false;
+                isDroppingDown = true;
+                Debug.Log($"⚠️ {name} collided with CornerOverride — initiating slide to wall: " + isSlidingToWall);
             }
         }
     }
