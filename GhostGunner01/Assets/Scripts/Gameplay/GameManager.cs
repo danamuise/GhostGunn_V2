@@ -48,13 +48,14 @@ public class GameManager : MonoBehaviour
         // Step 2: Shift grid state + spawn new targets into Area 1
         gridTargetSpawner.AdvanceAllTargetsAndSpawnNew(moveCount);
 
-        // Step 3: Check if any targets are now in Area 12
-        if (targetManager.CheckForGameOver())
+        // Step 3: If this is Move 10, trigger Game Over (after targets land visually)
+        if (moveCount == 10)
         {
+            Debug.Log("💀 Final move reached — targets are now in Area 10.");
+            yield return new WaitForSeconds(0.6f); // Delay to allow targets to visually arrive
             TriggerGameOver();
             yield break;
         }
-
         // Step 4: Ready for next round
         gun.EnableGun(true);
         roundInProgress = false;

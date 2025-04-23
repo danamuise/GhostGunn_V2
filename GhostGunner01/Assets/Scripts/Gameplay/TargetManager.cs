@@ -12,7 +12,7 @@ public class TargetManager : MonoBehaviour
     public float easing = 2.5f;
 
     [Header("Game Over Settings")]
-    public float gameOverY = -4.5f;
+    public float gameOverY = -3.0f;
 
     /// <summary>
     /// Moves all targets down by a fixed distance (typically row height).
@@ -63,6 +63,7 @@ public class TargetManager : MonoBehaviour
         }
     }
 
+    /*
     public bool CheckForGameOver()
     {
         foreach (Transform t in targetsParent)
@@ -73,7 +74,7 @@ public class TargetManager : MonoBehaviour
 
         return false;
     }
-
+    */
     public void ClearAllTargets()
     {
         foreach (Transform t in targetsParent)

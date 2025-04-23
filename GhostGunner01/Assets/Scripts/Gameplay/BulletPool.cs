@@ -15,6 +15,7 @@ public class BulletPool : MonoBehaviour
     public Transform bulletParent;
 
     private List<GameObject> pool = new List<GameObject>();
+    private int activeBulletCount = 0;
 
     void Awake()
     {
@@ -31,6 +32,7 @@ public class BulletPool : MonoBehaviour
 
                 Vector3 pos = bullet.transform.position;
                 bullet.transform.position = new Vector3(pos.x, pos.y + tankVerticalOffset, pos.z);
+                activeBulletCount++;
             }
             else
             {
@@ -77,5 +79,44 @@ public class BulletPool : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public void EnableNextBullet()
+    {
+        if (activeBulletCount >= poolSize)
+        {
+            Debug.Log("🔫 All bullets are already active.");
+            return;
+        }
+
+        for (int i = 0; i < pool.Count; i++)
+        {
+            GameObject bullet = pool[i];
+            if (!bullet.activeInHierarchy)
+            {
+                bullet.SetActive(true);
+                GhostBullet ghost = bullet.GetComponent<GhostBullet>();
+                if (ghost != null)
+                {
+                    ghost.EnterTank();
+                    Vector3 pos = bullet.transform.position;
+                    bullet.transform.position = new Vector3(pos.x, pos.y + tankVerticalOffset, pos.z);
+                }
+
+                activeBulletCount++;
+                Debug.Log($"🔫 Enabled bullet #{activeBulletCount}");
+                break;
+            }
+        }
+    }
+
+    public int GetActiveBulletCount()
+    {
+        return activeBulletCount;
+    }
+
+    public int GetTotalBulletCount()
+    {
+        return poolSize;
     }
 }

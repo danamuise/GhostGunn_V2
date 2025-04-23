@@ -150,6 +150,13 @@ public class GridTargetSpawner : MonoBehaviour
 
     private void SpawnPowerUpInRow(int rowIndex, int moveCount)
     {
+        BulletPool bulletPool = FindObjectOfType<BulletPool>();
+        if (bulletPool == null || bulletPool.GetActiveBulletCount() >= bulletPool.GetTotalBulletCount())
+        {
+            Debug.Log("🛑 Maximum bullets reached. No more AddBulletPU will be spawned.");
+            return;
+        }
+
         if (moveCount < 2 || moveCount % 2 != 1) return;
         if (powerUps == null || powerUps.Count == 0) return;
 
@@ -175,11 +182,12 @@ public class GridTargetSpawner : MonoBehaviour
             mover.AnimateToPosition(spawnPos, 0.5f, fromEndzone: true);
 
         grid.MarkCellOccupied(colIndex, rowIndex, true);
-
         puData.lastUsedMove = moveCount;
         puData.timesUsed++;
+
         Debug.Log($"<color=lime>✅ Power-up spawned: {puData.powerUpName} at row {rowIndex}, col {colIndex}</color>");
     }
+
 
     private void Shuffle(List<int> list)
     {

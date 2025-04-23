@@ -1191,7 +1191,7 @@ MonoBehaviour:
   targetsParent: {fileID: 1777398800}
   moveDuration: 0.35
   easing: 2.5
-  gameOverY: -4.5
+  gameOverY: -3
 --- !u!4 &1766850441
 Transform:
   m_ObjectHideFlags: 0
