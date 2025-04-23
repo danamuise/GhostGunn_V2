@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{021F0BD5-371D-A62F-1D21-05A8E8518959}|Assembly-CSharp.csproj|c:\\users\\danam\\documents\\github\\ghostgunner\\ghostgunner01\\assets\\scripts\\gameplay\\uimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{021F0BD5-371D-A62F-1D21-05A8E8518959}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gameplay\\uimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{021F0BD5-371D-A62F-1D21-05A8E8518959}|Assembly-CSharp.csproj|c:\\users\\danam\\documents\\github\\ghostgunner\\ghostgunner01\\assets\\scripts\\gameplay\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{021F0BD5-371D-A62F-1D21-05A8E8518959}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gameplay\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{021F0BD5-371D-A62F-1D21-05A8E8518959}|Assembly-CSharp.csproj|C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\assets\\scripts\\gameplay\\targetgridmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{021F0BD5-371D-A62F-1D21-05A8E8518959}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gameplay\\targetgridmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{021F0BD5-371D-A62F-1D21-05A8E8518959}|Assembly-CSharp.csproj|C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\assets\\scripts\\gameplay\\gridtargetspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{021F0BD5-371D-A62F-1D21-05A8E8518959}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gameplay\\gridtargetspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{021F0BD5-371D-A62F-1D21-05A8E8518959}|Assembly-CSharp.csproj|C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\assets\\scripts\\gameplay\\targetgridmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{021F0BD5-371D-A62F-1D21-05A8E8518959}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gameplay\\targetgridmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{021F0BD5-371D-A62F-1D21-05A8E8518959}|Assembly-CSharp.csproj|C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\assets\\scripts\\gameplay\\targetbehavior.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -70,11 +74,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 0,
+              "Title": "UIManager.cs",
+              "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\UIManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\UIManager.cs",
+              "ToolTip": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\UIManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Gameplay\\UIManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-23T22:20:53.587Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "AddBulletPowerUp.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\AddBulletPowerUp.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\AddBulletPowerUp.cs",
@@ -86,7 +103,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "TargetGridManager.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\TargetGridManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\TargetGridManager.cs",
@@ -105,14 +122,14 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\GridTargetSpawner.cs",
               "ToolTip": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\GridTargetSpawner.cs",
               "RelativeToolTip": "Assets\\Scripts\\Gameplay\\GridTargetSpawner.cs",
-              "ViewState": "AgIAABoAAAAAAAAAAAAiwK4AAAAkAAAAAAAAAA==",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAiwAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-22T15:54:34.945Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "GhostBullet.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\GhostBullet.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\GhostBullet.cs",
@@ -124,33 +141,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "GameManager.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\GameManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\GameManager.cs",
               "ToolTip": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\GameManager.cs",
               "RelativeToolTip": "Assets\\Scripts\\Gameplay\\GameManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAAD0AAAAAAAAAAAAowEcAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-11T03:47:15.77Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "TargetBehavior.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\TargetBehavior.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\TargetBehavior.cs",
               "ToolTip": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\TargetBehavior.cs",
               "RelativeToolTip": "Assets\\Scripts\\Gameplay\\TargetBehavior.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACcAAAAAAAAAAIA2wD4AAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-10T23:34:53.826Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "PowerUpManager.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\PowerUpManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\PowerUpManager.cs",
@@ -162,7 +179,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "BulletPool.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\BulletPool.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\BulletPool.cs",
@@ -174,7 +191,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "TargetManager.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\TargetManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\TargetManager.cs",
@@ -186,7 +203,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "PowerUpData.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\PowerUps\\PowerUpData.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PowerUps\\PowerUpData.cs",
@@ -198,7 +215,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "PowerUpMover.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\PowerUpMover.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\PowerUpMover.cs",
@@ -210,7 +227,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "PowerUp.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\PowerUp.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\PowerUp.cs",
@@ -222,7 +239,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "GhostShooter.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\GhostShooter.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\GhostShooter.cs",
@@ -234,7 +251,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "LaserTrajectoryPreview.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\LaserTrajectoryPreview.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\LaserTrajectoryPreview.cs",
@@ -246,7 +263,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "BouncingBullet.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunner\\GhostGunner01\\Assets\\Scripts\\Gameplay\\BouncingBullet.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\BouncingBullet.cs",

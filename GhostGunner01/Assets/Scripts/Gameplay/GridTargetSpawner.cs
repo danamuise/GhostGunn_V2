@@ -24,7 +24,9 @@ public class GridTargetSpawner : MonoBehaviour
 
     private Transform targetParent;
     private int lastEmptyColumn = -1;
+    private int targetIdCounter = 0; // assigns unique target id #
 
+    private Dictionary<string, int> targetHealthMap = new();//holds TargetIDs and Health values for score
     private class TargetMeta
     {
         public Vector2 offset;
@@ -77,7 +79,13 @@ public class GridTargetSpawner : MonoBehaviour
             Quaternion rot = Quaternion.Euler(0, 0, rotation);
 
             GameObject prefab = targetPrefabs[Random.Range(0, targetPrefabs.Count)];
+
+            ////////////////////////////////////////////////////////////////////////
             GameObject newTarget = Instantiate(prefab, spawnPos, rot, targetParent);
+            newTarget.name = $"Target_{targetIdCounter:D4}";  // e.g., Target_0001
+            targetIdCounter++;
+            ////////////////////////////////////////////////////////////////////////
+
             newTarget.transform.localScale = Vector3.one * targetScale;
 
             var anim = newTarget.GetComponent<TargetBehavior>();
@@ -86,7 +94,10 @@ public class GridTargetSpawner : MonoBehaviour
                 int variation = Mathf.Clamp(baseHealth / 5, 1, 25);
                 int min = Mathf.Max(1, baseHealth - variation);
                 int max = baseHealth + variation;
-                anim.SetHealth(Random.Range(min, max + 1));
+                int initialTargetHealth = Random.Range(min, max + 1);
+                RegisterTarget(newTarget.name, initialTargetHealth); // Add to dictionary
+                anim.SetHealth(initialTargetHealth);
+
                 anim.AnimateToPosition(spawnPos, 0.5f, fromEndzone: true);
             }
 
@@ -221,5 +232,26 @@ public class GridTargetSpawner : MonoBehaviour
         float spike = (move % 20 == 0) ? floor * 0.15f : 0f;
         float value = floor + spike;
         return Mathf.Clamp(Mathf.RoundToInt(value), 1, 100);
+    }
+
+    public void RegisterTarget(string id, int health)
+    {
+        targetHealthMap[id] = health;
+
+        /*Debug.Log("🧾 ************************  Current TargetHealthMap:");
+        foreach (var entry in targetHealthMap)
+        {
+            Debug.Log($"{entry.Key} → {entry.Value}");
+        }*/
+    }
+
+    public int GetHealth(string id)
+    {
+        return targetHealthMap.TryGetValue(id, out int value) ? value : 0;
+    }
+
+    public void ResetTargets()
+    {
+        targetHealthMap.Clear();
     }
 }

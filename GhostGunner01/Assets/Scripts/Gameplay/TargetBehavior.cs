@@ -60,6 +60,7 @@ public class TargetBehavior : MonoBehaviour
     private IEnumerator DestroyAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+        Debug.Log($"💥 *************************** Destroying target: {gameObject.name}");
         Destroy(gameObject);
     }
 
