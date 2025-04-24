@@ -9,9 +9,11 @@ public class GameManager : MonoBehaviour
     public TargetGridManager grid;
     public GhostShooter gun;
     public GameObject gameOverPopup;
+    public UIManager uiManager;
 
     private bool roundInProgress;
     private int moveCount = 1;
+    private int totalScore = 0;
 
     private void Awake()
     {
@@ -22,6 +24,7 @@ public class GameManager : MonoBehaviour
     {
         grid.InitializeGrid();
         gun.EnableGun(true);
+        uiManager?.InitializeUI();
     }
 
     public void OnShotComplete()
@@ -41,24 +44,20 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log($"<color=green>🌟 MOVE {moveCount} initiating</color>");
 
-        // Step 1: Animate all targets down visually (position only)
         float rowSpacing = grid.cellHeight;
         yield return StartCoroutine(targetManager.MoveTargetsDown(rowSpacing));
 
-        // Step 2: Shift grid state + spawn new targets into Area 1
         gridTargetSpawner.AdvanceAllTargetsAndSpawnNew(moveCount);
 
-        // Step 3: Check to see if there are targets in Area 10 (after landing visually)
         yield return new WaitForSeconds(0.6f);
 
-        if (LeadArea() == 9)  // Assuming Area 10 = row index 9
+        if (LeadArea() == 9)
         {
             Debug.Log("💀 Final move reached — targets are now in Area 10.");
             TriggerGameOver();
             yield break;
         }
 
-        // Step 4: Ready for next round
         gun.EnableGun(true);
         roundInProgress = false;
         moveCount++;
@@ -75,6 +74,7 @@ public class GameManager : MonoBehaviour
             gameOverPopup.SetActive(true);
         }
 
+        uiManager?.ShowFinalScore(totalScore);
         targetManager.ClearAllTargets();
     }
 
@@ -95,13 +95,23 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        return leadRow; // Returns the highest row index that has something in it
+        return leadRow;
     }
-
 
     public int GetMoveCount()
     {
         return moveCount;
     }
 
+    public void AddScore(int amount)
+    {
+        Debug.Log($"➕ Adding {amount} points to score. New total: {totalScore + amount}");
+        totalScore += amount;
+        uiManager.UpdateScoreDisplay(totalScore);
+    }
+
+    public void ResetScore()
+    {
+        totalScore = 0;
+    }
 }

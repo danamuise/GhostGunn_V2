@@ -156,6 +156,7 @@ MonoBehaviour:
   grid: {fileID: 1086136297}
   gun: {fileID: 721010759}
   gameOverPopup: {fileID: 1074917424}
+  uiManager: {fileID: 1273298677}
 --- !u!4 &81249632
 Transform:
   m_ObjectHideFlags: 0
@@ -566,6 +567,42 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 651066957285674614, guid: b77c97fd0206d92468237de9713a0e4d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 651066957285674614, guid: b77c97fd0206d92468237de9713a0e4d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 651066957285674614, guid: b77c97fd0206d92468237de9713a0e4d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1273298677}
+    - target: {fileID: 651066957285674614, guid: b77c97fd0206d92468237de9713a0e4d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 651066957285674614, guid: b77c97fd0206d92468237de9713a0e4d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayAgain
+      objectReference: {fileID: 0}
+    - target: {fileID: 651066957285674614, guid: b77c97fd0206d92468237de9713a0e4d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 651066957285674614, guid: b77c97fd0206d92468237de9713a0e4d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 4940196614998608986, guid: b77c97fd0206d92468237de9713a0e4d, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6850903721571266767, guid: b77c97fd0206d92468237de9713a0e4d, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8098248670315306485, guid: b77c97fd0206d92468237de9713a0e4d, type: 3}
       propertyPath: m_Name
       value: GameOverPanel
@@ -709,6 +746,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1000242788 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2494046630011458902, guid: b77c97fd0206d92468237de9713a0e4d, type: 3}
+  m_PrefabInstance: {fileID: 869984656}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1040631138
 GameObject:
   m_ObjectHideFlags: 0
@@ -841,6 +889,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPrefabs:
   - {fileID: 5273816985256045979, guid: 0cc428dfa62e9c84a8e6bc8bc66b5507, type: 3}
+  - {fileID: 4313810961233702181, guid: 99476cc3d00f276448fef7417f861674, type: 3}
+  - {fileID: 4313810961233702181, guid: fc280d64eed37344e8cb6aaf93c57062, type: 3}
   powerUps:
   - {fileID: 11400000, guid: 4ba340b953a9c0c439ea62de88a2f23a, type: 2}
   grid: {fileID: 1086136297}
@@ -895,6 +945,57 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 721010758}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1273298676
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1273298678}
+  - component: {fileID: 1273298677}
+  m_Layer: 0
+  m_Name: UImanager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1273298677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273298676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b65b39ee93de0545ab45d2fb3d014c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreFieldUI: {fileID: 779435740}
+  finalScoreUI: {fileID: 1000242788}
+  gridTargetSpawner: {fileID: 1086136298}
+  targetManager: {fileID: 1766850440}
+  grid: {fileID: 1086136297}
+  gun: {fileID: 721010759}
+  gameOverPopup: {fileID: 1074917424}
+--- !u!4 &1273298678
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273298676}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.4686431, y: 3.7394934, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1295232673
 GameObject:
@@ -1357,16 +1458,19 @@ PolygonCollider2D:
       - {x: 1.27, y: -0.155}
       - {x: 1.4883916, y: -0.18181902}
       - {x: 1.66, y: -0.255}
-      - {x: 1.728605, y: -0.32377088}
-      - {x: 1.7962769, y: -0.46215338}
+      - {x: 1.7102813, y: -0.30999723}
+      - {x: 1.7537224, y: -0.3802856}
+      - {x: 1.7835323, y: -0.45930853}
+      - {x: 1.8025563, y: -0.5720433}
       - {x: 1.8111389, y: -0.6941115}
       - {x: 1.9399999, y: -0.525}
       - {x: 1.9399999, y: 0.525}
       - {x: -1.9399999, y: 0.525}
       - {x: -1.9399999, y: -0.525}
-      - {x: -1.8027669, y: -0.68084866}
-      - {x: -1.77, y: -0.465}
-      - {x: -1.6886714, y: -0.32140088}
+      - {x: -1.8027669, y: -0.7265243}
+      - {x: -1.794123, y: -0.6316417}
+      - {x: -1.745259, y: -0.40029293}
+      - {x: -1.6620272, y: -0.27572522}
       - {x: -1.5693451, y: -0.22816163}
       - {x: -1.39, y: -0.175}
       - {x: -0.64, y: -0.105}
@@ -1542,7 +1646,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 5643233726399587055, guid: 385a55bed6d9caf43a1ee26044631b1e, type: 3}
   poolSize: 20
-  startingBullets: 20
+  startingBullets: 1
   tankVerticalOffset: 0
   bulletParent: {fileID: 490730283}
 --- !u!4 &1824429565
@@ -2091,7 +2195,6 @@ SceneRoots:
   - {fileID: 81249632}
   - {fileID: 1295232676}
   - {fileID: 1319720793}
-  - {fileID: 1418184136}
   - {fileID: 869984656}
   - {fileID: 490730283}
   - {fileID: 1777398800}
@@ -2099,3 +2202,5 @@ SceneRoots:
   - {fileID: 8345729662840629397}
   - {fileID: 1726532972}
   - {fileID: 1988237716}
+  - {fileID: 1273298678}
+  - {fileID: 1418184136}

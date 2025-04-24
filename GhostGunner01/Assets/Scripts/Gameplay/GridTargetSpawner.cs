@@ -26,7 +26,7 @@ public class GridTargetSpawner : MonoBehaviour
     private int lastEmptyColumn = -1;
     private int targetIdCounter = 0; // assigns unique target id #
 
-    private Dictionary<string, int> targetHealthMap = new();//holds TargetIDs and Health values for score
+    //private Dictionary<string, int> targetHealthMap = new();//holds TargetIDs and Health values for score
     private class TargetMeta
     {
         public Vector2 offset;
@@ -95,7 +95,7 @@ public class GridTargetSpawner : MonoBehaviour
                 int min = Mathf.Max(1, baseHealth - variation);
                 int max = baseHealth + variation;
                 int initialTargetHealth = Random.Range(min, max + 1);
-                RegisterTarget(newTarget.name, initialTargetHealth); // Add to dictionary
+                //RegisterTarget(newTarget.name, initialTargetHealth); // Add to dictionary
                 anim.SetHealth(initialTargetHealth);
 
                 anim.AnimateToPosition(spawnPos, 0.5f, fromEndzone: true);
@@ -234,24 +234,38 @@ public class GridTargetSpawner : MonoBehaviour
         return Mathf.Clamp(Mathf.RoundToInt(value), 1, 100);
     }
 
-    public void RegisterTarget(string id, int health)
+    /*public void RegisterTarget(string id, int health)
     {
         targetHealthMap[id] = health;
 
-        /*Debug.Log("🧾 ************************  Current TargetHealthMap:");
-        foreach (var entry in targetHealthMap)
-        {
-            Debug.Log($"{entry.Key} → {entry.Value}");
-        }*/
-    }
+    }*/
 
-    public int GetHealth(string id)
+    /*public int GetHealth(string id)
     {
         return targetHealthMap.TryGetValue(id, out int value) ? value : 0;
-    }
+    }*/
 
-    public void ResetTargets()
+    /*public void ResetTargets()
     {
         targetHealthMap.Clear();
-    }
+    }*/
+
+    /*public void HandleTargetDestroyed(string targetName)
+    {
+        if (targetHealthMap.TryGetValue(targetName, out int value))
+        {
+            GameManager gm = FindObjectOfType<GameManager>();
+            if (gm != null)
+            {
+                gm.AddScore(value);
+            }
+
+            Debug.Log($"**********************************************************  Target {targetName} destroyed. +{value} points added to score.");
+        }
+        else
+        {
+            Debug.LogWarning($"⚠️ Target {targetName} not found in health map.");
+        }
+    }*/
+
 }

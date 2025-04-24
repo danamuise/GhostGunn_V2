@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 public class UIManager : MonoBehaviour
@@ -9,11 +9,25 @@ public class UIManager : MonoBehaviour
     [Header("Final Score UI")]
     public TextMeshProUGUI finalScoreUI;
 
+    [Header("Scene References")]
+    private GameManager gameManager;
+    public GridTargetSpawner gridTargetSpawner;
+    public TargetManager targetManager;
+    public TargetGridManager grid;
+    public GhostShooter gun;
+    public GameObject gameOverPopup;
+
+    private void Start()
+    {
+        gameManager = Object.FindFirstObjectByType<GameManager>();
+        //scoreFieldUI.text = "NEWTEXT";
+    }
     public void UpdateScoreDisplay(int score)
     {
+        Debug.Log($"📺 Updating scoreFieldUI: {score}");
         if (scoreFieldUI != null)
         {
-            scoreFieldUI.text = $"Score: {score}";
+            scoreFieldUI.text = $"{score}";
         }
     }
 
@@ -28,5 +42,21 @@ public class UIManager : MonoBehaviour
     public void InitializeUI()
     {
         UpdateScoreDisplay(0);
+    }
+
+    public void PlayAgain()
+    {
+        Debug.Log("🔁 Restarting Game...");
+
+        gameManager.ResetScore(); // Add ResetScore method in GameManager
+        InitializeUI();
+        ShowFinalScore(0);
+        targetManager.ClearAllTargets();
+
+        grid.InitializeGrid();
+        gun.EnableGun(true);
+
+        if (gameOverPopup != null)
+            gameOverPopup.SetActive(false);
     }
 }

@@ -48,6 +48,8 @@ public class GhostBullet : MonoBehaviour
     private GameManager gameManager;
     private float bulletLifeTimer = 0f;
     private const float maxLifeTime = 8f;
+    private bool justEnteredGhostMode = false;
+
     public bool IsInTank => isInTank;
 
     public void Fire(Vector2 direction)
@@ -83,6 +85,7 @@ public class GhostBullet : MonoBehaviour
 
     private void FixedUpdate()
     {
+        justEnteredGhostMode = false; // ✅ reset after one frame
         if (isInLaserMode)
         {
             float stepDistance = laserSpeed * Time.fixedDeltaTime;
@@ -94,10 +97,10 @@ public class GhostBullet : MonoBehaviour
                 if (hit.collider.CompareTag("Target"))
                 {
                     TargetBehavior tb = hit.collider.GetComponentInParent<TargetBehavior>();
-                    if (tb != null)
+                    if (tb != null && !inGhostMode)
                     {
                         tb.TakeDamage(1);
-                        Debug.Log($"{name} hit {hit.collider.name} — health reduced");
+                        Debug.Log($"{name} | Laser Mode hit: {hit.collider.name} — health reduced");
                     }
 
                     EnterGhostMode();
@@ -197,10 +200,10 @@ public class GhostBullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (inGhostMode && collision.gameObject.CompareTag("Target"))
+        if (inGhostMode && !justEnteredGhostMode && collision.gameObject.CompareTag("Target"))
         {
             TargetBehavior tb = collision.gameObject.GetComponentInParent<TargetBehavior>();
-            if (tb != null)
+            if (tb != null && !isInLaserMode)
             {
                 tb.TakeDamage(1);
                 Debug.Log($"{name} | Ghost Mode hit: {collision.gameObject.name} — health reduced");
@@ -265,6 +268,7 @@ public class GhostBullet : MonoBehaviour
     {
         isInLaserMode = false;
         inGhostMode = true;
+        justEnteredGhostMode = true; // 🛡 prevent immediate ghost hit
 
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = 0f;

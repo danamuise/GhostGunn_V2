@@ -46,7 +46,11 @@ public class TargetBehavior : MonoBehaviour
     {
         health -= amount;
         Debug.Log($"{name} | Took {amount} damage — new health: {health}");
-
+        GameManager gm = FindObjectOfType<GameManager>();
+        if (gm != null)
+        {
+            gm.AddScore(1); // ✅ Add 1 point on every hit
+        }
         if (health <= 0)
         {
             StartCoroutine(DestroyAfterDelay(0.1f));  // ⏱ Delay destruction
@@ -60,9 +64,9 @@ public class TargetBehavior : MonoBehaviour
     private IEnumerator DestroyAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        Debug.Log($"💥 *************************** Destroying target: {gameObject.name}");
         Destroy(gameObject);
     }
+
 
     private void UpdateVisuals()
     {
