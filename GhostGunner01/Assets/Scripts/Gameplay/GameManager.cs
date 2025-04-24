@@ -3,17 +3,13 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("Scene References")]
     public TargetManager targetManager;
-    public GridTargetSpawner gridTargetSpawner;
-    public TargetGridManager grid;
     public GhostShooter gun;
     public GameObject gameOverPopup;
-    public UIManager uiManager;
+    public PowerUpManager powerUpManager;
 
     private bool roundInProgress;
     private int moveCount = 1;
-    private int totalScore = 0;
 
     private void Awake()
     {
@@ -22,9 +18,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        grid.InitializeGrid();
+        // First spawn at game start
+        targetManager.SpawnTargetsInArea(0);
         gun.EnableGun(true);
-        uiManager?.InitializeUI();
     }
 
     public void OnShotComplete()
@@ -42,30 +38,50 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator HandleTargetMovementAndRespawn()
     {
-        Debug.Log($"<color=green>🌟 MOVE {moveCount} initiating</color>");
-
-        float rowSpacing = grid.cellHeight;
-        yield return StartCoroutine(targetManager.MoveTargetsDown(rowSpacing));
-
-        gridTargetSpawner.AdvanceAllTargetsAndSpawnNew(moveCount);
-
-        yield return new WaitForSeconds(0.6f);
-
-        if (LeadArea() == 9)
+        if (moveCount % 2 == 0)
         {
-            Debug.Log("💀 Final move reached — targets are now in Area 10.");
+            Debug.Log($"<color=green>🌟 MOVE {moveCount} initiating</color> Include Power Up");
+
+            // TEMP: Commented out while debugging PU position availability
+            // Vector2 spawnPos = new Vector2(0f, moveCount - 2);
+            // powerUpManager.TrySpawnPowerUp(0, spawnPos);
+        }
+        else
+        {
+            Debug.Log($"<color=green>🌟 MOVE {moveCount} initiating</color>");
+        }
+
+        if (targetManager.WillMoveIntoGameOverZone())
+        {
             TriggerGameOver();
             yield break;
         }
 
+        // Begin moving targets down
+        Coroutine moveRoutine = StartCoroutine(targetManager.MoveTargetsDown());
+
+        // Short delay to stagger the animation slightly
+        yield return new WaitForSeconds(0.05f);
+
+        // Spawn new targets into Area 1 while others are still moving
+        targetManager.SpawnTargetsInArea(0);
+
+        // 🔍 Debug-only check for free PU space
+        targetManager.CheckForPowerUpSpace(moveCount);
+
+        // Wait for movement to finish
+        yield return moveRoutine;
+
+        // Re-enable the gun
         gun.EnableGun(true);
         roundInProgress = false;
+
         moveCount++;
     }
 
     private void TriggerGameOver()
     {
-        Debug.Log("💀 GAME OVER!");
+        Debug.Log("GAME OVER!");
         gun.DisableGun();
 
         if (gameOverPopup != null)
@@ -74,44 +90,6 @@ public class GameManager : MonoBehaviour
             gameOverPopup.SetActive(true);
         }
 
-        uiManager?.ShowFinalScore(totalScore);
         targetManager.ClearAllTargets();
-    }
-
-    private int LeadArea()
-    {
-        int leadRow = -1;
-        int rows = grid.GetRowCount();
-        int cols = grid.GetColumnCount();
-
-        for (int row = 0; row < rows; row++)
-        {
-            for (int col = 0; col < cols; col++)
-            {
-                if (grid.IsCellOccupied(col, row))
-                {
-                    leadRow = Mathf.Max(leadRow, row);
-                }
-            }
-        }
-
-        return leadRow;
-    }
-
-    public int GetMoveCount()
-    {
-        return moveCount;
-    }
-
-    public void AddScore(int amount)
-    {
-        Debug.Log($"➕ Adding {amount} points to score. New total: {totalScore + amount}");
-        totalScore += amount;
-        uiManager.UpdateScoreDisplay(totalScore);
-    }
-
-    public void ResetScore()
-    {
-        totalScore = 0;
     }
 }
