@@ -234,38 +234,4 @@ public class GridTargetSpawner : MonoBehaviour
         return Mathf.Clamp(Mathf.RoundToInt(value), 1, 100);
     }
 
-    /*public void RegisterTarget(string id, int health)
-    {
-        targetHealthMap[id] = health;
-
-    }*/
-
-    /*public int GetHealth(string id)
-    {
-        return targetHealthMap.TryGetValue(id, out int value) ? value : 0;
-    }*/
-
-    /*public void ResetTargets()
-    {
-        targetHealthMap.Clear();
-    }*/
-
-    /*public void HandleTargetDestroyed(string targetName)
-    {
-        if (targetHealthMap.TryGetValue(targetName, out int value))
-        {
-            GameManager gm = FindObjectOfType<GameManager>();
-            if (gm != null)
-            {
-                gm.AddScore(value);
-            }
-
-            Debug.Log($"**********************************************************  Target {targetName} destroyed. +{value} points added to score.");
-        }
-        else
-        {
-            Debug.LogWarning($"⚠️ Target {targetName} not found in health map.");
-        }
-    }*/
-
 }

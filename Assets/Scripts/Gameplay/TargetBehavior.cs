@@ -92,6 +92,9 @@ public class TargetBehavior : MonoBehaviour
 
     public void AnimateToPosition(Vector2 gridAlignedPosition, float duration = 0.5f, bool fromEndzone = false)
     {
+        int moveNumber = FindObjectOfType<GameManager>()?.GetMoveCount() ?? -1;
+        Debug.Log($"🎯 TRACKING Animating target {name} on move {moveNumber}");
+
         Vector2 startPosition = fromEndzone
             ? new Vector2(gridAlignedPosition.x, 5.35f)
             : (Vector2)transform.position;

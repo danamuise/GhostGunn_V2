@@ -1,0 +1,104 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|c:\\users\\danam\\documents\\github\\ghostgunn_v2\\assets\\scripts\\gameplay\\gridtargetspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gameplay\\gridtargetspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|c:\\users\\danam\\documents\\github\\ghostgunn_v2\\assets\\scripts\\gameplay\\targetbehavior.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gameplay\\targetbehavior.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|c:\\users\\danam\\documents\\github\\ghostgunn_v2\\assets\\scripts\\gameplay\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gameplay\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|c:\\users\\danam\\documents\\github\\ghostgunn_v2\\assets\\scripts\\gameplay\\ghostbullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gameplay\\ghostbullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\assets\\scripts\\gameplay\\ghostshooter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gameplay\\ghostshooter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "TargetBehavior.cs",
+              "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\Assets\\Scripts\\Gameplay\\TargetBehavior.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\TargetBehavior.cs",
+              "ToolTip": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\Assets\\Scripts\\Gameplay\\TargetBehavior.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Gameplay\\TargetBehavior.cs",
+              "ViewState": "AgIAAEEAAAAAAAAAAAA1wE4AAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-25T18:11:17.278Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "GameManager.cs",
+              "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\Assets\\Scripts\\Gameplay\\GameManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\GameManager.cs",
+              "ToolTip": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\Assets\\Scripts\\Gameplay\\GameManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Gameplay\\GameManager.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAzwCgAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-25T18:00:50.331Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GridTargetSpawner.cs",
+              "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\Assets\\Scripts\\Gameplay\\GridTargetSpawner.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\GridTargetSpawner.cs",
+              "ToolTip": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\Assets\\Scripts\\Gameplay\\GridTargetSpawner.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Gameplay\\GridTargetSpawner.cs",
+              "ViewState": "AgIAAM4AAAAAAAAAAAA0wNYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-25T17:50:03.035Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "GhostBullet.cs",
+              "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\Assets\\Scripts\\Gameplay\\GhostBullet.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\GhostBullet.cs",
+              "ToolTip": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\Assets\\Scripts\\Gameplay\\GhostBullet.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Gameplay\\GhostBullet.cs",
+              "ViewState": "AgIAAB4BAAAAAAAAAAAswEsBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-25T04:35:38.62Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "GhostShooter.cs",
+              "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\Assets\\Scripts\\Gameplay\\GhostShooter.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\GhostShooter.cs",
+              "ToolTip": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\Assets\\Scripts\\Gameplay\\GhostShooter.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Gameplay\\GhostShooter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-25T04:34:53.622Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
