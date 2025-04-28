@@ -12,6 +12,12 @@ public class GridTargetSpawner : MonoBehaviour
     [Header("Grid Reference")]
     public TargetGridManager grid;
 
+    [Header("DDA Health Curve Reference")]
+    public TargetHealthCurve targetHealthCurve; // 🔥 Drag TargetHealthCurve.cs here
+    [Header("Target Health Randomness")]
+    [Range(0f, 1f)] public float healthRandomUpperPercent = 0.1f;
+    [Range(0f, 1f)] public float healthRandomLowerPercent = 0.2f;
+
     [Header("Spawning Rules")]
     public int minTargetsPerRow = 2;
     public int maxTargetsPerRow = 4;
@@ -24,9 +30,8 @@ public class GridTargetSpawner : MonoBehaviour
 
     private Transform targetParent;
     private int lastEmptyColumn = -1;
-    private int targetIdCounter = 0; // assigns unique target id #
+    private int targetIdCounter = 0;
 
-    //private Dictionary<string, int> targetHealthMap = new();//holds TargetIDs and Health values for score
     private class TargetMeta
     {
         public Vector2 offset;
@@ -41,7 +46,7 @@ public class GridTargetSpawner : MonoBehaviour
         targetParent = parentObj != null ? parentObj.transform : new GameObject("Targets").transform;
     }
 
-    public void SpawnTargetsInArea(int areaIndex)
+    public void SpawnTargetsInArea(int areaIndex, int moveCount)
     {
         if (targetPrefabs == null || targetPrefabs.Count == 0) return;
 
@@ -61,8 +66,7 @@ public class GridTargetSpawner : MonoBehaviour
 
         lastEmptyColumn = emptyCol;
 
-        int moveCount = FindObjectOfType<GameManager>()?.GetMoveCount() ?? 0;
-        int baseHealth = HealthAlgorithm(moveCount);
+        int baseHealth = targetHealthCurve != null ? targetHealthCurve.GetHealthForMove(moveCount) : 1;
 
         for (int i = 0; i < maxAllowed; i++)
         {
@@ -79,25 +83,17 @@ public class GridTargetSpawner : MonoBehaviour
             Quaternion rot = Quaternion.Euler(0, 0, rotation);
 
             GameObject prefab = targetPrefabs[Random.Range(0, targetPrefabs.Count)];
-
-            ////////////////////////////////////////////////////////////////////////
             GameObject newTarget = Instantiate(prefab, spawnPos, rot, targetParent);
-            newTarget.name = $"Target_{targetIdCounter:D4}";  // e.g., Target_0001
+            newTarget.name = $"Target_{targetIdCounter:D4}";
             targetIdCounter++;
-            ////////////////////////////////////////////////////////////////////////
 
             newTarget.transform.localScale = Vector3.one * targetScale;
 
             var anim = newTarget.GetComponent<TargetBehavior>();
             if (anim != null)
             {
-                int variation = Mathf.Clamp(baseHealth / 5, 1, 25);
-                int min = Mathf.Max(1, baseHealth - variation);
-                int max = baseHealth + variation;
-                int initialTargetHealth = Random.Range(min, max + 1);
-                //RegisterTarget(newTarget.name, initialTargetHealth); // Add to dictionary
-                anim.SetHealth(initialTargetHealth);
-
+                int finalHealth = CalculateTargetHealth(baseHealth, moveCount);
+                anim.SetHealth(finalHealth);
                 anim.AnimateToPosition(spawnPos, 0.5f, fromEndzone: true);
             }
 
@@ -110,7 +106,7 @@ public class GridTargetSpawner : MonoBehaviour
             SpawnPowerUpInRow(areaIndex, moveCount);
     }
 
-    public void AdvanceAllTargetsAndSpawnNew(int moveCount)
+    public void AdvanceAllTargetsAndSpawnNew(int dummyMoveCount)
     {
         int rows = grid.GetRowCount();
         int cols = grid.GetColumnCount();
@@ -160,7 +156,9 @@ public class GridTargetSpawner : MonoBehaviour
             grid.MarkCellOccupied(col, newRow, true);
         }
 
-        SpawnTargetsInArea(0);
+        int moveCount = FindObjectOfType<GameManager>()?.GetMoveCount() ?? 0;
+
+        SpawnTargetsInArea(0, moveCount);
         SpawnPowerUpInRow(0, moveCount);
     }
 
@@ -213,25 +211,26 @@ public class GridTargetSpawner : MonoBehaviour
         }
     }
 
-    private int HealthAlgorithm(int move)
+    private int CalculateTargetHealth(int baseHealth, int moveCount)
     {
-        if (move <= 3)
-            return 1;
+        if (moveCount <= 5)
+        {
+            return 1; // First 5 moves always 1
+        }
 
-        if ((move - 1) % 20 == 0)
-            return Random.Range(1, 5);
+        bool isSpikeMove = (moveCount % 10 == 0);
 
-        float floor;
-        if (move <= 20)
-            floor = 1 + Mathf.Pow(move - 3, 1.25f) * 0.4f;
-        else if (move <= 35)
-            floor = 18 + Mathf.Pow(move - 20, 1.2f) * 0.6f;
-        else
-            floor = 30 + Mathf.Pow(move - 35, 1.3f) * 1.0f;
+        if (isSpikeMove)
+        {
+            return baseHealth; // No randomization on spike moves
+        }
 
-        float spike = (move % 20 == 0) ? floor * 0.15f : 0f;
-        float value = floor + spike;
-        return Mathf.Clamp(Mathf.RoundToInt(value), 1, 100);
+        int upperRange = Mathf.CeilToInt(baseHealth * healthRandomUpperPercent);
+        int lowerRange = Mathf.CeilToInt(baseHealth * healthRandomLowerPercent);
+
+        int min = Mathf.Max(1, baseHealth - lowerRange);
+        int max = baseHealth + upperRange;
+
+        return Random.Range(min, max + 1);
     }
-
 }

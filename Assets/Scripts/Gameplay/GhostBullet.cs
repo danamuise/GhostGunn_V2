@@ -32,14 +32,14 @@ public class GhostBullet : MonoBehaviour
 
     private float remainingDistance;
     private float dropStartTime = -1f;
-    private float lifetime;
+    //private float lifetime;
 
     private Vector3 tankBasePosition;
     private float tankTimeOffset;
     private Transform tankTransform;
 
     private Vector2 wallSlideDirection;
-    private bool isFired = false;
+    //private bool isFired = false;
     private GameManager gameManager;
     private float bulletLifeTimer = 0f;
     private const float maxLifeTime = 8f;
@@ -56,11 +56,11 @@ public class GhostBullet : MonoBehaviour
         isSlidingToWall = false;
         isDroppingDown = false;
         dropStartTime = -1f;
-        isFired = true;
+        //isFired = true;
 
         laserDirection = direction.normalized;
         remainingDistance = maxLaserDistance;
-        lifetime = 0f;
+        //lifetime = 0f;
 
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.gravityScale = 0f;
@@ -260,7 +260,7 @@ public class GhostBullet : MonoBehaviour
     {
         Debug.Log($"📤 {name} → EnterTank() called at {Time.time:F2}");
 
-        isFired = false;
+        //isFired = false;
         isInTank = true;
         inGhostMode = false;
         isDroppingDown = false;
