@@ -1,5 +1,5 @@
-using UnityEngine;
-
+﻿using UnityEngine;
+using System.Collections.Generic; // Needed for List
 
 public class TargetGridManager : MonoBehaviour
 {
@@ -59,6 +59,29 @@ public class TargetGridManager : MonoBehaviour
     public int GetColumnCount() => columns;
     public int GetRowCount() => rows;
 
+    // 🔥 New simple debug helper
+    public void AnnounceAvailableSpacesInRow(int rowIndex)
+    {
+        Debug.Log("AnnounceAvailableSpacesInRow");
+        List<int> availableColumns = new List<int>();
+
+        for (int col = 0; col < columns; col++)
+        {
+            if (!IsCellOccupied(col, rowIndex))
+                availableColumns.Add(col + 1); // Player-facing numbering (1–5)
+        }
+
+        if (availableColumns.Count > 0)
+        {
+            string colList = string.Join(", ", availableColumns);
+            Debug.Log($"[TargetGridManager] Move {FindObjectOfType<GameManager>()?.GetMoveCount() ?? -1} — Available spaces in Row {rowIndex + 1}: Columns {colList}");
+        }
+        else
+        {
+            Debug.Log($"[TargetGridManager] Move {FindObjectOfType<GameManager>()?.GetMoveCount() ?? -1} — No available spaces in Row {rowIndex + 1}");
+        }
+    }
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
@@ -77,4 +100,20 @@ public class TargetGridManager : MonoBehaviour
         }
     }
 #endif
+
+    public List<int> GetAvailableColumnsInRow(int rowIndex)
+    {
+        List<int> availableCols = new List<int>();
+
+        for (int col = 0; col < columns; col++)
+        {
+            if (!IsCellOccupied(col, rowIndex))
+            {
+                availableCols.Add(col);
+            }
+        }
+
+        return availableCols;
+    }
+
 }

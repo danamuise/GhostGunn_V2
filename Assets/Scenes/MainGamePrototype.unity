@@ -172,6 +172,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &299981597
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 299981599}
+  - component: {fileID: 299981598}
+  m_Layer: 0
+  m_Name: PowerUpParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &299981598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 299981597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0183eb01008204f4ca1be89c54530dab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridTargetManager: {fileID: 1086136297}
+  addBulletPrefab: {fileID: 8582528860953319632, guid: 5d42fb9c1cbcd214e8486710aeb2e11c, type: 3}
+  powerUpParent: {fileID: 299981599}
+--- !u!4 &299981599
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 299981597}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.20175986, y: 0.23016576, z: 0.073817976}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &422302783
 GameObject:
   m_ObjectHideFlags: 0
@@ -893,6 +940,7 @@ MonoBehaviour:
   - {fileID: 4313810961233702181, guid: fc280d64eed37344e8cb6aaf93c57062, type: 3}
   powerUps:
   - {fileID: 11400000, guid: 4ba340b953a9c0c439ea62de88a2f23a, type: 2}
+  powerUpManager: {fileID: 299981598}
   grid: {fileID: 1086136297}
   targetHealthCurve: {fileID: 1173312486}
   healthRandomUpperPercent: 0.1
@@ -1678,8 +1726,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 5643233726399587055, guid: 385a55bed6d9caf43a1ee26044631b1e, type: 3}
-  poolSize: 20
-  startingBullets: 20
+  poolSize: 5
+  startingBullets: 1
   tankVerticalOffset: 0
   bulletParent: {fileID: 490730283}
 --- !u!4 &1824429565
@@ -2238,3 +2286,4 @@ SceneRoots:
   - {fileID: 1273298678}
   - {fileID: 1418184136}
   - {fileID: 1173312487}
+  - {fileID: 299981599}

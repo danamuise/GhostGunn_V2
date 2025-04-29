@@ -34,7 +34,12 @@ public class GhostShooter : MonoBehaviour
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(inputPos);
         worldPoint.z = 0f;
 
-        Vector2 direction = (worldPoint - firePoint.position).normalized;
+        // ✨ Clamp direction between 10 and 170 degrees
+        Vector2 rawDirection = (worldPoint - firePoint.position).normalized;
+        float angle = Mathf.Atan2(rawDirection.y, rawDirection.x) * Mathf.Rad2Deg;
+        angle = Mathf.Clamp(angle, 10f, 170f);
+        float clampedRad = angle * Mathf.Deg2Rad;
+        Vector2 direction = new Vector2(Mathf.Cos(clampedRad), Mathf.Sin(clampedRad));
 
         if (inputDown)
         {
@@ -55,32 +60,7 @@ public class GhostShooter : MonoBehaviour
         }
     }
 
-    /*
-    void FireBullet(Vector2 direction)
-    {
-        Debug.Log($"🔫 FireBullet() called at {Time.time:F2}");
 
-        GameObject bulletGO = bulletPool.GetBullet();
-
-        if (bulletGO == null)
-        {
-            Debug.LogWarning("🚫 No available bullet to fire!");
-            return;
-        }
-
-        Debug.Log($"✅ Firing bullet: {bulletGO.name}");
-
-        bulletGO.transform.position = firePoint.position;
-        bulletGO.SetActive(true);
-
-        GhostBullet bullet = bulletGO.GetComponent<GhostBullet>();
-        Vector2 randomized = AddSpreadToDirection(direction, 5f); // 2 degrees of spread
-        Debug.Log($"🔄 Randomized dir: {randomized} from base: {direction}");
-
-        bullet.Fire(randomized);
-
-    }
-    */ 
     public void EnableGun(bool enable)
     {
         canShoot = enable;

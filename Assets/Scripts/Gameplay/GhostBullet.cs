@@ -245,7 +245,7 @@ public class GhostBullet : MonoBehaviour
         }
     }
 
-    private void EnterGhostMode()
+    public void EnterGhostMode()
     {
         isInLaserMode = false;
         inGhostMode = true;

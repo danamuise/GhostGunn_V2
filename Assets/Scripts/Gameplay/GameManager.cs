@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public UIManager uiManager;
 
     private bool roundInProgress;
-    private int moveCount = 1;
+    private int moveCount = 0;
     private int totalScore = 0;
 
     private void Awake()
@@ -42,12 +42,14 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator HandleTargetMovementAndRespawn()
     {
+        moveCount++; // ✅ Advance first — guarantees correct moveCount for this round
+
         Debug.Log($"<color=green>🌟 MOVE {moveCount} initiating</color>");
 
         float rowSpacing = grid.cellHeight;
         yield return StartCoroutine(targetManager.MoveTargetsDown(rowSpacing));
 
-        gridTargetSpawner.AdvanceAllTargetsAndSpawnNew(moveCount);
+        gridTargetSpawner.AdvanceAllTargetsAndSpawnNew(moveCount); // Targets and PowerUps use correct move #
 
         yield return new WaitForSeconds(0.6f);
 
@@ -60,8 +62,8 @@ public class GameManager : MonoBehaviour
 
         gun.EnableGun(true);
         roundInProgress = false;
-        moveCount++;
     }
+
 
     private void TriggerGameOver()
     {

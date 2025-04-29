@@ -119,4 +119,78 @@ public class BulletPool : MonoBehaviour
     {
         return poolSize;
     }
+
+    public void AddBullet()
+    {
+        int tanked = GetTankedBulletCount();
+        int max = poolSize;
+
+        if (tanked >= max)
+        {
+            Debug.Log("🔫 Bullet tank already full — cannot add more bullets.");
+            return;
+        }
+
+        for (int i = 0; i < pool.Count; i++)
+        {
+            GameObject bullet = pool[i];
+            if (!bullet.activeInHierarchy)
+            {
+                bullet.SetActive(true);
+                GhostBullet ghost = bullet.GetComponent<GhostBullet>();
+                if (ghost != null)
+                {
+                    ghost.EnterTank();
+                    Vector3 pos = bullet.transform.position;
+                    bullet.transform.position = new Vector3(pos.x, pos.y + tankVerticalOffset, pos.z);
+                }
+
+                Debug.Log($"🔫 BulletPool: Added bullet (tanked now: {GetTankedBulletCount()}/{max})");
+                return;
+            }
+        }
+
+        Debug.LogWarning("🔫 AddBullet() called but no inactive bullets were found.");
+    }
+
+
+    public int GetTankedBulletCount()
+    {
+        int count = 0;
+        foreach (GameObject bulletGO in pool)
+        {
+            if (bulletGO.activeInHierarchy)
+            {
+                GhostBullet bullet = bulletGO.GetComponent<GhostBullet>();
+                if (bullet != null && bullet.IsInTank)
+                    count++;
+            }
+        }
+        return count;
+    }
+
+    public int GetEnabledBulletCount()
+    {
+        int count = 0;
+        foreach (GameObject bullet in pool)
+        {
+            if (bullet.activeInHierarchy)
+                count++;
+        }
+        return count;
+    }
+    public GameObject GetNextAvailableBullet()
+    {
+        foreach (GameObject bullet in pool)
+        {
+            if (!bullet.activeInHierarchy)
+            {
+                return bullet;
+            }
+        }
+
+        Debug.LogWarning("⚠️ BulletPool: No available bullets left.");
+        return null;
+    }
+
 }

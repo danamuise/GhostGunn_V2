@@ -8,6 +8,7 @@ public class GridTargetSpawner : MonoBehaviour
 
     [Header("PowerUp Settings")]
     public List<PowerUpData> powerUps;
+    public PowerUpManager powerUpManager;
 
     [Header("Grid Reference")]
     public TargetGridManager grid;
@@ -159,7 +160,9 @@ public class GridTargetSpawner : MonoBehaviour
         int moveCount = FindObjectOfType<GameManager>()?.GetMoveCount() ?? 0;
 
         SpawnTargetsInArea(0, moveCount);
-        SpawnPowerUpInRow(0, moveCount);
+        powerUpManager.TrySpawnAddBulletPU(moveCount);
+        //SpawnPowerUpInRow(0, moveCount);
+        grid.AnnounceAvailableSpacesInRow(0);
     }
 
     private void SpawnPowerUpInRow(int rowIndex, int moveCount)
