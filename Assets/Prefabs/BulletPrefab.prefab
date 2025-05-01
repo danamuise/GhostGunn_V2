@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5722732802981189631}
   - component: {fileID: 4696288291118276324}
   - component: {fileID: 2634873249822104898}
+  - component: {fileID: -2871908706201920280}
   m_Layer: 8
   m_Name: BulletPrefab
   m_TagString: Bullet
@@ -74,8 +75,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 130303049
+  m_SortingLayer: 2
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 627c10ab9b129f44d8c9a82dc8391820, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -148,9 +149,6 @@ MonoBehaviour:
   floatSpeed: 2
   jitterAmount: 0.1
   verticalOffset: -0.08
-  ceilingYThreshold: 4.9
-  wallXThreshold: 2.7
-  stuckCheckTime: 3
 --- !u!96 &4696288291118276324
 TrailRenderer:
   serializedVersion: 3
@@ -291,3 +289,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!210 &-2871908706201920280
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5643233726399587055}
+  m_Enabled: 1
+  m_SortingLayerID: 130303049
+  m_SortingLayer: 2
+  m_SortingOrder: 3
+  m_SortAtRoot: 1
