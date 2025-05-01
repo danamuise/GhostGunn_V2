@@ -96,6 +96,8 @@ public class GhostShooter : MonoBehaviour
     {
         List<GameObject> bullets = bulletPool.GetAllBullets();
 
+        SFXManager.Instance.Play("GhostSound", 0.5f, 0.9f, 1.1f);
+
         foreach (GameObject bulletGO in bullets)
         {
             if (!bulletGO.activeInHierarchy) continue;
@@ -106,8 +108,10 @@ public class GhostShooter : MonoBehaviour
                 bulletGO.transform.position = firePoint.position;
                 bulletGO.SetActive(true);
                 Vector2 randomized = AddSpreadToDirection(direction, 2.4f);
-                //Debug.Log($"🚀 Spread direction for {bulletGO.name}: {randomized}");
                 bullet.Fire(randomized);
+
+                // 🔊 Play SFX per bullet
+                SFXManager.Instance.Play("BulletShoot", 0.5f, 0.9f, 1.1f);
 
                 Debug.Log($"🚀 Fired bullet: {bulletGO.name} at {Time.time:F2}");
 
@@ -115,9 +119,10 @@ public class GhostShooter : MonoBehaviour
             }
         }
     }
+
     private Vector2 AddSpreadToDirection(Vector2 baseDirection, float maxAngleDegrees)
     {
-        //Debug.Log($"🚀 ADDING SPREAD TO DIRECTION ***************************************************");
+        //Debug.Log($"🚀 ADDING SPREAD TO DIRECTION);
         float angle = Random.Range(-maxAngleDegrees, maxAngleDegrees);
         float radians = angle * Mathf.Deg2Rad;
 

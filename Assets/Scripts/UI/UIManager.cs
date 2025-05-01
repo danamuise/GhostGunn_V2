@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -47,16 +48,17 @@ public class UIManager : MonoBehaviour
     public void PlayAgain()
     {
         Debug.Log("🔁 Restarting Game...");
-
+        SceneManager.LoadScene("SplashScreen");
         gameManager.ResetScore(); // Add ResetScore method in GameManager
         InitializeUI();
         ShowFinalScore(0);
         targetManager.ClearAllTargets();
-
+        SFXManager.Instance.FadeOutMusic(2f);
         grid.InitializeGrid();
         gun.EnableGun(true);
 
         if (gameOverPopup != null)
             gameOverPopup.SetActive(false);
+        
     }
 }

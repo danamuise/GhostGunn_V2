@@ -24,6 +24,11 @@ public class AddBulletPowerUp : MonoBehaviour
                 GhostBullet ghost = bullet.GetComponent<GhostBullet>();
                 if (ghost != null)
                 {
+                    PowerUpManager powerUpManager = FindObjectOfType<PowerUpManager>();
+                    if (powerUpManager != null)
+                    {
+                        powerUpManager.PlayPickupEffects(transform.position);
+                    }
                     ghost.EnterGhostMode(); // 🔮 Skip tank — go directly to GhostMode
                 }
 

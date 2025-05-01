@@ -20,8 +20,9 @@ public class GameManager : MonoBehaviour
         roundInProgress = false;
     }
 
-    void Start()
+     private void Start()
     {
+        SFXManager.Instance.PlayMusic("mainBGmusic", 0.3f);
         grid.InitializeGrid();
         gun.EnableGun(true);
         uiManager?.InitializeUI();
