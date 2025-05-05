@@ -9,6 +9,9 @@ public class TargetBehavior : MonoBehaviour
     public SpriteRenderer targetSprite;
     public TextMeshProUGUI label;
 
+    // Animation
+    private Animator zombieAnimator;
+
     // Persistent visual variation
     private Vector2 persistentOffset = Vector2.zero;
     private float persistentZRotation = 0f;
@@ -33,6 +36,11 @@ public class TargetBehavior : MonoBehaviour
         if (targetSprite == null)
             Debug.LogWarning($"{name} | TargetBehavior could not find SpriteRenderer");
 
+        // 🔄 Get Animator
+        zombieAnimator = GetComponentInChildren<Animator>();
+        if (zombieAnimator == null)
+            Debug.LogWarning($"{name} | TargetBehavior could not find Animator");
+
         UpdateVisuals();
     }
 
@@ -46,6 +54,7 @@ public class TargetBehavior : MonoBehaviour
     {
         health -= amount;
         Debug.Log($"{name} | Took {amount} damage — new health: {health}");
+
         GameManager gm = FindObjectOfType<GameManager>();
         if (gm != null)
         {
@@ -54,9 +63,17 @@ public class TargetBehavior : MonoBehaviour
             SFXManager.Instance.PlayRandom(grunts, 0.5f, 0.6f, 1.3f);
             gm.AddScore(1); // ✅ Add 1 point on every hit
         }
+
+        // Trigger damage animation
+        if (zombieAnimator != null)
+        {
+            zombieAnimator.SetBool("zombie_damage", true);
+            Invoke(nameof(ResetDamageAnimation), 0.25f); // Adjust based on your damage animation length
+        }
+
         if (health <= 0)
         {
-            StartCoroutine(DestroyAfterDelay(0.1f));  // ⏱ Delay destruction
+            StartCoroutine(DestroyAfterDelay(0.1f));
         }
         else
         {
@@ -64,12 +81,17 @@ public class TargetBehavior : MonoBehaviour
         }
     }
 
+    private void ResetDamageAnimation()
+    {
+        if (zombieAnimator != null)
+            zombieAnimator.SetBool("zombie_damage", false);
+    }
+
     private IEnumerator DestroyAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
         Destroy(gameObject);
     }
-
 
     private void UpdateVisuals()
     {
@@ -83,9 +105,6 @@ public class TargetBehavior : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Call once on spawn to define the persistent visual offset/rotation.
-    /// </summary>
     public void SetOffsetAndRotation(Vector2 offset, float zRotation)
     {
         persistentOffset = offset;
@@ -104,6 +123,10 @@ public class TargetBehavior : MonoBehaviour
 
         Vector2 endPosition = gridAlignedPosition + persistentOffset;
 
+        // 🧟 Enable walk animation
+        if (zombieAnimator != null)
+            zombieAnimator.SetBool("zombie_walk", true);
+
         StopAllCoroutines();
         StartCoroutine(SlideToPosition(startPosition, endPosition, duration));
     }
@@ -120,5 +143,9 @@ public class TargetBehavior : MonoBehaviour
         }
 
         transform.position = endPos;
+
+        // 🛑 Stop walking animation
+        if (zombieAnimator != null)
+            zombieAnimator.SetBool("zombie_walk", false);
     }
 }
