@@ -11,6 +11,9 @@ public class TargetBehavior : MonoBehaviour
     public SpriteRenderer dizzolveTarget;
     public SpriteRenderer zombieSprite;
     public Transform scoreText;
+    [SerializeField] private GameObject hitParticles;
+    private bool isDying = false; // fpr hitParticle instantiation
+
 
     // Animation
     private Animator zombieAnimator;
@@ -55,35 +58,45 @@ public class TargetBehavior : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
+        if (isDying) return; // ✅ Already dying — ignore further hits
+
         health -= amount;
         Debug.Log($"{name} | Took {amount} damage — new health: {health}");
 
         GameManager gm = FindObjectOfType<GameManager>();
         if (gm != null)
         {
-            // 🔊 Play SFX 
             string[] grunts = { "Grunt0", "Grunt1", "Grunt2", "Grunt3", "Grunt4", "Grunt5" };
             SFXManager.Instance.PlayRandom(grunts, 0.5f, 0.6f, 1.3f);
-            gm.AddScore(1); // ✅ Add 1 point on every hit
+            gm.AddScore(1);
         }
 
-        // Trigger damage animation
         if (zombieAnimator != null)
         {
             zombieAnimator.SetBool("zombie_damage", true);
-            Invoke(nameof(ResetDamageAnimation), 0.25f); // Adjust based on your damage animation length
+            Invoke(nameof(ResetDamageAnimation), 0.25f);
         }
 
         if (health <= 0)
         {
+            isDying = true; // ✅ Mark as dying
+
             zombieSprite.enabled = false;
+
             if (scoreText != null)
-                scoreText.gameObject.SetActive(false);//trun off score text field
+                scoreText.gameObject.SetActive(false);
+
+            if (hitParticles != null && dizzolveTarget != null)
+            {
+                Debug.Log("Spawning hit particle");
+                GameObject fx = Instantiate(hitParticles, dizzolveTarget.transform.position, Quaternion.identity);
+                Destroy(fx, 1.5f);
+            }
+
             DissolveAndDisable dissolver = dizzolveTarget.GetComponent<DissolveAndDisable>();
             if (dissolver != null)
-            {
                 dissolver.BeginDissolve();
-            }
+
             StartCoroutine(DestroyAfterDelay(0.4f));
         }
         else
@@ -91,6 +104,7 @@ public class TargetBehavior : MonoBehaviour
             UpdateVisuals();
         }
     }
+
 
     private void ResetDamageAnimation()
     {

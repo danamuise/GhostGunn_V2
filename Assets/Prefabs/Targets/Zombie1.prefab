@@ -394,6 +394,7 @@ MonoBehaviour:
   dizzolveTarget: {fileID: 6581358784621401276}
   zombieSprite: {fileID: 7008100407658145695}
   scoreText: {fileID: 7587847588047068818}
+  hitParticles: {fileID: 2413636708366313752, guid: 3df6d6835fb33bd42ad3f12602f2a2f1, type: 3}
 --- !u!60 &8083605961516512130
 PolygonCollider2D:
   m_ObjectHideFlags: 0
