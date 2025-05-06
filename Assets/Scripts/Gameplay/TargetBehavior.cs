@@ -8,6 +8,9 @@ public class TargetBehavior : MonoBehaviour
     private int health;
     public SpriteRenderer targetSprite;
     public TextMeshProUGUI label;
+    public SpriteRenderer dizzolveTarget;
+    public SpriteRenderer zombieSprite;
+    public Transform scoreText;
 
     // Animation
     private Animator zombieAnimator;
@@ -73,7 +76,15 @@ public class TargetBehavior : MonoBehaviour
 
         if (health <= 0)
         {
-            StartCoroutine(DestroyAfterDelay(0.1f));
+            zombieSprite.enabled = false;
+            if (scoreText != null)
+                scoreText.gameObject.SetActive(false);//trun off score text field
+            DissolveAndDisable dissolver = dizzolveTarget.GetComponent<DissolveAndDisable>();
+            if (dissolver != null)
+            {
+                dissolver.BeginDissolve();
+            }
+            StartCoroutine(DestroyAfterDelay(0.4f));
         }
         else
         {
@@ -90,7 +101,10 @@ public class TargetBehavior : MonoBehaviour
     private IEnumerator DestroyAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+        zombieSprite.enabled = true;
+        Debug.Log("Destroying " + gameObject.name);
         Destroy(gameObject);
+
     }
 
     private void UpdateVisuals()
