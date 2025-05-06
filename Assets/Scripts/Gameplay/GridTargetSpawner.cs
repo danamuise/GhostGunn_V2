@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 public class GridTargetSpawner : MonoBehaviour
 {
@@ -14,7 +15,8 @@ public class GridTargetSpawner : MonoBehaviour
     public TargetGridManager grid;
 
     [Header("DDA Health Curve Reference")]
-    public TargetHealthCurve targetHealthCurve; // 🔥 Drag TargetHealthCurve.cs here
+    public TargetHealthCurve targetHealthCurve;
+
     [Header("Target Health Randomness")]
     [Range(0f, 1f)] public float healthRandomUpperPercent = 0.1f;
     [Range(0f, 1f)] public float healthRandomLowerPercent = 0.2f;
@@ -32,6 +34,8 @@ public class GridTargetSpawner : MonoBehaviour
     private Transform targetParent;
     private int lastEmptyColumn = -1;
     private int targetIdCounter = 0;
+
+    private int spawnRowCounter = 0; // 🆕 Sorting order depth tracker
 
     private class TargetMeta
     {
@@ -100,8 +104,12 @@ public class GridTargetSpawner : MonoBehaviour
 
             targetMetaMap[newTarget] = new TargetMeta { offset = offset, rotationZ = rotation };
 
+            AssignSortingOrderByRow(newTarget, spawnRowCounter, moveCount); // 🧠 Use spawnRowCounter
+
             grid.MarkCellOccupied(col, areaIndex, true);
         }
+
+        spawnRowCounter++; // ⬆️ Increment sorting depth
 
         if (moveCount >= 5 && areaIndex % 2 == 1)
             SpawnPowerUpInRow(areaIndex, moveCount);
@@ -161,7 +169,6 @@ public class GridTargetSpawner : MonoBehaviour
 
         SpawnTargetsInArea(0, moveCount);
         powerUpManager.TrySpawnAddBulletPU(moveCount);
-        //SpawnPowerUpInRow(0, moveCount);
         grid.AnnounceAvailableSpacesInRow(0);
     }
 
@@ -217,16 +224,11 @@ public class GridTargetSpawner : MonoBehaviour
     private int CalculateTargetHealth(int baseHealth, int moveCount)
     {
         if (moveCount <= 5)
-        {
-            return 1; // First 5 moves always 1
-        }
+            return 1;
 
         bool isSpikeMove = (moveCount % 10 == 0);
-
         if (isSpikeMove)
-        {
-            return baseHealth; // No randomization on spike moves
-        }
+            return baseHealth;
 
         int upperRange = Mathf.CeilToInt(baseHealth * healthRandomUpperPercent);
         int lowerRange = Mathf.CeilToInt(baseHealth * healthRandomLowerPercent);
@@ -236,4 +238,31 @@ public class GridTargetSpawner : MonoBehaviour
 
         return Random.Range(min, max + 1);
     }
+
+    public void AssignSortingOrderByRow(GameObject target, int rowIndex, int moveNumber, int baseOrder = 1000)
+    {
+        int sortingOrder = baseOrder - rowIndex;
+
+        SortingGroup sg = target.GetComponent<SortingGroup>();
+        if (sg != null)
+        {
+            sg.sortingLayerName = "foreground";
+            sg.sortingOrder = sortingOrder;
+            Debug.Log($"🧟 Move {moveNumber} — Row {rowIndex + 1} → SortingGroup order: {sortingOrder}");
+        }
+
+        // ✅ Set canvas layer order inside TargetBehavior
+        TargetBehavior tb = target.GetComponent<TargetBehavior>();
+        if (tb != null)
+        {
+            tb.SetCanvasSortingOrder(sortingOrder + 1); // ensure it's rendered above main sprite
+        }
+    }
+
+    public void ResetSpawnRowCounter()
+    {
+        spawnRowCounter = 0;
+        Debug.Log("🔄 Target sorting row counter reset.");
+    }
+
 }

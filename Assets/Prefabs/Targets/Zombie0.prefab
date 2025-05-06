@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8713490877910002919}
   - component: {fileID: 6080466405929619395}
   - component: {fileID: 2170713646369366591}
+  - component: {fileID: 7108789212047659143}
   m_Layer: 8
   m_Name: TargetHealth
   m_TagString: Untagged
@@ -134,6 +135,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!210 &7108789212047659143
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556638136391282435}
+  m_Enabled: 1
+  m_SortingLayerID: 130303049
+  m_SortingLayer: 2
+  m_SortingOrder: 2000
+  m_SortAtRoot: 0
 --- !u!1 &3465170968853031557
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,6 +265,7 @@ GameObject:
   - component: {fileID: -8922210066432874099}
   - component: {fileID: 8083605961516512130}
   - component: {fileID: 1103971689322004829}
+  - component: {fileID: 7543722037320992749}
   m_Layer: 10
   m_Name: Zombie0
   m_TagString: Target
@@ -373,6 +387,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!210 &7543722037320992749
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4313810961233702181}
+  m_Enabled: 1
+  m_SortingLayerID: 130303049
+  m_SortingLayer: 2
+  m_SortingOrder: 1
+  m_SortAtRoot: 1
 --- !u!1 &4461043189598978252
 GameObject:
   m_ObjectHideFlags: 0

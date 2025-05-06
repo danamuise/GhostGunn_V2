@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour
 
         uiManager?.ShowFinalScore(totalScore);
         targetManager.ClearAllTargets();
+        FindObjectOfType<GridTargetSpawner>()?.ResetSpawnRowCounter();
     }
 
     private int LeadArea()

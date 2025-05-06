@@ -252,6 +252,7 @@ GameObject:
   - component: {fileID: -8922210066432874099}
   - component: {fileID: 8083605961516512130}
   - component: {fileID: 1103971689322004829}
+  - component: {fileID: 2723559955103433607}
   m_Layer: 10
   m_Name: Zombie2
   m_TagString: Target
@@ -373,6 +374,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!210 &2723559955103433607
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4313810961233702181}
+  m_Enabled: 1
+  m_SortingLayerID: 130303049
+  m_SortingLayer: 2
+  m_SortingOrder: 1
+  m_SortAtRoot: 1
 --- !u!1 &4461043189598978252
 GameObject:
   m_ObjectHideFlags: 0

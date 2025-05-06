@@ -47,6 +47,14 @@ public class TargetBehavior : MonoBehaviour
         if (zombieAnimator == null)
             Debug.LogWarning($"{name} | TargetBehavior could not find Animator");
 
+        Canvas canvas = GetComponentInChildren<Canvas>();
+        if (canvas != null)
+        {
+            canvas.renderMode = RenderMode.WorldSpace;
+            canvas.sortingLayerName = "foreground";
+            
+        }
+
         UpdateVisuals();
     }
 
@@ -176,4 +184,16 @@ public class TargetBehavior : MonoBehaviour
         if (zombieAnimator != null)
             zombieAnimator.SetBool("zombie_walk", false);
     }
+
+    public void SetCanvasSortingOrder(int sortingOrder)
+    {
+        Canvas canvas = GetComponentInChildren<Canvas>();
+        if (canvas != null)
+        {
+            canvas.renderMode = RenderMode.WorldSpace;
+            canvas.sortingLayerName = "foreground";
+            canvas.sortingOrder = sortingOrder;
+        }
+    }
+
 }
