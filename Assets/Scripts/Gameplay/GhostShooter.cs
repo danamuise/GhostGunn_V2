@@ -15,22 +15,29 @@ public class GhostShooter : MonoBehaviour
     {
         if (!canShoot) return;
 
+        // 🛑 Prevent shooting when mouse is over UI (WebGL fix)
+        if (UnityEngine.EventSystems.EventSystem.current != null &&
+            UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         if (!AllBulletsAreInTank())
         {
             trajectoryPreview?.ClearDots();
             return;
         }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
         Vector3 inputPos = Input.mousePosition;
         bool inputDown = Input.GetMouseButton(0);
         bool inputUp = Input.GetMouseButtonUp(0);
 #else
-        if (Input.touchCount == 0) return;
-        Touch touch = Input.GetTouch(0);
-        Vector3 inputPos = touch.position;
-        bool inputDown = touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary;
-        bool inputUp = touch.phase == TouchPhase.Ended;
+    if (Input.touchCount == 0) return;
+    Touch touch = Input.GetTouch(0);
+    Vector3 inputPos = touch.position;
+    bool inputDown = touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary;
+    bool inputUp = touch.phase == TouchPhase.Ended;
 #endif
 
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(inputPos);
@@ -40,8 +47,9 @@ public class GhostShooter : MonoBehaviour
         Vector2 rawDirection = (worldPoint - firePoint.position).normalized;
         float angle = Mathf.Atan2(rawDirection.y, rawDirection.x) * Mathf.Rad2Deg;
         angle = Mathf.Clamp(angle, 10f, 170f);
+
         if (gunBase != null)
-            gunBase.rotation = Quaternion.Euler(0f, 0f, angle-90f);
+            gunBase.rotation = Quaternion.Euler(0f, 0f, angle - 90f);
 
         float clampedRad = angle * Mathf.Deg2Rad;
         Vector2 direction = new Vector2(Mathf.Cos(clampedRad), Mathf.Sin(clampedRad));
@@ -58,8 +66,6 @@ public class GhostShooter : MonoBehaviour
                 trajectoryPreview.ClearDots();
 
             Debug.DrawLine(firePoint.position, worldPoint, Color.red, 2f);
-            //Debug.Log("Direction: " + direction);
-
             StartCoroutine(FireAllBullets(direction));
             DisableGun();
         }
