@@ -6,7 +6,9 @@ public class GhostShooter : MonoBehaviour
     public BulletPool bulletPool;
     public Transform firePoint;
     public LaserTrajectoryPreview trajectoryPreview;
-
+    public Transform gunBase;
+    public Transform gunBarrel;
+    private Coroutine recoilCoroutine;
     private bool canShoot = true;
 
     void Update()
@@ -38,6 +40,9 @@ public class GhostShooter : MonoBehaviour
         Vector2 rawDirection = (worldPoint - firePoint.position).normalized;
         float angle = Mathf.Atan2(rawDirection.y, rawDirection.x) * Mathf.Rad2Deg;
         angle = Mathf.Clamp(angle, 10f, 170f);
+        if (gunBase != null)
+            gunBase.rotation = Quaternion.Euler(0f, 0f, angle-90f);
+
         float clampedRad = angle * Mathf.Deg2Rad;
         Vector2 direction = new Vector2(Mathf.Cos(clampedRad), Mathf.Sin(clampedRad));
 
@@ -113,12 +118,16 @@ public class GhostShooter : MonoBehaviour
                 // 🔊 Play SFX per bullet
                 SFXManager.Instance.Play("BulletShoot", 0.5f, 0.9f, 1.1f);
 
+                // 🔫 Trigger gun barrel recoil
+                TriggerRecoil();
+
                 Debug.Log($"🚀 Fired bullet: {bulletGO.name} at {Time.time:F2}");
 
                 yield return new WaitForSeconds(0.1f); // delay between shots
             }
         }
     }
+
 
     private Vector2 AddSpreadToDirection(Vector2 baseDirection, float maxAngleDegrees)
     {
@@ -136,4 +145,32 @@ public class GhostShooter : MonoBehaviour
         return new Vector2(newX, newY).normalized;
     }
 
+    private void TriggerRecoil()
+    {
+        if (recoilCoroutine != null)
+            StopCoroutine(recoilCoroutine);
+
+        recoilCoroutine = StartCoroutine(PlayRecoil());
+    }
+
+    private IEnumerator PlayRecoil()
+    {
+        // Instantly recoil
+        Vector3 startPos = gunBarrel.localPosition;
+        gunBarrel.localPosition = new Vector3(startPos.x, 0.33f, startPos.z);
+
+        float returnDuration = 0.06f; // fast return
+        float elapsed = 0f;
+
+        while (elapsed < returnDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / returnDuration;
+            float y = Mathf.Lerp(0.33f, 0.49f, t);
+            gunBarrel.localPosition = new Vector3(startPos.x, y, startPos.z);
+            yield return null;
+        }
+
+        gunBarrel.localPosition = new Vector3(startPos.x, 0.49f, startPos.z);
+    }
 }

@@ -339,7 +339,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startValue: -2.46
   endValue: -3.22
-  duration: 0.6
+  duration: 0.7
 --- !u!1 &4313810961233702181
 GameObject:
   m_ObjectHideFlags: 0
