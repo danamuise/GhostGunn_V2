@@ -10,23 +10,17 @@ public class GhostShooter : MonoBehaviour
     public Transform gunBarrel;
     private Coroutine recoilCoroutine;
     private bool canShoot = true;
-
+    private bool justLoaded = true;
+    void OnEnable()
+    {
+        StartCoroutine(ResetJustLoaded());
+    }
     void Update()
     {
-        if (!canShoot) return;
-
-        // 🛑 Prevent shooting when mouse is over UI (WebGL fix)
+        // 🛑 Prevent input if clicking on UI
         if (UnityEngine.EventSystems.EventSystem.current != null &&
             UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-        {
             return;
-        }
-
-        if (!AllBulletsAreInTank())
-        {
-            trajectoryPreview?.ClearDots();
-            return;
-        }
 
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
         Vector3 inputPos = Input.mousePosition;
@@ -43,7 +37,7 @@ public class GhostShooter : MonoBehaviour
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(inputPos);
         worldPoint.z = 0f;
 
-        // ✨ Clamp direction between 10 and 170 degrees
+        // 🔁 Always aim the gun
         Vector2 rawDirection = (worldPoint - firePoint.position).normalized;
         float angle = Mathf.Atan2(rawDirection.y, rawDirection.x) * Mathf.Rad2Deg;
         angle = Mathf.Clamp(angle, 10f, 170f);
@@ -51,21 +45,24 @@ public class GhostShooter : MonoBehaviour
         if (gunBase != null)
             gunBase.rotation = Quaternion.Euler(0f, 0f, angle - 90f);
 
+        // 🔒 Only allow trajectory and firing if we’re allowed to shoot AND all bullets are in tank
+        if (!canShoot || !AllBulletsAreInTank())
+        {
+            trajectoryPreview?.ClearDots();
+            return;
+        }
+
         float clampedRad = angle * Mathf.Deg2Rad;
         Vector2 direction = new Vector2(Mathf.Cos(clampedRad), Mathf.Sin(clampedRad));
 
         if (inputDown)
         {
-            if (trajectoryPreview != null)
-                trajectoryPreview.DrawLaserLine(firePoint.position, direction);
+            trajectoryPreview?.DrawLaserLine(firePoint.position, direction);
         }
 
         if (inputUp)
         {
-            if (trajectoryPreview != null)
-                trajectoryPreview.ClearDots();
-
-            Debug.DrawLine(firePoint.position, worldPoint, Color.red, 2f);
+            trajectoryPreview?.ClearDots();
             StartCoroutine(FireAllBullets(direction));
             DisableGun();
         }
@@ -178,5 +175,11 @@ public class GhostShooter : MonoBehaviour
         }
 
         gunBarrel.localPosition = new Vector3(startPos.x, 0.49f, startPos.z);
+    }
+
+    private IEnumerator ResetJustLoaded()
+    {
+        yield return null; // Wait one frame
+        justLoaded = false;
     }
 }

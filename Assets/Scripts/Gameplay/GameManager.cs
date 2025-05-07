@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,7 +9,6 @@ public class GameManager : MonoBehaviour
     public GridTargetSpawner gridTargetSpawner;
     public TargetGridManager grid;
     public GhostShooter gun;
-    public GameObject gameOverPopup;
     public UIManager uiManager;
 
     private bool roundInProgress;
@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
         roundInProgress = false;
     }
 
-     private void Start()
+    private void Start()
     {
         SFXManager.Instance.PlayMusic("mainBGmusic", 0.3f);
         grid.InitializeGrid();
@@ -65,19 +65,17 @@ public class GameManager : MonoBehaviour
         roundInProgress = false;
     }
 
-
     private void TriggerGameOver()
     {
         Debug.Log("💀 GAME OVER!");
         gun.DisableGun();
 
-        if (gameOverPopup != null)
-        {
-            Debug.Log("✅ Showing Game Over Popup");
-            gameOverPopup.SetActive(true);
-        }
+        // 💾 Store score in static keeper for cross-scene use
+        ScoreKeeper.finalScore = totalScore;
 
-        uiManager?.ShowFinalScore(totalScore);
+        // 🌒 Load GameOver scene
+        SceneManager.LoadScene("GameOverScene");
+
         targetManager.ClearAllTargets();
         FindObjectOfType<GridTargetSpawner>()?.ResetSpawnRowCounter();
     }
