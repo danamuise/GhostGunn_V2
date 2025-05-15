@@ -310,17 +310,12 @@ public class GhostBullet : MonoBehaviour
             Debug.LogWarning($"{name} | 🚨 gameManager is null in EnterTank() at {Time.time:F2}");
         }
 
-        // ✅ HUD update logic here
+        // ✅ Proper HUD update routed through GhostShooter
+        GhostShooter shooter = Object.FindFirstObjectByType<GhostShooter>();
+        if (shooter != null)
         {
-            BulletPool pool = Object.FindFirstObjectByType<BulletPool>();
-            if (pool != null && pool.ghostTankUI != null)
-            {
-                int tanked = pool.GetTankedBulletCount();
-                int enabled = pool.GetEnabledBulletCount();
-                pool.ghostTankUI.SetBulletCounts(tanked, enabled);
-
-                Debug.Log($"🖥️ HUD updated in EnterTank() → {tanked} in tank / {enabled} total");
-            }
+            shooter.RefreshHUD();
+            Debug.Log($"🖥️ HUD updated via GhostShooter.RefreshHUD() at {Time.time:F2}");
         }
 
         bulletLifeTimer = 0f;

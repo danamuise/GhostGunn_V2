@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+
 public class GhostShooter : MonoBehaviour
 {
     public BulletPool bulletPool;
@@ -17,6 +18,10 @@ public class GhostShooter : MonoBehaviour
     {
         StartCoroutine(ResetJustLoaded());
     }
+    private void Start()
+    {
+        RefreshHUD(); // Ensures HUD is accurate on game start
+    }
     void Update()
     {
         // 🛑 Prevent input if clicking on UI
@@ -29,11 +34,11 @@ public class GhostShooter : MonoBehaviour
         bool inputDown = Input.GetMouseButton(0);
         bool inputUp = Input.GetMouseButtonUp(0);
 #else
-    if (Input.touchCount == 0) return;
-    Touch touch = Input.GetTouch(0);
-    Vector3 inputPos = touch.position;
-    bool inputDown = touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary;
-    bool inputUp = touch.phase == TouchPhase.Ended;
+        if (Input.touchCount == 0) return;
+        Touch touch = Input.GetTouch(0);
+        Vector3 inputPos = touch.position;
+        bool inputDown = touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary;
+        bool inputUp = touch.phase == TouchPhase.Ended;
 #endif
 
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(inputPos);
@@ -70,7 +75,6 @@ public class GhostShooter : MonoBehaviour
         }
     }
 
-
     public void EnableGun(bool enable)
     {
         canShoot = enable;
@@ -96,8 +100,6 @@ public class GhostShooter : MonoBehaviour
                 inTank++;
         }
 
-        //Debug.Log($"🔎 AllBulletsAreInTank(): {inTank} in tank / {total} total");
-
         return inTank == total;
     }
 
@@ -108,7 +110,6 @@ public class GhostShooter : MonoBehaviour
         int totalInTank = bulletPool.GetTankedBulletCount();
         Debug.Log($"🔫 Starting FireAllBullets() — {totalInTank} ghosts in tank");
 
-        // Optional initial HUD refresh
         ghostTankUI?.SetBulletCounts(totalInTank, bulletPool.GetEnabledBulletCount());
 
         SFXManager.Instance.Play("GhostSound", 0.5f, 0.9f, 1.1f);
@@ -136,25 +137,22 @@ public class GhostShooter : MonoBehaviour
                 // ✅ Delayed HUD update for smoother number change
                 StartCoroutine(DelayedHUDUpdate(0.15f));
 
-                yield return new WaitForSeconds(0.1f); // original firing delay remains
+                yield return new WaitForSeconds(0.1f);
             }
         }
 
-        // Final HUD sync to ensure it's accurate
         int remaining = bulletPool.GetTankedBulletCount();
         ghostTankUI?.SetBulletCounts(remaining, bulletPool.GetEnabledBulletCount());
+        ghostTankUI?.UpdateMeter(remaining, bulletPool.GetEnabledBulletCount());
 
         Debug.Log($"✅ FireAllBullets() complete — Fired: {fired}, Remaining in tank: {remaining}");
     }
 
-
     private Vector2 AddSpreadToDirection(Vector2 baseDirection, float maxAngleDegrees)
     {
-        //Debug.Log($"🚀 ADDING SPREAD TO DIRECTION);
         float angle = Random.Range(-maxAngleDegrees, maxAngleDegrees);
         float radians = angle * Mathf.Deg2Rad;
 
-        // Rotate the direction vector by a small angle
         float cos = Mathf.Cos(radians);
         float sin = Mathf.Sin(radians);
 
@@ -174,11 +172,10 @@ public class GhostShooter : MonoBehaviour
 
     private IEnumerator PlayRecoil()
     {
-        // Instantly recoil
         Vector3 startPos = gunBarrel.localPosition;
         gunBarrel.localPosition = new Vector3(startPos.x, 0.33f, startPos.z);
 
-        float returnDuration = 0.06f; // fast return
+        float returnDuration = 0.06f;
         float elapsed = 0f;
 
         while (elapsed < returnDuration)
@@ -195,7 +192,7 @@ public class GhostShooter : MonoBehaviour
 
     private IEnumerator ResetJustLoaded()
     {
-        yield return null; // Wait one frame
+        yield return null;
         justLoaded = false;
     }
 
@@ -205,10 +202,19 @@ public class GhostShooter : MonoBehaviour
 
         int tankedNow = bulletPool.GetTankedBulletCount();
         int total = bulletPool.GetEnabledBulletCount();
+
         ghostTankUI?.SetBulletCounts(tankedNow, total);
+        ghostTankUI?.UpdateMeter(tankedNow, total);
 
         Debug.Log($"⏱️ HUD updated with delay: {tankedNow} in tank / {total} total");
     }
 
-
+    // ✅ New method: Call this from GhostBullet when bullet re-enters tank
+    public void RefreshHUD()
+    {
+        int tankedNow = bulletPool.GetTankedBulletCount();
+        int total = bulletPool.GetEnabledBulletCount();
+        ghostTankUI?.SetBulletCounts(tankedNow, total);
+        ghostTankUI?.UpdateMeter(tankedNow, total);
+    }
 }
