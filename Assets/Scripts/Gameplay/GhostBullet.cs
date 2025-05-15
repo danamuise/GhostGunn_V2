@@ -260,7 +260,6 @@ public class GhostBullet : MonoBehaviour
     {
         Debug.Log($"📤 {name} → EnterTank() called at {Time.time:F2}");
 
-        //isFired = false;
         isInTank = true;
         inGhostMode = false;
         isDroppingDown = false;
@@ -311,8 +310,22 @@ public class GhostBullet : MonoBehaviour
             Debug.LogWarning($"{name} | 🚨 gameManager is null in EnterTank() at {Time.time:F2}");
         }
 
+        // ✅ HUD update logic here
+        {
+            BulletPool pool = Object.FindFirstObjectByType<BulletPool>();
+            if (pool != null && pool.ghostTankUI != null)
+            {
+                int tanked = pool.GetTankedBulletCount();
+                int enabled = pool.GetEnabledBulletCount();
+                pool.ghostTankUI.SetBulletCounts(tanked, enabled);
+
+                Debug.Log($"🖥️ HUD updated in EnterTank() → {tanked} in tank / {enabled} total");
+            }
+        }
+
         bulletLifeTimer = 0f;
     }
+
 
     private void ExitTank()
     {

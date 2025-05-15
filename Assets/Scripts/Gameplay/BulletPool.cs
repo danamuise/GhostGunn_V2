@@ -13,6 +13,7 @@ public class BulletPool : MonoBehaviour
 
     [Header("Hierarchy")]
     public Transform bulletParent;
+    public GhostTankUI ghostTankUI; // ✅ HUD reference
 
     private List<GameObject> pool = new List<GameObject>();
     private int activeBulletCount = 0;
@@ -29,7 +30,6 @@ public class BulletPool : MonoBehaviour
             if (i < startingBullets)
             {
                 ghost.EnterTank();
-
                 Vector3 pos = bullet.transform.position;
                 bullet.transform.position = new Vector3(pos.x, pos.y + tankVerticalOffset, pos.z);
                 activeBulletCount++;
@@ -40,6 +40,15 @@ public class BulletPool : MonoBehaviour
             }
 
             pool.Add(bullet);
+        }
+
+        // ✅ Initial HUD update after all bullets are initialized
+        if (ghostTankUI != null)
+        {
+            int tanked = GetTankedBulletCount();
+            int enabled = GetEnabledBulletCount();
+            ghostTankUI.SetBulletCounts(tanked, enabled);
+            Debug.Log($"📟 Initial HUD update: {tanked} in tank / {enabled} total");
         }
     }
 
@@ -53,75 +62,20 @@ public class BulletPool : MonoBehaviour
                 if (ghost != null && ghost.IsInTank)
                 {
                     Debug.Log($"🎯 GetBullet() returning: {bullet.name}");
+                    Debug.Log($"👻 Ghosts in tank (ready to fire): {GetTankedBulletCount()}");
                     return bullet;
                 }
             }
         }
 
-        Debug.LogWarning("No bullets available in the tank!");
+        Debug.LogWarning("⚠️ No bullets available in the tank!");
         return null;
-    }
-
-    public List<GameObject> GetAllBullets()
-    {
-        return pool;
-    }
-
-    public bool AllBulletsReturned()
-    {
-        foreach (GameObject bulletGO in pool)
-        {
-            if (bulletGO.activeInHierarchy)
-            {
-                GhostBullet bullet = bulletGO.GetComponent<GhostBullet>();
-                if (bullet != null && !bullet.IsInTank)
-                    return false;
-            }
-        }
-        return true;
-    }
-
-    public void EnableNextBullet()
-    {
-        if (activeBulletCount >= poolSize)
-        {
-            Debug.Log("🔫 All bullets are already active.");
-            return;
-        }
-
-        for (int i = 0; i < pool.Count; i++)
-        {
-            GameObject bullet = pool[i];
-            if (!bullet.activeInHierarchy)
-            {
-                bullet.SetActive(true);
-                GhostBullet ghost = bullet.GetComponent<GhostBullet>();
-                if (ghost != null)
-                {
-                    ghost.EnterTank();
-                    Vector3 pos = bullet.transform.position;
-                    bullet.transform.position = new Vector3(pos.x, pos.y + tankVerticalOffset, pos.z);
-                }
-
-                activeBulletCount++;
-                Debug.Log($"🔫 Enabled bullet #{activeBulletCount}");
-                break;
-            }
-        }
-    }
-
-    public int GetActiveBulletCount()
-    {
-        return activeBulletCount;
-    }
-
-    public int GetTotalBulletCount()
-    {
-        return poolSize;
     }
 
     public void AddBullet()
     {
+        Debug.Log("➕ AddBullet() called");
+
         int tanked = GetTankedBulletCount();
         int max = poolSize;
 
@@ -145,14 +99,20 @@ public class BulletPool : MonoBehaviour
                     bullet.transform.position = new Vector3(pos.x, pos.y + tankVerticalOffset, pos.z);
                 }
 
-                Debug.Log($"🔫 BulletPool: Added bullet (tanked now: {GetTankedBulletCount()}/{max})");
+                Debug.Log($"✨ Bullet added: {bullet.name}");
+                Debug.Log($"👻 Ghosts in tank after add: {GetTankedBulletCount()}");
+
+                if (ghostTankUI != null)
+                {
+                    ghostTankUI.SetBulletCounts(GetTankedBulletCount(), GetEnabledBulletCount());
+                }
+
                 return;
             }
         }
 
         Debug.LogWarning("🔫 AddBullet() called but no inactive bullets were found.");
     }
-
 
     public int GetTankedBulletCount()
     {
@@ -179,6 +139,25 @@ public class BulletPool : MonoBehaviour
         }
         return count;
     }
+
+    public List<GameObject> GetAllBullets() => pool;
+
+    public int GetTotalBulletCount() => poolSize;
+
+    public bool AllBulletsReturned()
+    {
+        foreach (GameObject bulletGO in pool)
+        {
+            if (bulletGO.activeInHierarchy)
+            {
+                GhostBullet bullet = bulletGO.GetComponent<GhostBullet>();
+                if (bullet != null && !bullet.IsInTank)
+                    return false;
+            }
+        }
+        return true;
+    }
+
     public GameObject GetNextAvailableBullet()
     {
         foreach (GameObject bullet in pool)
@@ -193,4 +172,5 @@ public class BulletPool : MonoBehaviour
         return null;
     }
 
+    public int GetActiveBulletCount() => activeBulletCount;
 }
