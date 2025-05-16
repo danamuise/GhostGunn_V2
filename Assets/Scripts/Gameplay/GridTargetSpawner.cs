@@ -163,6 +163,31 @@ public class GridTargetSpawner : MonoBehaviour
                 pum.AnimateToPosition(baseNewPos, 0.5f, false);
 
             grid.MarkCellOccupied(col, newRow, true);
+
+            // ✅ DEBUG + OUTLINE effect when reaching Area 8
+            if (newRow == 8)
+            {
+                Debug.Log($"<color=red>⚠️ {obj.name} has reached Area 8!</color>");
+
+                SpriteRenderer sr = obj.GetComponentInChildren<SpriteRenderer>();
+                if (sr != null)
+                {
+                    // Clone the material to avoid affecting shared instances
+                    sr.material = new Material(sr.material);
+                }
+
+                // Enable blinking outline effect
+                OutlineBlinker blinker = obj.GetComponentInChildren<OutlineBlinker>();
+                if (blinker != null)
+                {
+                    blinker.enabled = true;
+                    Debug.Log($"🧠 Enabled OutlineBlinker on {obj.name}");
+                }
+                else
+                {
+                    Debug.LogWarning($"⚠️ No OutlineBlinker found on {obj.name}");
+                }
+            }
         }
 
         int moveCount = FindObjectOfType<GameManager>()?.GetMoveCount() ?? 0;
@@ -171,6 +196,7 @@ public class GridTargetSpawner : MonoBehaviour
         powerUpManager.TrySpawnAddBulletPU(moveCount);
         grid.AnnounceAvailableSpacesInRow(0);
     }
+
 
     private void SpawnPowerUpInRow(int rowIndex, int moveCount)
     {

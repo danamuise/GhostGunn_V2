@@ -3113,9 +3113,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetPrefabs:
-  - {fileID: 4313810961233702181, guid: 99476cc3d00f276448fef7417f861674, type: 3}
+  - {fileID: 4313810961233702181, guid: 8f7831a0032f6624eb25c114939bc3d3, type: 3}
   - {fileID: 4313810961233702181, guid: 1f2a2451134955441add3a70813655fa, type: 3}
-  - {fileID: 4313810961233702181, guid: 802fac8c7764fb3449c33f44f20b0cd2, type: 3}
+  - {fileID: 4313810961233702181, guid: ddc357ec2d555434299d523e835f39c8, type: 3}
   - {fileID: 4313810961233702181, guid: 1aef0081badce334a8f3f88893940965, type: 3}
   powerUps:
   - {fileID: 11400000, guid: 4ba340b953a9c0c439ea62de88a2f23a, type: 2}

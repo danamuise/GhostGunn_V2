@@ -63,18 +63,6 @@ public class TargetManager : MonoBehaviour
         }
     }
 
-    /*
-    public bool CheckForGameOver()
-    {
-        foreach (Transform t in targetsParent)
-        {
-            if (t != null && t.position.y <= gameOverY)
-                return true;
-        }
-
-        return false;
-    }
-    */
     public void ClearAllTargets()
     {
         foreach (Transform t in targetsParent)

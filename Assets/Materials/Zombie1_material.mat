@@ -7,13 +7,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SSU_Demo_DirectionalGlowFade
+  m_Name: Zombie1_material
   m_Shader: {fileID: 4800000, guid: 0803c241834332942abfcbd27c498b46, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - ETC1_EXTERNAL_ALPHA
-  - _ENABLEDIRECTIONALGLOWFADE_ON
+  - _ENABLEOUTEROUTLINE_ON
   - _SHADERFADING_NONE
   - _SHADERSPACE_UV
   - _STRONGTINTCONTRASTTOGGLE_ON
@@ -168,7 +168,7 @@ Material:
     - _BakedMaterial: 0
     - _BlackTintFade: 1
     - _BlackTintPower: 4
-    - _Brightness: 1
+    - _Brightness: 2
     - _BumpScale: 1
     - _BurnEdgeNoiseFactor: 0.5
     - _BurnFade: 1
@@ -195,7 +195,7 @@ Material:
     - _ColorReplaceRange: 0.05
     - _ColorReplaceSaturationThreshold: 0.8
     - _ColorReplaceSmoothness: 0.1
-    - _Contrast: 1
+    - _Contrast: 2
     - _CustomFadeAlpha: 1
     - _CustomFadeNoiseFactor: 0
     - _CustomFadeSmoothness: 2
@@ -212,11 +212,11 @@ Material:
     - _DirectionalDistortionRandomDirection: 0.1
     - _DirectionalDistortionRotation: 0
     - _DirectionalDistortionWidth: 0.5
-    - _DirectionalGlowFadeFade: -0.94
+    - _DirectionalGlowFadeFade: 0
     - _DirectionalGlowFadeInvert: 0
-    - _DirectionalGlowFadeNoiseFactor: 0.12
+    - _DirectionalGlowFadeNoiseFactor: 0.2
     - _DirectionalGlowFadeRotation: 0
-    - _DirectionalGlowFadeWidth: 0.23
+    - _DirectionalGlowFadeWidth: 0.1
     - _DstBlend: 0
     - _EnableAddColor: 0
     - _EnableAddHue: 0
@@ -231,7 +231,7 @@ Material:
     - _EnableCustomFade: 0
     - _EnableDirectionalAlphaFade: 0
     - _EnableDirectionalDistortion: 0
-    - _EnableDirectionalGlowFade: 1
+    - _EnableDirectionalGlowFade: 0
     - _EnableEnchanted: 0
     - _EnableFlame: 0
     - _EnableFrozen: 0
@@ -247,7 +247,7 @@ Material:
     - _EnableInnerOutline: 0
     - _EnableMetal: 0
     - _EnableNegative: 0
-    - _EnableOuterOutline: 0
+    - _EnableOuterOutline: 1
     - _EnablePingPongGlow: 0
     - _EnablePixelOutline: 0
     - _EnablePixelate: 0
@@ -336,7 +336,7 @@ Material:
     - _HologramLineGap: 3
     - _HologramLineSpeed: 0.01
     - _HologramMinAlpha: 0.2
-    - _Hue: 0
+    - _Hue: 0.5
     - _InkSpreadContrast: 2
     - _InkSpreadDistance: 3
     - _InkSpreadFade: 1
@@ -360,7 +360,7 @@ Material:
     - _OuterOutlineFade: 1
     - _OuterOutlineOutlineOnlyToggle: 0
     - _OuterOutlineTextureToggle: 0
-    - _OuterOutlineWidth: 0.04
+    - _OuterOutlineWidth: 0
     - _Parallax: 0.02
     - _PingPongGlowContrast: 1
     - _PingPongGlowFade: 1
@@ -393,7 +393,7 @@ Material:
     - _RecolorRGBYCPTextureToggle: 0
     - _RectHeight: 100
     - _RectWidth: 100
-    - _Saturation: 1
+    - _Saturation: 0
     - _ScreenTilingPixelsPerUnit: 100
     - _ScreenWidthUnits: 10
     - _ShaderFading: 0
@@ -458,7 +458,7 @@ Material:
     - _SquishSquish: 0.1
     - _SquishStretch: 0.1
     - _SrcBlend: 1
-    - _StrongTintContrast: 2.5
+    - _StrongTintContrast: 0
     - _StrongTintContrastToggle: 1
     - _StrongTintFade: 1
     - _StrongTintMaskToggle: 0
@@ -525,7 +525,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _AddColorColor: {r: 2.996078, g: 0, b: 0, a: 0}
-    - _AlphaTintColor: {r: 95.87451, g: 5.019608, b: 95.87451, a: 0}
+    - _AlphaTintColor: {r: 10.039216, g: 41.160786, b: 191.74902, a: 0}
     - _BlackTintColor: {r: 0, g: 0, b: 1, a: 0}
     - _BurnEdgeColor: {r: 11.98431, g: 1.129412, b: 0.1254902, a: 0}
     - _BurnEdgeNoiseScale: {r: 0.3, g: 0.3, b: 0, a: 0}
@@ -550,8 +550,8 @@ Material:
     - _DirectionalDistortionDistortion: {r: 0, g: 0.1, b: 0, a: 0}
     - _DirectionalDistortionDistortionScale: {r: 1, g: 1, b: 0, a: 0}
     - _DirectionalDistortionNoiseScale: {r: 0.4, g: 0.4, b: 0, a: 0}
-    - _DirectionalGlowFadeEdgeColor: {r: 0, g: 15.698111, b: 1.2339827, a: 0}
-    - _DirectionalGlowFadeNoiseScale: {r: 0.33, g: 0.27, b: 0, a: 0}
+    - _DirectionalGlowFadeEdgeColor: {r: 11.98431, g: 0.6901961, b: 0.6901961, a: 0}
+    - _DirectionalGlowFadeNoiseScale: {r: 0.4, g: 0.4, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EnchantedHighColor: {r: 0, g: 0.7098798, b: 4.237095, a: 0}
     - _EnchantedLowColor: {r: 2.996078, g: 0, b: 0, a: 0}
@@ -599,7 +599,7 @@ Material:
     - _MetalNoiseDistortionSpeed: {r: -0.05, g: -0.05, b: 0, a: 0}
     - _MetalNoiseScale: {r: 0.25, g: 0.25, b: 0, a: 0}
     - _MetalNoiseSpeed: {r: 0.05, g: 0.05, b: 0, a: 0}
-    - _OuterOutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OuterOutlineColor: {r: 1, g: 0, b: 0, a: 1}
     - _OuterOutlineDistortionIntensity: {r: 0.01, g: 0.01, b: 0, a: 0}
     - _OuterOutlineNoiseScale: {r: 4, g: 4, b: 0, a: 0}
     - _OuterOutlineNoiseSpeed: {r: 0, g: 0.1, b: 0, a: 0}
@@ -625,7 +625,7 @@ Material:
     - _ScreenTilingOffset: {r: 0, g: 0, b: 0, a: 0}
     - _ScreenTilingScale: {r: 1, g: 1, b: 0, a: 0}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 0}
-    - _ShadowOffset: {r: 0.05, g: -0.05, b: 0, a: 0}
+    - _ShadowOffset: {r: 0.07, g: -0.07, b: 0, a: 0}
     - _ShiftingColorA: {r: 1.498039, g: 0, b: 0, a: 0}
     - _ShiftingColorB: {r: 1.498039, g: 0.7490196, b: 0, a: 0}
     - _ShineColor: {r: 11.98431, g: 11.98431, b: 11.98431, a: 0}
@@ -644,7 +644,7 @@ Material:
     - _SpriteSheetRect: {r: 0, g: 0, b: 1, a: 1}
     - _SqueezeCenter: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _SqueezeScale: {r: 2, g: 0, b: 0, a: 0}
-    - _StrongTintTint: {r: 16, g: 8.407844, b: 0.8156863, a: 1}
+    - _StrongTintTint: {r: 1, g: 1, b: 1, a: 1}
     - _TextureLayer1Color: {r: 0.4494117, g: 1.298301, b: 2.996079, a: 1}
     - _TextureLayer1Offset: {r: 0, g: 0, b: 0, a: 0}
     - _TextureLayer1Scale: {r: 1, g: 1, b: 0, a: 0}

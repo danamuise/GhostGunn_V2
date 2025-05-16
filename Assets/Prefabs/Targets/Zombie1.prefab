@@ -145,6 +145,7 @@ GameObject:
   - component: {fileID: 702554609385997233}
   - component: {fileID: 7008100407658145695}
   - component: {fileID: 3897781851847271153}
+  - component: {fileID: 2087964058733055765}
   m_Layer: 0
   m_Name: Zombie1
   m_TagString: Untagged
@@ -187,7 +188,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 73934b3be3ea718429df543406f091df, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -240,6 +241,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2087964058733055765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3465170968853031557}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd00e69e9e7e0be42ba53fbbb3e65dae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blinkInterval: 0.5
+  outlineOnWidth: 0.008
+  outlineOffWidth: 0
 --- !u!1 &4106115990277359337
 GameObject:
   m_ObjectHideFlags: 0
@@ -280,7 +296,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4106115990277359337}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -314,7 +330,7 @@ SpriteRenderer:
   m_SortingLayerID: 130303049
   m_SortingLayer: 2
   m_SortingOrder: 1
-  m_Sprite: {fileID: 2025546569, guid: a830d5a7a33972648b7492e4d2440507, type: 3}
+  m_Sprite: {fileID: -828644516, guid: a830d5a7a33972648b7492e4d2440507, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -339,7 +355,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startValue: -2.46
   endValue: -3.22
-  duration: 0.7
+  duration: 0.65
 --- !u!1 &4313810961233702181
 GameObject:
   m_ObjectHideFlags: 0
