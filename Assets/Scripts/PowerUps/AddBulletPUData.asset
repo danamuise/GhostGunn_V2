@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AddBulletPUData
   m_EditorClassIdentifier: 
   powerUpName: AddBullet
-  powerUpPrefab: {fileID: 8582528860953319632, guid: 5d42fb9c1cbcd214e8486710aeb2e11c, type: 3}
+  powerUpPrefab: {fileID: 7329726899166178089, guid: df1c9451c1f3f264abb4d3bd18179b23, type: 3}
   priority: 1
   cooldown: 0
   probability: 1
