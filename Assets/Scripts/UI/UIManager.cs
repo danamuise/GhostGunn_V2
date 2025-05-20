@@ -16,7 +16,6 @@ public class UIManager : MonoBehaviour
     public TargetManager targetManager;
     public TargetGridManager grid;
     public GhostShooter gun;
-    public GameObject gameOverPopup;
 
     private void Start()
     {
@@ -56,9 +55,5 @@ public class UIManager : MonoBehaviour
         SFXManager.Instance.FadeOutMusic(2f);
         grid.InitializeGrid();
         gun.EnableGun(true);
-
-        if (gameOverPopup != null)
-            gameOverPopup.SetActive(false);
-        
     }
 }

@@ -4974,6 +4974,7 @@ MonoBehaviour:
     m_Bits: 1216
   gravityStrength: 10
   bulletSize: 0.15
+  rescueBounceForce: 5
   wallDropSpeed: 25
   wallDropDuration: 0.4
   floatMagnitude: 0.11

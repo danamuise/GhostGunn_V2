@@ -9,7 +9,8 @@ public class GhostBullet : MonoBehaviour
     public LayerMask laserCollisionMask;
     public float gravityStrength = 9.81f;
     [Range(0.001f, 1.0f)] public float bulletSize = 1f;
-
+    [Header("Bullet stuck Rescue Settings")]
+    public float rescueBounceForce = 3f;
     [Header("Return to Tank Settings")]
     public float wallDropSpeed = 25f;
     public float wallDropDuration = 0.4f;
@@ -32,18 +33,22 @@ public class GhostBullet : MonoBehaviour
 
     private float remainingDistance;
     private float dropStartTime = -1f;
-    //private float lifetime;
 
     private Vector3 tankBasePosition;
     private float tankTimeOffset;
     private Transform tankTransform;
 
     private Vector2 wallSlideDirection;
-    //private bool isFired = false;
     private GameManager gameManager;
     private float bulletLifeTimer = 0f;
     private const float maxLifeTime = 8f;
     private bool justEnteredGhostMode = false;
+
+    // 🛑 STUCK DETECTION
+    private const float velocityThreshold = 0.25f;
+    private float ghostModeStartTime = -1f;
+    private float stuckDetectionDelay = 0.25f;
+    private bool hasLoggedStuck = false;
 
     public bool IsInTank => isInTank;
 
@@ -56,11 +61,9 @@ public class GhostBullet : MonoBehaviour
         isSlidingToWall = false;
         isDroppingDown = false;
         dropStartTime = -1f;
-        //isFired = true;
 
         laserDirection = direction.normalized;
         remainingDistance = maxLaserDistance;
-        //lifetime = 0f;
 
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.gravityScale = 0f;
@@ -141,7 +144,6 @@ public class GhostBullet : MonoBehaviour
         {
             rb.velocity = new Vector2(wallSlideDirection.x * laserSpeed, 0f);
 
-            // 🔍 Raycast to detect wall contact
             RaycastHit2D hit = Physics2D.Raycast(transform.position, wallSlideDirection, 0.1f, laserCollisionMask);
             if (hit.collider != null &&
                 (hit.collider.CompareTag("Wall_Left") || hit.collider.CompareTag("Wall_Right")))
@@ -186,6 +188,47 @@ public class GhostBullet : MonoBehaviour
             {
                 Debug.LogWarning($"{name} exceeded max lifetime — returning to tank");
                 EnterTank();
+            }
+        }
+
+        // 🧠 STUCK DETECTION (once, after ghost delay)
+        bool canCheckStuck =
+            !isInTank &&
+            !isSlidingToWall &&
+            !isDroppingDown &&
+            !isInLaserMode &&
+            inGhostMode &&
+                Time.time - ghostModeStartTime > stuckDetectionDelay;
+
+
+        if (canCheckStuck && Time.time - ghostModeStartTime > stuckDetectionDelay)
+        {
+            float velocity = rb.velocity.magnitude;
+
+            if (velocity < velocityThreshold && !hasLoggedStuck)
+            {
+                if (velocity < velocityThreshold && !hasLoggedStuck)
+                {
+                    Debug.Log("🛑 Bullet is stuck");
+                    hasLoggedStuck = true;
+
+                    // 🛟 RESCUE ACTION: bounce forcefully with slight horizontal deflection
+                    Vector2 bounceDir = -rb.velocity.normalized;
+                    if (bounceDir == Vector2.zero)
+                        bounceDir = Vector2.down; // fallback direction
+
+                    float sideJitter = Random.Range(-0.4f, 0.4f); // adjust to taste
+                    bounceDir += new Vector2(sideJitter, 0f);
+                    bounceDir.Normalize();
+
+                    rb.velocity = Vector2.zero;
+                    rb.velocity = bounceDir * rescueBounceForce;
+                }
+
+            }
+            else if (velocity >= velocityThreshold)
+            {
+                hasLoggedStuck = false;
             }
         }
     }
@@ -250,6 +293,8 @@ public class GhostBullet : MonoBehaviour
         isInLaserMode = false;
         inGhostMode = true;
         justEnteredGhostMode = true;
+        ghostModeStartTime = Time.time;
+        hasLoggedStuck = false;
 
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = 0f;
@@ -310,7 +355,6 @@ public class GhostBullet : MonoBehaviour
             Debug.LogWarning($"{name} | 🚨 gameManager is null in EnterTank() at {Time.time:F2}");
         }
 
-        // ✅ Proper HUD update routed through GhostShooter
         GhostShooter shooter = Object.FindFirstObjectByType<GhostShooter>();
         if (shooter != null)
         {
@@ -320,7 +364,6 @@ public class GhostBullet : MonoBehaviour
 
         bulletLifeTimer = 0f;
     }
-
 
     private void ExitTank()
     {
