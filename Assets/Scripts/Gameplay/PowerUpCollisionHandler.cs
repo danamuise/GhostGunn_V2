@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class PowerUpCollisionHandler : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D other)
+  /*  private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("PlayerBullet"))
+        if (other.CompareTag("Bullet")) // works for all bullets
         {
             PowerUp powerUp = GetComponent<PowerUp>();
             if (powerUp != null)
@@ -12,6 +12,6 @@ public class PowerUpCollisionHandler : MonoBehaviour
                 powerUp.Activate(other.gameObject);
                 Destroy(gameObject);
             }
-        }
-    }
+        }*/
 }
+

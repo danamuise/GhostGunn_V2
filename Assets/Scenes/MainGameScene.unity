@@ -711,9 +711,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridTargetManager: {fileID: 1086136297}
-  addBulletPrefab: {fileID: 7329726899166178089, guid: df1c9451c1f3f264abb4d3bd18179b23, type: 3}
   powerUpParent: {fileID: 299981599}
-  PUPickUpVFX: {fileID: 3204759577422697501, guid: ab148c2f148f8534b94b55ab35e01ded, type: 3}
+  powerUps:
+  - {fileID: 11400000, guid: 4ba340b953a9c0c439ea62de88a2f23a, type: 2}
+  - {fileID: 11400000, guid: 8374684ae25bcfc479276b501be673fa, type: 2}
+  vfxOffset: {x: 0, y: 0.9}
 --- !u!4 &299981599
 Transform:
   m_ObjectHideFlags: 0
@@ -3019,6 +3021,7 @@ MonoBehaviour:
   - {fileID: 4313810961233702181, guid: 1aef0081badce334a8f3f88893940965, type: 3}
   powerUps:
   - {fileID: 11400000, guid: 4ba340b953a9c0c439ea62de88a2f23a, type: 2}
+  - {fileID: 11400000, guid: 8374684ae25bcfc479276b501be673fa, type: 2}
   powerUpManager: {fileID: 299981598}
   grid: {fileID: 1086136297}
   targetHealthCurve: {fileID: 1173312486}
@@ -3101,6 +3104,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 2330c6db03eacb04ba1d4e07e156d148, type: 3}
   - name: Grunt5
     clip: {fileID: 8300000, guid: 130dad800f9e02e40adce3aa94951026, type: 3}
+  - name: explosion0
+    clip: {fileID: 8300000, guid: 58f43fad931827248b158ca664f98d18, type: 3}
   musicLibrary:
   - name: mainBGmusic
     clip: {fileID: 8300000, guid: d2b12c6a30c85f144a6b46487d980d83, type: 3}
@@ -4055,7 +4060,7 @@ SpriteRenderer:
   m_SortingLayerID: 130303049
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 113ebf893ef7cf345a47393590f58b19, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -4063,7 +4068,7 @@ SpriteRenderer:
   m_Size: {x: 9.78, y: 9.78}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1319720793

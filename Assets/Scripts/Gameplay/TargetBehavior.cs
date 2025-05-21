@@ -196,4 +196,9 @@ public class TargetBehavior : MonoBehaviour
         }
     }
 
+    public int GetCurrentHealth()
+    {
+        return health; // assuming `health` is your private/int field
+    }
+
 }

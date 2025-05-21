@@ -116,4 +116,38 @@ public class TargetGridManager : MonoBehaviour
         return availableCols;
     }
 
+    // Convert world position to grid column and row (returns false if out of bounds)
+    public bool GetGridCoordinates(Vector2 worldPos, out int col, out int row)
+    {
+        float startX = -(columns - 1) * 0.5f * cellWidth;
+
+        col = Mathf.RoundToInt((worldPos.x - startX) / cellWidth);
+        row = Mathf.RoundToInt((gridOrigin.y - worldPos.y) / cellHeight);
+
+        if (col < 0 || col >= columns || row < 0 || row >= rows)
+        {
+            col = -1;
+            row = -1;
+            return false;
+        }
+
+        return true;
+    }
+
+    // Check if a cell is within grid bounds
+    public bool IsCellInBounds(int col, int row)
+    {
+        return col >= 0 && col < columns && row >= 0 && row < rows;
+    }
+
+    // Placeholder: return the GameObject occupying the cell, if any (null if untracked)
+    public GameObject GetTargetAt(int col, int row)
+    {
+        // TODO: Replace this with your actual target tracking system
+        Vector2 worldPos = GetWorldPosition(col, row);
+        Collider2D hit = Physics2D.OverlapPoint(worldPos);
+        return hit != null ? hit.gameObject : null;
+    }
+
+
 }

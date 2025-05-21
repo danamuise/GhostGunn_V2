@@ -190,10 +190,11 @@ public class GridTargetSpawner : MonoBehaviour
             }
         }
 
-        int moveCount = FindObjectOfType<GameManager>()?.GetMoveCount() ?? 0;
+        int moveCount = dummyMoveCount; // ← use the parameter you already have
 
         SpawnTargetsInArea(0, moveCount);
-        powerUpManager.TrySpawnAddBulletPU(moveCount);
+        Debug.LogWarning($"powerUpManager.TrySpawnPowerUp(moveCount)");
+        powerUpManager.TrySpawnPowerUp(moveCount);
         grid.AnnounceAvailableSpacesInRow(0);
     }
 

@@ -2,6 +2,8 @@
 
 public class AddBulletPowerUp : MonoBehaviour
 {
+    public PowerUpData powerUpData; // 👈 Assigned in prefab
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Bullet"))
@@ -25,10 +27,11 @@ public class AddBulletPowerUp : MonoBehaviour
                 if (ghost != null)
                 {
                     PowerUpManager powerUpManager = FindObjectOfType<PowerUpManager>();
-                    if (powerUpManager != null)
+                    if (powerUpManager != null && powerUpData != null)
                     {
-                        powerUpManager.PlayPickupEffects(transform.position);
+                        powerUpManager.PlayPickupEffects(transform.position, powerUpData);
                     }
+
                     ghost.EnterGhostMode(); // 🔮 Skip tank — go directly to GhostMode
                 }
 
@@ -40,6 +43,6 @@ public class AddBulletPowerUp : MonoBehaviour
             }
         }
 
-        Destroy(gameObject); // Remove PowerUp after activation
+        Destroy(gameObject);
     }
 }

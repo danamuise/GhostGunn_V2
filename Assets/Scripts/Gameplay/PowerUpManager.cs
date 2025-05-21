@@ -4,70 +4,101 @@ using UnityEngine;
 public class PowerUpManager : MonoBehaviour
 {
     [Header("References")]
-    public TargetGridManager gridTargetManager;  // Assign in Inspector
-    public GameObject addBulletPrefab;           // Assign AddBulletPU prefab in Inspector
-    public Transform powerUpParent;              // Assign PowerUps container in Inspector
+    public TargetGridManager gridTargetManager;      // Assign in Inspector
+    public Transform powerUpParent;                  // Container for all power-ups
 
-    [Header("Shared VFX / SFX")]
-    public GameObject PUPickUpVFX;               // VFX prefab (auto-destroys in 2 sec)
-    public void TrySpawnAddBulletPU(int move)
+    [Header("Power-Ups")]
+    public List<PowerUpData> powerUps;               // Each PowerUpData defines prefab, VFX, SFX, etc.
+
+    [Header("VFX / SFX Settings")]
+    public Vector2 vfxOffset = new Vector2(0f, 0.9f);
+
+    private int totalTargetSpawnCycles = 0;
+
+    public void TrySpawnPowerUp(int move)
     {
+        if (powerUps == null || powerUps.Count == 0)
+        {
+            Debug.LogWarning("[PowerUpManager] No power-ups assigned.");
+            return;
+        }
+
         BulletPool bulletPool = FindObjectOfType<BulletPool>();
-
-        if (bulletPool == null)
-        {
-            Debug.LogWarning("[PowerUpManager] Missing BulletPool reference.");
-            return;
-        }
-
-        // ✅ Enforce even-numbered moves here
-        if (move % 2 != 0)
-        {
-            Debug.Log($"[PowerUpManager] Skipping spawn — Move {move} is odd.");
-            return;
-        }
-
-        if (bulletPool.GetEnabledBulletCount() >= bulletPool.GetTotalBulletCount())
-        {
-            Debug.Log("[PowerUpManager] Bullet tank full — skipping AddBulletPU spawn.");
-            return;
-        }
+        if (bulletPool == null) return;
 
         List<int> availableCols = gridTargetManager.GetAvailableColumnsInRow(0);
-        if (availableCols == null || availableCols.Count == 0)
+        if (availableCols == null || availableCols.Count == 0) return;
+
+        PowerUpData selectedPU = null;
+
+        // AddBulletPU logic
+        if (bulletPool.GetEnabledBulletCount() < bulletPool.GetTotalBulletCount())
         {
-            Debug.Log("[PowerUpManager] No available columns for PowerUp spawn.");
-            return;
+            if (move % 2 == 0 && powerUps.Count > 0)
+            {
+                selectedPU = powerUps[0];
+            }
         }
+        else
+        {
+            // ProximityBombPU logic (every 3rd spawn cycle)
+            totalTargetSpawnCycles++;
+            if (totalTargetSpawnCycles % 4 == 0 && powerUps.Count > 1)
+            {
+                selectedPU = powerUps[1];
+            }
+        }
+
+        if (selectedPU == null || selectedPU.powerUpPrefab == null) return;
 
         int chosenCol = availableCols[Random.Range(0, availableCols.Count)];
         Vector2 spawnPos = gridTargetManager.GetWorldPosition(chosenCol, 0);
 
-        Debug.Log($"🧲 Spawning AddBulletPU — Move {move}, Column {chosenCol + 1}");
+        GameObject newPU = Instantiate(selectedPU.powerUpPrefab, spawnPos, Quaternion.identity, powerUpParent);
 
-        GameObject newPU = Instantiate(addBulletPrefab, spawnPos, Quaternion.identity, powerUpParent);
-
-        var mover = newPU.GetComponent<PowerUpMover>();
+        PowerUpMover mover = newPU.GetComponent<PowerUpMover>();
         if (mover != null)
         {
             mover.AnimateToPosition(spawnPos, 0.5f, fromEndzone: true);
         }
 
         gridTargetManager.MarkCellOccupied(chosenCol, 0, true);
+        Debug.Log($"🧲 Spawned: {selectedPU.powerUpName} — Move {move}, Column {chosenCol + 1}");
     }
 
-    public void PlayPickupEffects(Vector2 position)
+    public void PlayPickupEffects(Vector2 position, PowerUpData powerUpData)
     {
-        // VFX block
-        if (PUPickUpVFX != null)
-        {
-            position.y += 0.9f;
+        if (powerUpData == null) return;
 
-            GameObject vfx = Instantiate(PUPickUpVFX, position, Quaternion.identity);
-            vfx.transform.localScale = Vector3.one * 0.6f; // 💡 Adjust the scale here
-            Destroy(vfx, 2f); // ⏱️ Auto-destroy after 2 seconds
+        // Spawn VFX
+        if (powerUpData.pickupVFX != null)
+        {
+            Vector2 vfxPos = position + vfxOffset;
+            Vector3 worldPos = new Vector3(position.x, position.y, 0f);
+            GameObject vfx = Instantiate(powerUpData.pickupVFX, worldPos, Quaternion.identity);
+
+            vfx.transform.localScale = Vector3.one * 0.6f;
+            Destroy(vfx, 2f);
         }
-            SFXManager.Instance.Play("PUCollect", 0.5f, 0.9f, 1.1f);
+
+        // Play SFX
+        if (!string.IsNullOrEmpty(powerUpData.pickupSFX))
+        {
+            SFXManager.Instance.Play(powerUpData.pickupSFX, 0.5f, 0.9f, 1.1f);
+        }
+    }
+
+    [System.Diagnostics.Conditional("UNITY_EDITOR")]
+    void DrawDebugMarker(Vector3 pos, Color color)
+    {
+#if UNITY_EDITOR
+        GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        marker.transform.position = pos;
+        marker.transform.localScale = Vector3.one * 0.2f;
+        marker.GetComponent<Renderer>().material.color = color;
+        marker.name = "💥 VFX Debug Marker";
+        Destroy(marker, 2f); // Auto-destroy after 2 seconds
+#endif
     }
 
 }
