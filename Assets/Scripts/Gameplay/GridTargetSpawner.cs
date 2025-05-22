@@ -193,7 +193,6 @@ public class GridTargetSpawner : MonoBehaviour
         int moveCount = dummyMoveCount; // ← use the parameter you already have
 
         SpawnTargetsInArea(0, moveCount);
-        Debug.LogWarning($"powerUpManager.TrySpawnPowerUp(moveCount)");
         powerUpManager.TrySpawnPowerUp(moveCount);
         grid.AnnounceAvailableSpacesInRow(0);
     }

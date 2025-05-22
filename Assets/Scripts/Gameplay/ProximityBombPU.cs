@@ -69,6 +69,10 @@ public class ProximityBombPU : MonoBehaviour
             }
         }
 
+        // Trigger camera shake
+        CameraShaker.Instance?.Shake(0.2f, 0.15f);
+
+        // Trigger pickup VFX/SFX
         PowerUpManager manager = FindObjectOfType<PowerUpManager>();
         if (manager != null && powerUpData != null)
         {
@@ -77,4 +81,5 @@ public class ProximityBombPU : MonoBehaviour
 
         Destroy(gameObject);
     }
+
 }

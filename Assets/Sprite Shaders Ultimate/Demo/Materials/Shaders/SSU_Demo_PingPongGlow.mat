@@ -14,6 +14,7 @@ Material:
   m_ValidKeywords:
   - ETC1_EXTERNAL_ALPHA
   - _ENABLEPINGPONGGLOW_ON
+  - _ENABLESPLITTONING_ON
   - _SHADERFADING_NONE
   - _SHADERSPACE_UV
   - _TEXTURELAYER1SHEETTOGGLE_ON
@@ -228,7 +229,7 @@ Material:
     - _EnableSmoothPixelArt: 0
     - _EnableSourceAlphaDissolve: 0
     - _EnableSourceGlowDissolve: 0
-    - _EnableSplitToning: 0
+    - _EnableSplitToning: 1
     - _EnableSqueeze: 0
     - _EnableSquish: 0
     - _EnableStrongTint: 0
@@ -313,8 +314,8 @@ Material:
     - _OuterOutlineOutlineOnlyToggle: 0
     - _OuterOutlineTextureToggle: 0
     - _OuterOutlineWidth: 0.04
-    - _PingPongGlowContrast: 0.5
-    - _PingPongGlowFade: 1
+    - _PingPongGlowContrast: 2.36
+    - _PingPongGlowFade: 0.06
     - _PingPongGlowFrequency: 3
     - _PixelOutlineFade: 1
     - _PixelOutlineOutlineOnlyToggle: 0
@@ -372,7 +373,7 @@ Material:
     - _ShineWidth: 0.1
     - _SineGlowContrast: 1
     - _SineGlowFade: 1
-    - _SineGlowFrequency: 4
+    - _SineGlowFrequency: 4.71
     - _SineGlowMaskToggle: 0
     - _SineGlowMax: 1
     - _SineGlowMin: 0
@@ -395,10 +396,10 @@ Material:
     - _SourceGlowDissolveInvert: 0
     - _SourceGlowDissolveNoiseFactor: 0.2
     - _SourceGlowDissolveWidth: 0.1
-    - _SplitToningBalance: 1
+    - _SplitToningBalance: 1.09
     - _SplitToningContrast: 1
     - _SplitToningFade: 1
-    - _SplitToningShift: 0
+    - _SplitToningShift: -0.31
     - _SpriteSheetFix: 0
     - _SqueezeFade: 1
     - _SqueezePower: 1
@@ -544,13 +545,13 @@ Material:
     - _MetalNoiseDistortionSpeed: {r: -0.05, g: -0.05, b: 0, a: 0}
     - _MetalNoiseScale: {r: 0.25, g: 0.25, b: 0, a: 0}
     - _MetalNoiseSpeed: {r: 0.05, g: 0.05, b: 0, a: 0}
-    - _OuterOutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OuterOutlineColor: {r: 0.7075472, g: 0.54401034, b: 0.54401034, a: 1}
     - _OuterOutlineDistortionIntensity: {r: 0.01, g: 0.01, b: 0, a: 0}
     - _OuterOutlineNoiseScale: {r: 4, g: 4, b: 0, a: 0}
     - _OuterOutlineNoiseSpeed: {r: 0, g: 0.1, b: 0, a: 0}
     - _OuterOutlineTextureSpeed: {r: 0.5, g: 0, b: 0, a: 0}
-    - _PingPongGlowFrom: {r: 5.992157, g: 0.1882353, b: 0.1882353, a: 0}
-    - _PingPongGlowTo: {r: 0.1882353, g: 0.1882353, b: 5.992157, a: 0}
+    - _PingPongGlowFrom: {r: 2.3678746, g: 10.680627, b: 9.853704, a: 0}
+    - _PingPongGlowTo: {r: 0.4369226, g: 0, b: 5.5849056, a: 0}
     - _PixelOutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _PixelOutlineTextureSpeed: {r: 0.5, g: 0, b: 0, a: 0}
     - _PoisonColor: {r: 0.3137255, g: 2.996078, b: 0.3137255, a: 0}
@@ -584,7 +585,7 @@ Material:
     - _SourceGlowDissolveEdgeColor: {r: 11.98431, g: 0.627451, b: 0.627451, a: 0}
     - _SourceGlowDissolveNoiseScale: {r: 0.3, g: 0.3, b: 0, a: 0}
     - _SourceGlowDissolvePosition: {r: 0, g: 0, b: 0, a: 0}
-    - _SplitToningHighlightsColor: {r: 1, g: 0.1, b: 0.1, a: 0}
+    - _SplitToningHighlightsColor: {r: 0.4669811, g: 1, b: 1, a: 0}
     - _SplitToningShadowsColor: {r: 0.1, g: 0.4000002, b: 1, a: 0}
     - _SpriteSheetRect: {r: 0, g: 0, b: 1, a: 1}
     - _SqueezeCenter: {r: 0.5, g: 0.5, b: 0, a: 0}
