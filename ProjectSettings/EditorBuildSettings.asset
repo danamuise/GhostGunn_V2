@@ -12,10 +12,13 @@ EditorBuildSettings:
     path: Assets/Scenes/SplashScreen.unity
     guid: e23b98a2249772f468061f68218bdc41
   - enabled: 1
-    path: Assets/Scenes/MainGameScene.unity
+    path: Assets/Scenes/Level1Scene.unity
     guid: 48102efacb7d7054e901dd6bdde5b0dd
   - enabled: 1
     path: Assets/Scenes/GameOverScene.unity
     guid: b072a52f4ea057c4eabd767e5326fe4a
+  - enabled: 1
+    path: Assets/Scenes/FTUEscene.unity
+    guid: 4162b9339285a264dae2ffc5477c8eff
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

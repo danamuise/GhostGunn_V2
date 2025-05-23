@@ -22,6 +22,6 @@ public class GameOver : MonoBehaviour
 
     public void OnPlayAgainPressed()
     {
-        SceneManager.LoadScene("MainGameScene"); // Use the exact name of your gameplay scene
+        SceneManager.LoadScene("Level1Scene"); // Use the exact name of your gameplay scene
     }
 }
