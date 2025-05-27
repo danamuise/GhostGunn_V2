@@ -6,8 +6,13 @@ public class GhostTankUI : MonoBehaviour
 {
     public TextMeshProUGUI ghostsInTankText;
     public TextMeshProUGUI ghostsTotalText;
+
     [Header("Bar Sprites (Top to Bottom)")]
     public List<SpriteRenderer> barSprites; // 10 bars in order
+
+    [Header("Tank Console Lights")]
+    public SpriteRenderer redLightOn;
+    public SpriteRenderer greenLightOn;
 
     public void UpdateMeter(int ghostsInTank, int totalGhosts)
     {
@@ -30,17 +35,27 @@ public class GhostTankUI : MonoBehaviour
         }
 
         Debug.Log($"📊 UpdateMeter() — tanked: {ghostsInTank}, total: {totalGhosts}, showing bars: {barsToShow}");
+
+        // 🔴🟢 Update indicator lights
+        if (redLightOn != null && greenLightOn != null)
+        {
+            bool tankFull = (ghostsInTank == totalGhosts);
+
+            redLightOn.enabled = !tankFull;
+            greenLightOn.enabled = tankFull;
+
+            Debug.Log($"💡 Tank light — RED: {!tankFull}, GREEN: {tankFull}");
+        }
     }
 
-
     public void SetBulletCounts(int tanked, int total)
-        {
-            if (ghostsInTankText != null)
-                ghostsInTankText.text = tanked.ToString();
+    {
+        if (ghostsInTankText != null)
+            ghostsInTankText.text = tanked.ToString();
 
-            if (ghostsTotalText != null)
-                ghostsTotalText.text = total.ToString();
+        if (ghostsTotalText != null)
+            ghostsTotalText.text = total.ToString();
 
-            Debug.Log($"🖥️ HUD updated: {tanked} in tank / {total} total");
-        }
+        Debug.Log($"🖥️ HUD updated: {tanked} in tank / {total} total");
+    }
 }

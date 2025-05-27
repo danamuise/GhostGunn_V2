@@ -412,10 +412,10 @@ Material:
     - _ShiftingSpeed: 0.5
     - _ShineContrast: 2
     - _ShineFade: 1
-    - _ShineFrequency: 0.3
+    - _ShineFrequency: 0.75
     - _ShineMaskToggle: 0
     - _ShineRotation: 30
-    - _ShineSaturation: 0.5
+    - _ShineSaturation: 0.38
     - _ShineSmooth: 1
     - _ShineSpeed: 5
     - _ShineWidth: 0.1

@@ -14,6 +14,7 @@ public class PowerUpManager : MonoBehaviour
     public Vector2 vfxOffset = new Vector2(0f, 0.9f);
 
     private int totalTargetSpawnCycles = 0;
+    private bool hasSpawnedNukePU = false;
 
     public void TrySpawnPowerUp(int move)
     {
@@ -27,29 +28,53 @@ public class PowerUpManager : MonoBehaviour
         if (bulletPool == null) return;
 
         List<int> availableCols = gridTargetManager.GetAvailableColumnsInRow(0);
-        if (availableCols == null || availableCols.Count == 0) return;
+        if (availableCols == null || availableCols.Count == 0)
+        {
+            Debug.LogWarning("⚠️ No available columns for power-up spawn.");
+            return;
+        }
 
         PowerUpData selectedPU = null;
+        GameManager gm = FindObjectOfType<GameManager>();
 
-        // AddBulletPU logic
-        if (bulletPool.GetEnabledBulletCount() < bulletPool.GetTotalBulletCount())
+        // 🧨 NukePU logic — spawns only once after score threshold
+        if (!hasSpawnedNukePU && gm != null && gm.GetScore() >= 20 && powerUps.Count > 2)
+        {
+            Debug.Log("✅ SCORE IS OVER 20 — Spawning NukePU");
+            selectedPU = powerUps[2]; // Assumes NukePU is third in list
+            hasSpawnedNukePU = true;
+        }
+        // ➕ AddBulletPU logic (every 2nd move)
+        else if (bulletPool.GetEnabledBulletCount() < bulletPool.GetTotalBulletCount())
         {
             if (move % 2 == 0 && powerUps.Count > 0)
             {
+                Debug.Log("💡 Selecting AddBulletPU");
                 selectedPU = powerUps[0];
             }
         }
+        // 💣 ProximityBombPU logic (every 4th spawn cycle)
         else
         {
-            // ProximityBombPU logic (every 3rd spawn cycle)
             totalTargetSpawnCycles++;
             if (totalTargetSpawnCycles % 4 == 0 && powerUps.Count > 1)
             {
+                Debug.Log("💣 Selecting ProximityBombPU");
                 selectedPU = powerUps[1];
             }
         }
 
-        if (selectedPU == null || selectedPU.powerUpPrefab == null) return;
+        if (selectedPU == null || selectedPU.powerUpPrefab == null)
+        {
+            Debug.Log("🛑 No eligible power-up selected.");
+            return;
+        }
+
+        if (availableCols == null || availableCols.Count == 0)
+        {
+            Debug.LogWarning($"⚠️ No available columns to spawn {selectedPU?.powerUpName ?? "Unknown PU"}");
+            return;
+        }
 
         int chosenCol = availableCols[Random.Range(0, availableCols.Count)];
         Vector2 spawnPos = gridTargetManager.GetWorldPosition(chosenCol, 0);
@@ -76,7 +101,6 @@ public class PowerUpManager : MonoBehaviour
             Vector2 vfxPos = position + vfxOffset;
             Vector3 worldPos = new Vector3(position.x, position.y, 0f);
             GameObject vfx = Instantiate(powerUpData.pickupVFX, worldPos, Quaternion.identity);
-
             vfx.transform.localScale = Vector3.one * 0.6f;
             Destroy(vfx, 2f);
         }
@@ -100,5 +124,4 @@ public class PowerUpManager : MonoBehaviour
         Destroy(marker, 2f); // Auto-destroy after 2 seconds
 #endif
     }
-
 }

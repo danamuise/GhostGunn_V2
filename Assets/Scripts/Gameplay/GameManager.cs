@@ -11,6 +11,11 @@ public class GameManager : MonoBehaviour
     public GhostShooter gun;
     public UIManager uiManager;
 
+    [Header("NukePU Settings")]
+    public GameObject nukeChargeBar;  // Drag the charge bar GameObject here
+    private bool nukeCharging = false;
+    private float nukeChargeProgress = 0f;
+
     private bool roundInProgress;
     private int moveCount = 0;
     private int totalScore = 0;
@@ -110,10 +115,45 @@ public class GameManager : MonoBehaviour
         Debug.Log($"➕ Adding {amount} points to score. New total: {totalScore + amount}");
         totalScore += amount;
         uiManager.UpdateScoreDisplay(totalScore);
+
+        // Handle NukePU charging logic
+        if (!nukeCharging && totalScore >= 2000)
+        {
+            nukeCharging = true;
+            nukeChargeProgress = 0f;
+            if (nukeChargeBar != null)
+                nukeChargeBar.transform.localScale = new Vector3(1f, 0f, 1f); // Reset charge bar
+        }
+
+        if (nukeCharging && nukeChargeProgress < 1f)
+        {
+            float chargeIncrement = amount * 0.01f; // 100 points = full charge
+            nukeChargeProgress += chargeIncrement;
+            nukeChargeProgress = Mathf.Clamp01(nukeChargeProgress);
+
+            if (nukeChargeBar != null)
+            {
+                Vector3 scale = nukeChargeBar.transform.localScale;
+                nukeChargeBar.transform.localScale = new Vector3(scale.x, nukeChargeProgress, scale.z);
+            }
+
+            if (nukeChargeProgress >= 1f)
+            {
+                Debug.Log("⚠️ CHALLENGE STAGE REACHED");
+                // You could trigger NukePU availability here if desired
+            }
+        }
     }
+
 
     public void ResetScore()
     {
         totalScore = 0;
     }
+
+    public int GetScore()
+    {
+        return totalScore;
+    }
+
 }
