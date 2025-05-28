@@ -38,9 +38,9 @@ public class PowerUpManager : MonoBehaviour
         GameManager gm = FindObjectOfType<GameManager>();
 
         // 🧨 NukePU logic — spawns only once after score threshold
-        if (!hasSpawnedNukePU && gm != null && gm.GetScore() >= 20 && powerUps.Count > 2)
+        if (!hasSpawnedNukePU && gm != null && gm.GetScore() >= 2000 && powerUps.Count > 2)
         {
-            Debug.Log("✅ SCORE IS OVER 20 — Spawning NukePU");
+            Debug.Log("✅ SCORE IS OVER 2000 — Spawning NukePU");
             selectedPU = powerUps[2]; // Assumes NukePU is third in list
             hasSpawnedNukePU = true;
         }

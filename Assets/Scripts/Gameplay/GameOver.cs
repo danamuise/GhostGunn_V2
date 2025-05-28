@@ -9,9 +9,10 @@ public class GameOver : MonoBehaviour
 
     private void Start()
     {
+        SFXManager.Instance.PlayMusic("GameOver", 0.3f);
         if (scoreText != null)
         {
-            scoreText.text = "SCORE: " + ScoreKeeper.finalScore.ToString();
+            scoreText.text = ScoreKeeper.finalScore.ToString();
             Debug.Log($"🧾 GameOver UI Loaded — Final Score: {ScoreKeeper.finalScore}");
         }
         else

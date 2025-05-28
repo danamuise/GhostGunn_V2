@@ -1,25 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
+
 public class NukePU : MonoBehaviour
 {
-
     private bool isActivated = false;
     private Vector3 consoleTargetPosition = new Vector3(-1.48f, -4.12f, 0f);
     private float travelDuration = 0.75f;
     [SerializeField] private GameObject nukeHitVFXPrefab;
+    [SerializeField] private GameObject wordBalloon0;
+    private NukeWordBaloons wordBalloon0_;
+
+    private void Start()
+    {
+        wordBalloon0_ = wordBalloon0.GetComponent<NukeWordBaloons>();
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (isActivated) return;
         if (!other.CompareTag("Bullet")) return;
 
         isActivated = true;
-
-        // Optional: disable collider so it can't be triggered again
         GetComponent<Collider2D>().enabled = false;
-
-        // Optional: play a particle or flash
-
         StartCoroutine(AnimateToConsole(consoleTargetPosition, travelDuration));
     }
 
@@ -31,13 +32,14 @@ public class NukePU : MonoBehaviour
         while (elapsed < duration)
         {
             float t = elapsed / duration;
-            float easedT = Mathf.Pow(t, 3); // Slow start, fast end
+            float easedT = Mathf.Pow(t, 3); // Ease-in
             transform.position = Vector3.Lerp(start, target, easedT);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         transform.position = target;
+
         try
         {
             GameObject nukeIcon = GameObject.Find("NukeIcon");
@@ -59,9 +61,19 @@ public class NukePU : MonoBehaviour
                         );
                         Debug.Log("💨 NukeHit_VFX instantiated at NukeIcon.");
                     }
+
+                    // ✅ Show Nuke Word Balloon
+
+                    if (wordBalloon0_ != null)
+                    {
+                        wordBalloon0_.EnableWordBalloon();
+                        Debug.Log("💬 Enable Nuke Word Balloon");
+                        // Start coroutine to disable it after 3 seconds
+                        StartCoroutine(HideWordBalloonAfterDelay( 3f));
+                    }
                     else
                     {
-                        Debug.LogWarning("⚠️ nukeHitVFXPrefab is not assigned in the Inspector!");
+                        Debug.LogWarning("⚠️ NukeOptionWordBalloon0 not found in scene.");
                     }
                 }
                 else
@@ -79,9 +91,17 @@ public class NukePU : MonoBehaviour
             Debug.LogError($"❌ Exception during NukeIcon SpriteRenderer activation: {e.Message}");
         }
 
-
-        // ✅ Destroy this power-up object
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
+    private IEnumerator HideWordBalloonAfterDelay(float delay)
+    {
+        Debug.Log("HideWordBalloonAfterDelay");
+        yield return new WaitForSeconds(delay);
+        if (wordBalloon0 != null)
+        {
+            wordBalloon0_.HideWordBalloon();
+        }
+        Destroy(gameObject);
+    }
 }
