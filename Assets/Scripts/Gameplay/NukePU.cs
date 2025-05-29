@@ -4,10 +4,11 @@ using System.Collections;
 public class NukePU : MonoBehaviour
 {
     private bool isActivated = false;
-    private Vector3 consoleTargetPosition = new Vector3(-1.48f, -4.12f, 0f);
+    private Vector3 consoleTargetPosition = new Vector3(-1.48f, -3.72f, 0f);
     private float travelDuration = 0.75f;
     [SerializeField] private GameObject nukeHitVFXPrefab;
     [SerializeField] private GameObject wordBalloon0;
+    [SerializeField] private GameObject coinSheet0;
     private NukeWordBaloons wordBalloon0_;
 
     private void Start()
@@ -39,13 +40,15 @@ public class NukePU : MonoBehaviour
         }
 
         transform.position = target;
+        GameObject nukeIcon = GameObject.Find("NukeIcon");
+        SpriteRenderer sr = nukeIcon.GetComponent<SpriteRenderer>();
 
         try
         {
-            GameObject nukeIcon = GameObject.Find("NukeIcon");
+            
             if (nukeIcon != null)
             {
-                SpriteRenderer sr = nukeIcon.GetComponent<SpriteRenderer>();
+                
                 if (sr != null)
                 {
                     sr.enabled = true;
@@ -90,8 +93,25 @@ public class NukePU : MonoBehaviour
         {
             Debug.LogError($"❌ Exception during NukeIcon SpriteRenderer activation: {e.Message}");
         }
+        //SpriteRenderer NukePU_sr = GetComponent<SpriteRenderer>();
+        //NukePU_sr.enabled = false;
 
-        //Destroy(gameObject);
+        foreach (SpriteRenderer NukePUsr in this.GetComponentsInChildren<SpriteRenderer>(true))
+        {
+            NukePUsr.enabled = false;
+        }
+
+        if (coinSheet0 != null)
+        {
+            Debug.Log("coinSheet0 found");
+            coinSheet0.SetActive(false);
+            Destroy(coinSheet0);
+        }
+        else
+        {
+            Debug.Log("coinSheet0 not found");
+        }
+
     }
 
     private IEnumerator HideWordBalloonAfterDelay(float delay)

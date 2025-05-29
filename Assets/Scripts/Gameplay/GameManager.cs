@@ -14,7 +14,9 @@ public class GameManager : MonoBehaviour
     [Header("NukePU Charging")]
     public GameObject nukeChargeBar;
     public float NukeFullCharge = 1000f;
+    public SpriteRenderer nukeOutline;
     private float nukeChargeProgress = 0f;
+    private bool nukeArmed = false; // ✅ One-time trigger flag
 
     private SpriteRenderer nukeIconSR;
     private Material nukeIconMaterial;
@@ -81,6 +83,13 @@ public class GameManager : MonoBehaviour
             }
 
             nukeIconMaterial.color = newColor;
+
+            if (nukeOutline != null)
+            {
+                float blinkFrequency = 10f;
+                bool shouldShow = Mathf.PingPong(Time.time * blinkFrequency, 1f) > 0.5f;
+                nukeOutline.enabled = shouldShow;
+            }
         }
     }
 
@@ -101,9 +110,21 @@ public class GameManager : MonoBehaviour
                 Debug.Log($"🔋 NukeChargeBar Y Scale: {nukeChargeProgress:F3}");
             }
 
-            if (nukeChargeProgress >= 1f)
+            if (!nukeArmed && nukeChargeProgress >= 1f)
             {
+                nukeArmed = true; // ✅ Trigger once
                 Debug.Log("💣 Nuke is fully charged!");
+
+                GameObject nukeIcon = GameObject.Find("NukeIcon");
+                if (nukeIcon != null)
+                {
+                    NukeTarget nukeTarget = nukeIcon.GetComponent<NukeTarget>();
+                    if (nukeTarget != null)
+                    {
+                        nukeTarget.ArmNuke();
+                        Debug.Log("NukeTarget armed and ready for collision.");
+                    }
+                }
             }
         }
     }
@@ -184,6 +205,7 @@ public class GameManager : MonoBehaviour
     public void ResetNukeChargeBar()
     {
         nukeChargeProgress = 0f;
+        nukeArmed = false; // ✅ Reset flag
         if (nukeChargeBar != null)
             nukeChargeBar.transform.localScale = new Vector3(1f, 0f, 1f);
 

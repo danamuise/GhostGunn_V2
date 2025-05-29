@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3976070413893814430}
   - component: {fileID: 8920342003451541037}
   - component: {fileID: 2268189258951053652}
+  - component: {fileID: 6249532161751505710}
   m_Layer: 5
   m_Name: NukeIntro text
   m_TagString: Untagged
@@ -35,8 +36,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.224}
-  m_SizeDelta: {x: 214.33, y: 64.3999}
+  m_AnchoredPosition: {x: 0, y: 0.19}
+  m_SizeDelta: {x: 239.446, y: 64.3999}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3976070413893814430
 CanvasRenderer:
@@ -66,8 +67,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: You have recieved the nuclear option! Charge it up and shoot it for maximum
-    damage!
+  m_text: You have recieved the nuclear option! Charge it up and click on it for
+    maximum damage!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 490a26c1830edb743abd5de0354bd8d2, type: 2}
   m_sharedMaterial: {fileID: -3704634820310649970, guid: 490a26c1830edb743abd5de0354bd8d2, type: 2}
@@ -152,6 +153,18 @@ MonoBehaviour:
   timeBtwChars: 0.01
   leadingChar: 
   leadingCharBeforeDelay: 0
+--- !u!210 &6249532161751505710
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2973475238091778106}
+  m_Enabled: 1
+  m_SortingLayerID: 130303049
+  m_SortingLayer: 2
+  m_SortingOrder: 4
+  m_SortAtRoot: 0
 --- !u!1 &5201194602448400297
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,7 +278,7 @@ GameObject:
   - component: {fileID: 1338443373345458650}
   - component: {fileID: 8043995585665979345}
   m_Layer: 0
-  m_Name: NukeOption_wordBaloon1
+  m_Name: NukeOption_wordBaloon2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -327,7 +340,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 130303049
   m_SortingLayer: 2
-  m_SortingOrder: 2
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: 52f57a3d8d7519d49b16287c372a9773, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

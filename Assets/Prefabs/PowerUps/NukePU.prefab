@@ -5118,3 +5118,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nukeHitVFXPrefab: {fileID: 6008419087115266581, guid: bb2c76f06627ef7448261228d7d49779, type: 3}
   wordBalloon0: {fileID: 8246163543328364006, guid: 44c4b10a0a5cb284cb484ab1c496b684, type: 3}
+  coinSheet0: {fileID: 6355327929970411081}
