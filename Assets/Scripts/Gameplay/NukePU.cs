@@ -93,8 +93,6 @@ public class NukePU : MonoBehaviour
         {
             Debug.LogError($"❌ Exception during NukeIcon SpriteRenderer activation: {e.Message}");
         }
-        //SpriteRenderer NukePU_sr = GetComponent<SpriteRenderer>();
-        //NukePU_sr.enabled = false;
 
         foreach (SpriteRenderer NukePUsr in this.GetComponentsInChildren<SpriteRenderer>(true))
         {
