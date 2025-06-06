@@ -304,9 +304,9 @@ Material:
     - _ForceAlpha: 0
     - _FrozenContrast: 2
     - _FrozenFade: 1
-    - _FrozenHighlightContrast: 2
+    - _FrozenHighlightContrast: 1.44
     - _FrozenHighlightDensity: 1
-    - _FrozenSnowContrast: 1
+    - _FrozenSnowContrast: -0.35
     - _FrozenSnowDensity: 0.25
     - _FullAlphaDissolveFade: 0.5
     - _FullAlphaDissolveWidth: 0.5
@@ -565,8 +565,8 @@ Material:
     - _FrozenHighlightDistortion: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _FrozenHighlightDistortionScale: {r: 0.2, g: 0.2, b: 0, a: 0}
     - _FrozenHighlightDistortionSpeed: {r: -0.05, g: -0.05, b: 0, a: 0}
-    - _FrozenHighlightScale: {r: 0.2, g: 0.2, b: 0, a: 0}
-    - _FrozenHighlightSpeed: {r: 0.1, g: 0.1, b: 0, a: 0}
+    - _FrozenHighlightScale: {r: 0.29, g: 0.2, b: 0, a: 0}
+    - _FrozenHighlightSpeed: {r: 1, g: 0.19, b: 0, a: 0}
     - _FrozenSnowColor: {r: 1.123529, g: 1.373203, b: 1.498039, a: 0}
     - _FrozenSnowScale: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _FrozenTint: {r: 1.819608, g: 4.611765, b: 5.992157, a: 0}

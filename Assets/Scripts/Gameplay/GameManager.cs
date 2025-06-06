@@ -129,12 +129,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void EnterChallengeMode()
-    {
-        Debug.Log("🚀 Entering Challenge Mode...");
-        SceneManager.LoadScene("ChallengeModeScene");
-    }
-
     public void OnShotComplete()
     {
         if (roundInProgress)

@@ -14,6 +14,7 @@ Material:
   m_ValidKeywords:
   - ETC1_EXTERNAL_ALPHA
   - _ENABLEENCHANTED_ON
+  - _ENCHANTEDLERPTOGGLE_ON
   - _SHADERFADING_NONE
   - _SHADERSPACE_UV
   - _STRONGTINTCONTRASTTOGGLE_ON
@@ -284,11 +285,11 @@ Material:
     - _EnableWiggle: 0
     - _EnableWind: 0
     - _EnableWorldTiling: 0
-    - _EnchantedBrightness: 1
+    - _EnchantedBrightness: 4
     - _EnchantedContrast: 0.5
     - _EnchantedFade: 1
-    - _EnchantedLerpToggle: 0
-    - _EnchantedRainbowDensity: 0.5
+    - _EnchantedLerpToggle: 1
+    - _EnchantedRainbowDensity: 1
     - _EnchantedRainbowSaturation: 0.8
     - _EnchantedRainbowSpeed: 0.5
     - _EnchantedRainbowToggle: 0
@@ -553,9 +554,9 @@ Material:
     - _DirectionalGlowFadeEdgeColor: {r: 11.98431, g: 0.6901961, b: 0.6901961, a: 0}
     - _DirectionalGlowFadeNoiseScale: {r: 0.4, g: 0.4, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _EnchantedHighColor: {r: 0, g: 0.7098798, b: 4.237095, a: 0}
-    - _EnchantedLowColor: {r: 2.996078, g: 0, b: 0, a: 0}
-    - _EnchantedScale: {r: 0.1, g: 0.1, b: 0, a: 0}
+    - _EnchantedHighColor: {r: 1.3301408, g: 0, b: 1.6436743, a: 0}
+    - _EnchantedLowColor: {r: 0, g: 1, b: 0.9702382, a: 0}
+    - _EnchantedScale: {r: 0.1, g: 0.01, b: 0, a: 0}
     - _EnchantedSpeed: {r: 0, g: 1, b: 0, a: 0}
     - _FadingNoiseScale: {r: 0.2, g: 0.2, b: 0, a: 0}
     - _FadingPosition: {r: 0, g: 0, b: 0, a: 0}

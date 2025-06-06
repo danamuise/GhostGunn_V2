@@ -17,7 +17,7 @@ MonoBehaviour:
   priority: 1
   cooldown: 0
   pickupVFX: {fileID: 4515118019402398087, guid: 862e41c19f422834885d76a3aa4c4ea5, type: 3}
-  pickupSFX: PUCollect
+  pickupSFX: NukePUhit
   probability: 1
   timesUsed: 0
   lastUsedMove: -1000

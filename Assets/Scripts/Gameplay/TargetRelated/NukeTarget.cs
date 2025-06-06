@@ -3,6 +3,8 @@
 public class NukeTarget : MonoBehaviour
 {
     private bool isArmed = false;
+    public GameObject nukeSequenceObject;
+
 
     public void ArmNuke()
     {
@@ -17,7 +19,20 @@ public class NukeTarget : MonoBehaviour
         if (other.CompareTag("Bullet"))
         {
             Debug.Log("💥 Nuke Launched — NukeIcon hit by bullet!");
-            Destroy(gameObject); // You can replace this with effects later
+
+            if (nukeSequenceObject != null)
+            {
+                nukeSequenceObject.SetActive(true);
+                Debug.Log("💥 NukeSequence GameObject enabled!");
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ NukeSequence GameObject reference is missing!");
+            }
+
+            Destroy(gameObject); 
+
+
         }
     }
 }

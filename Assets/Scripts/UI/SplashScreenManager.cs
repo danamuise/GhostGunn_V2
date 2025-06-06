@@ -17,7 +17,7 @@ public class SplashScreenManager : MonoBehaviour
         if (splashImage != null)
         {
             splashMaterial = splashImage.material;
-            StartCoroutine(AnimatePixelDensity(0f, -10.2f, 1.5f));
+            StartCoroutine(AnimatePixelDensity(0f, -67.4f, 1.75f));
         }
     }
 

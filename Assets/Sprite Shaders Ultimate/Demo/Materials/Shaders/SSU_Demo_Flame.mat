@@ -13,12 +13,10 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - ETC1_EXTERNAL_ALPHA
-  - _ENABLEFLAME_ON
   - _SHADERFADING_NONE
   - _SHADERSPACE_UV
   - _TEXTURELAYER1SHEETTOGGLE_ON
   - _TEXTURELAYER2SHEETTOGGLE_ON
-  - _UVDISTORTMASKTOGGLE_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -63,26 +61,18 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OuterOutlineTintTexture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 5af9a397a8643994c829e696a24a7845, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _PixelOutlineTintTexture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 5af9a397a8643994c829e696a24a7845, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RecolorRGBTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _RecolorRGBTintAreas:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _RecolorRGBYCPTexture:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _RecolorRGBYCPTintAreas:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -99,15 +89,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TextureLayer1Texture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 9685c3a024e22a946a7e8c2ce3542300, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TextureLayer2Texture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 9685c3a024e22a946a7e8c2ce3542300, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _UVDistortMask:
-        m_Texture: {fileID: 2800000, guid: 4b51dd816847558429e35f95f32090f2, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _UberNoiseTexture:
@@ -192,7 +182,7 @@ Material:
     - _EnableDirectionalDistortion: 0
     - _EnableDirectionalGlowFade: 0
     - _EnableEnchanted: 0
-    - _EnableFlame: 1
+    - _EnableFlame: 0
     - _EnableFrozen: 0
     - _EnableFullAlphaDissolve: 0
     - _EnableFullDistortion: 0
@@ -260,7 +250,6 @@ Material:
     - _FlameNoiseHeightFactor: 1.5
     - _FlameRadius: 0.2
     - _FlameSmooth: 2
-    - _ForceAlpha: 0
     - _FrozenContrast: 2
     - _FrozenFade: 1
     - _FrozenHighlightContrast: 2
@@ -273,7 +262,7 @@ Material:
     - _FullGlowDissolveFade: 0.5
     - _FullGlowDissolveWidth: 0.5
     - _GaussianBlurFade: 1
-    - _GaussianBlurOffset: 1
+    - _GaussianBlurOffset: 0.5
     - _GlitchBrightness: 4
     - _GlitchFade: 1
     - _GlitchHueSpeed: 1
@@ -409,7 +398,7 @@ Material:
     - _SquishStretch: 0.1
     - _StrongTintContrast: 0
     - _StrongTintContrastToggle: 0
-    - _StrongTintFade: 0.1
+    - _StrongTintFade: 1
     - _StrongTintMaskToggle: 0
     - _TextureLayer1Columns: 3
     - _TextureLayer1Contrast: 1
@@ -443,7 +432,7 @@ Material:
     - _ToggleTimeSpeed: 0
     - _ToggleUnscaledTime: 0
     - _UVDistortFade: 1
-    - _UVDistortMaskToggle: 1
+    - _UVDistortMaskToggle: 0
     - _UVRotateSpeed: 1
     - _VertexTintFirst: 0
     - _VibrateFade: 1
@@ -460,13 +449,13 @@ Material:
     - _WindIsParallax: 0
     - _WindLocalWind: 0
     - _WindMaxIntensity: 0.4
-    - _WindMaxRotation: 0.12
+    - _WindMaxRotation: 2
     - _WindMinIntensity: -0.4
     - _WindNoiseScale: 0.1
     - _WindNoiseSpeed: 1
     - _WindRotation: 0
-    - _WindRotationWindFactor: 0.1
-    - _WindSquishFactor: 0
+    - _WindRotationWindFactor: 1
+    - _WindSquishFactor: 0.3
     - _WindSquishWindFactor: 0
     - _WindXPosition: 0
     - _WorldTilingPixelsPerUnit: 100
@@ -489,7 +478,7 @@ Material:
     - _CamouflageDistortionSpeed: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _CamouflageNoiseScaleA: {r: 0.25, g: 0.25, b: 0, a: 0}
     - _CamouflageNoiseScaleB: {r: 0.25, g: 0.25, b: 0, a: 0}
-    - _Color: {r: 1, g: 0.7083334, b: 0.3, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorReplaceFromColor: {r: 0, g: 0, b: 0, a: 0}
     - _ColorReplaceToColor: {r: 0, g: 0, b: 0.2, a: 0}
     - _CustomFadeNoiseScale: {r: 1, g: 1, b: 0, a: 0}
@@ -590,7 +579,7 @@ Material:
     - _SpriteSheetRect: {r: 0, g: 0, b: 1, a: 1}
     - _SqueezeCenter: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _SqueezeScale: {r: 2, g: 0, b: 0, a: 0}
-    - _StrongTintTint: {r: 0.67058825, g: 0.8117647, b: 0.43529412, a: 1}
+    - _StrongTintTint: {r: 1, g: 1, b: 1, a: 1}
     - _TextureLayer1Color: {r: 0.4494117, g: 1.298301, b: 2.996079, a: 1}
     - _TextureLayer1Offset: {r: 0, g: 0, b: 0, a: 0}
     - _TextureLayer1Scale: {r: 1, g: 1, b: 0, a: 0}
@@ -599,10 +588,10 @@ Material:
     - _TextureLayer2Offset: {r: 0, g: 0, b: 0, a: 0}
     - _TextureLayer2Scale: {r: 1, g: 1, b: 0, a: 0}
     - _TextureLayer2ScrollSpeed: {r: 0, g: 1, b: 0, a: 0}
-    - _UVDistortFrom: {r: -0.02, g: 0, b: 0, a: 0}
+    - _UVDistortFrom: {r: -0.02, g: -0.02, b: 0, a: 0}
     - _UVDistortNoiseScale: {r: 0.1, g: 0.1, b: 0, a: 0}
-    - _UVDistortSpeed: {r: 2, g: 0, b: 0, a: 0}
-    - _UVDistortTo: {r: 0.02, g: 0, b: 0, a: 0}
+    - _UVDistortSpeed: {r: 2, g: 2, b: 0, a: 0}
+    - _UVDistortTo: {r: 0.02, g: 0.02, b: 0, a: 0}
     - _UVRotatePivot: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _UVScalePivot: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _UVScaleScale: {r: 1, g: 1, b: 0, a: 0}
