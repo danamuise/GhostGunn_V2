@@ -4,6 +4,17 @@ using System.Collections.Generic;
 public class SFXManager : MonoBehaviour
 {
     public static SFXManager Instance;
+    public static bool isClickingButton = false;
+    [Header("Sound UI References")]
+    public GameObject soundUI;
+    public GameObject moveUIoutButton;
+    public GameObject moveUIinButton;
+
+    [Header("SFX & Music Buttons (not used in this snippet, safe to remove if unneeded)")]
+    public GameObject soundOffButton;
+    public GameObject soundOnButton;
+    public GameObject musicOnButton;
+    public GameObject musicOffButton;
 
     [System.Serializable]
     public class NamedAudioClip
@@ -40,13 +51,16 @@ public class SFXManager : MonoBehaviour
         BuildSFXSources();
         BuildMusicLibrary();
 
-        // Create a single dedicated music source
         GameObject musicGO = new GameObject("MusicSource");
         musicGO.transform.SetParent(transform);
         musicSource = musicGO.AddComponent<AudioSource>();
         musicSource.loop = true;
         musicSource.playOnAwake = false;
         musicSource.spatialBlend = 0f;
+
+        // Set initial button states
+        moveUIoutButton.SetActive(true);
+        moveUIinButton.SetActive(false);
     }
 
     private void BuildSFXSources()
@@ -156,4 +170,79 @@ public class SFXManager : MonoBehaviour
         musicSource.Stop();
         musicSource.volume = startVol; // Reset volume
     }
+
+    // --- UI MOVE BUTTONS ---
+
+    public void MoveUIOut()
+    {
+        Debug.Log("MoveUIOut() called!");
+        StartCoroutine(MoveSoundUI(2.606f, 1.69f));
+        moveUIoutButton.SetActive(false);
+        moveUIinButton.SetActive(true);
+
+        // Schedule auto-close after 10 seconds
+        Invoke(nameof(MoveUIIn), 10f);
+    }
+
+    public void MoveUIIn()
+    {
+        Debug.Log("MoveUIIn() called!");
+        StartCoroutine(MoveSoundUI(1.69f, 2.606f));
+        moveUIinButton.SetActive(false);
+        moveUIoutButton.SetActive(true);
+
+        // Cancel the auto-close in case it was scheduled
+        CancelInvoke(nameof(MoveUIIn));
+    }
+
+
+    private System.Collections.IEnumerator MoveSoundUI(float startX, float endX, float duration = 0.3f)
+    {
+        Vector3 startPos = new Vector3(startX, soundUI.transform.position.y, soundUI.transform.position.z);
+        Vector3 endPos = new Vector3(endX, soundUI.transform.position.y, soundUI.transform.position.z);
+
+        float time = 0f;
+        while (time < 1f)
+        {
+            time += Time.deltaTime / duration;
+            float t = Mathf.Pow(time, 2); // ease-in
+            soundUI.transform.position = Vector3.Lerp(startPos, endPos, t);
+            yield return null;
+        }
+        soundUI.transform.position = endPos;
+    }
+
+    private bool isMusicOn = true; // Track music state ourselves
+
+    public void ToggleMusic()
+    {
+        if (isMusicOn)
+        {
+            Debug.Log(" music OFF");
+            musicSource.Stop();
+            musicOnButton.SetActive(false);
+            musicOffButton.SetActive(true);
+            isMusicOn = false; // Update toggle state
+            MoveUIIn();
+        }
+        else
+        {
+           if (musicSource.clip != null)
+            {
+                Debug.Log(" music ON");
+                //musicSource.volume = 1f;
+                musicSource.Play();
+                musicOnButton.SetActive(true);
+                musicOffButton.SetActive(false);
+                isMusicOn = true; // Update toggle state
+                MoveUIIn();
+                }
+            else
+            {
+               Debug.LogWarning("🎵 No music clip assigned to resume playback!");
+            }
+        }
+    }
+
+
 }
