@@ -7983,46 +7983,6 @@ PrefabInstance:
       propertyPath: moveUIoutButton
       value: 
       objectReference: {fileID: 1137979497}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: musicLibrary.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: soundLibrary.Array.size
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: musicLibrary.Array.data[4].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 14d8e4d6d2a2b5d43ab2113a89e25de7, type: 3}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: musicLibrary.Array.data[4].name
-      value: NukeSequenceSFX
-      objectReference: {fileID: 0}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: soundLibrary.Array.data[14].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 77a8387af7d3e1c45841e9d118ac3641, type: 3}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: soundLibrary.Array.data[14].name
-      value: NukePUhit
-      objectReference: {fileID: 0}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: soundLibrary.Array.data[15].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 9c5ccdf99c446324c8427a5e072c21c2, type: 3}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: soundLibrary.Array.data[15].name
-      value: NukeIconLand
-      objectReference: {fileID: 0}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: soundLibrary.Array.data[16].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 14d8e4d6d2a2b5d43ab2113a89e25de7, type: 3}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: soundLibrary.Array.data[16].name
-      value: NukeScequenceSFX
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

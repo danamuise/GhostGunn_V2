@@ -80,9 +80,11 @@ public class SFXManager : MonoBehaviour
                 source.spatialBlend = 0f;
 
                 sfxSources.Add(entry.name, source);
+                Debug.Log($"SFXSource created for: {entry.name}");
             }
         }
     }
+
 
     private void BuildMusicLibrary()
     {
@@ -98,6 +100,7 @@ public class SFXManager : MonoBehaviour
     }
 
     // 🔊 Play SFX with optional pitch variation
+
     public void Play(string soundName, float volume = 1f, float pitchMin = 0.95f, float pitchMax = 1.05f)
     {
         if (!sfxSources.TryGetValue(soundName, out AudioSource source))
@@ -109,7 +112,11 @@ public class SFXManager : MonoBehaviour
         source.pitch = Random.Range(pitchMin, pitchMax);
         source.volume = volume;
         source.PlayOneShot(source.clip);
+
+        // Add a debug log to show which sound is being played
+        Debug.Log($"🎧 Playing SFX: {soundName}");
     }
+
 
     public void PlayRandom(string[] soundNames, float volume = 1f, float pitchMin = 0.95f, float pitchMax = 1.05f)
     {

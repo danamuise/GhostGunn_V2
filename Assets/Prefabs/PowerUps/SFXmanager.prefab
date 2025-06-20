@@ -44,6 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a778c58fb0baf840860e163c292ea1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundUI: {fileID: 7751269498262281042, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+  moveUIoutButton: {fileID: -7595413430563298066, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+  moveUIinButton: {fileID: -7519722154212866590, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+  soundOffButton: {fileID: 0}
+  soundOnButton: {fileID: 0}
+  musicOnButton: {fileID: 0}
+  musicOffButton: {fileID: 0}
   soundLibrary:
   - name: BulletShoot
     clip: {fileID: 8300000, guid: e77648cf6951dbb4d90a0ac4f841ef2a, type: 3}
@@ -73,10 +80,14 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 130dad800f9e02e40adce3aa94951026, type: 3}
   - name: explosion0
     clip: {fileID: 8300000, guid: 58f43fad931827248b158ca664f98d18, type: 3}
-  - name: NukeIconLand
-    clip: {fileID: 8300000, guid: 9c5ccdf99c446324c8427a5e072c21c2, type: 3}
   - name: NukePUhit
     clip: {fileID: 8300000, guid: 77a8387af7d3e1c45841e9d118ac3641, type: 3}
+  - name: NukeIconLand
+    clip: {fileID: 8300000, guid: 9c5ccdf99c446324c8427a5e072c21c2, type: 3}
+  - name: FoundStampSFX
+    clip: {fileID: 8300000, guid: 5c9e75e0a79c1084eb35a6ad17a8a65d, type: 3}
+  - name: buttonBoing
+    clip: {fileID: 8300000, guid: 6d21d27c426aa574184526764146fc4b, type: 3}
   musicLibrary:
   - name: mainBGmusic
     clip: {fileID: 8300000, guid: 90b1bd647c6c59c489e60caa4d377d08, type: 3}

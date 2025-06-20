@@ -155,14 +155,39 @@ public class GameManager : MonoBehaviour
 
         if (LeadArea() == 9)
         {
-            Debug.Log("💀 Final move reached — targets are now in Area 10.");
-            TriggerGameOver();
-            yield break;
+            Debug.Log("⚠️ Area 10 objects detected. Checking for targets only…");
+
+            // Check if there are any actual targets in Area 10
+            bool hasTargets = HasTargetsInRow(9);
+
+            if (hasTargets)
+            {
+                Debug.Log("💀 Final move reached — targets in Area 10. Game Over triggered.");
+                TriggerGameOver();
+                yield break;
+            }
+            else
+            {
+                Debug.Log("✅ Only power-ups in Area 10 — destroying them and continuing game.");
+
+                // Destroy power-ups in Area 10
+                int cols = grid.GetColumnCount();
+                for (int col = 0; col < cols; col++)
+                {
+                    GameObject obj = grid.GetTargetAt(col, 9);
+                    if (obj != null && obj.CompareTag("PowerUp"))
+                    {
+                        Destroy(obj);
+                        grid.MarkCellOccupied(col, 9, false);
+                    }
+                }
+            }
         }
 
         gun.EnableGun(true);
         roundInProgress = false;
     }
+
 
     private void TriggerGameOver()
     {
@@ -207,6 +232,21 @@ public class GameManager : MonoBehaviour
             nukeIconMaterial.color = dimColor;
 
         Debug.Log("🔄 Nuke charge bar reset.");
+    }
+
+    private bool HasTargetsInRow(int rowIndex)
+    {
+        int cols = grid.GetColumnCount();
+
+        for (int col = 0; col < cols; col++)
+        {
+            GameObject obj = grid.GetTargetAt(col, rowIndex);
+            if (obj != null && obj.CompareTag("Target"))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void ResetScore()

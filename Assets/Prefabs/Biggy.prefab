@@ -53,6 +53,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4921502831410464599}
     m_Modifications:
+    - target: {fileID: -8722140490625287503, guid: 326455a37e21002469409ea67791ba90, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2d786e542be100f478328aa103c3304a, type: 2}
     - target: {fileID: -8653719598885068355, guid: 326455a37e21002469409ea67791ba90, type: 3}
       propertyPath: m_Name
       value: BigGhostSingle
