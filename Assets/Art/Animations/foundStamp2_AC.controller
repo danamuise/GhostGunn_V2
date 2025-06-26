@@ -62,7 +62,7 @@ AnimatorController:
   m_Name: foundStamp2_AC
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: Stamp2
+  - m_Name: stamp2
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -115,7 +115,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Stamp2
+    m_ConditionEvent: stamp2
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6398095115038266023}

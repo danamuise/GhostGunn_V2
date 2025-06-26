@@ -16,7 +16,7 @@ public class BookPhotoMatcher : MonoBehaviour
     [Header("Book Photo Button Roots (Prefabs)")]
     public GameObject[] bookPhotoButtonRoots; // Same order as bookPhotoButtons
 
-    private int[] civilianPhotoIDs = new int[] { 0, 14, 10 };
+    private int[] civilianPhotoIDs = new int[] { 0, 14, 9 };
     private int currentCivilianIndex = 0;
     private int[] bookPhotoIDsOnCurrentPage = new int[4];
 
@@ -26,6 +26,7 @@ public class BookPhotoMatcher : MonoBehaviour
     void Start()
     {
         currentCivilianIndex = 0;
+        book.onBookOpened.AddListener(OnBookOpenedByPlayer);
 
         // Hook up photo button listeners
         for (int i = 0; i < bookPhotoButtons.Length; i++)
@@ -33,6 +34,13 @@ public class BookPhotoMatcher : MonoBehaviour
             int index = i;
             bookPhotoButtons[i].onClick.AddListener(() => OnPhotoButtonClicked(index));
         }
+    }
+
+    void OnBookOpenedByPlayer()
+    {
+        Debug.Log("📖 Book officially opened by player — enabling photo buttons");
+        SetPhotoButtonsInteractable(true);
+        EnableBookPhotoButtons();
     }
 
     void OnPhotoButtonClicked(int index)
@@ -56,27 +64,32 @@ public class BookPhotoMatcher : MonoBehaviour
         {
             Debug.Log($"photo{selectedID}: correct");
             ShowFeedback(index, true);
-
-            SetPhotoButtonsInteractable(false);
             StartCoroutine(HandleCorrectMatchSequence());
         }
         else
         {
             Debug.Log($"photo{selectedID}: incorrect");
             ShowFeedback(index, false);
+            // ❌ Do NOT disable interactables immediately — allow marker to show
+            StartCoroutine(HandleIncorrectMatchSequence());
         }
 
         Debug.Log($"🧠 Current Civilian Index: {currentCivilianIndex} | Target ID: {targetID} | Selected ID: {selectedID}");
     }
 
+
     IEnumerator HandleCorrectMatchSequence()
     {
+        SetPhotoButtonsInteractable(false);
         // 1. Wait 0.75s after showing "correct" marker
         yield return new WaitForSeconds(0.75f);
 
         // 2. Close the book
         HideAllBookPhotoMarkers();
+        SetPhotoButtonsInteractable(false);  // Make extra sure before book closes
         book.CloseBook();
+        // Also disable raycasts immediately
+        DisableBookPhotoButtons();
 
         // 3. Wait for book closing to complete (~0.5s)
         yield return new WaitForSeconds(0.5f);
@@ -116,7 +129,9 @@ public class BookPhotoMatcher : MonoBehaviour
         }
 
         Debug.Log($"🔍 Now searching for photo ID: {civilianPhotoIDs[currentCivilianIndex]}");
-        SetPhotoButtonsInteractable(true);
+
+        // Show next photo (or whatever your logic does)
+        //StartCoroutine(ReenablePhotoButtonsAfterBookOpens());
     }
 
     public void SetPagePhotoIDs(int id0, int id1, int id2, int id3)
@@ -176,5 +191,84 @@ public class BookPhotoMatcher : MonoBehaviour
             if (incorrect != null) incorrect.gameObject.SetActive(false);
         }
     }
+
+    void DisableBookPhotoButtons()
+    {
+        Debug.Log("✔️ Book photo buttons disabled: ");
+        foreach (var btn in bookPhotoButtons)
+        {
+            if (btn != null)
+            {
+                btn.interactable = false;
+                
+                var cg = btn.GetComponent<CanvasGroup>();
+                if (cg != null)
+                {
+                    cg.interactable = false;
+                    btn.gameObject.SetActive(false);
+                    cg.blocksRaycasts = false;
+                }
+                else
+                {
+                    Debug.LogWarning($"⚠️ No CanvasGroup found on {btn.gameObject.name}");
+                }
+            }
+        }
+    }
+
+    void EnableBookPhotoButtons()
+    {
+        Debug.Log("✔️ Book photo buttons enabled");
+        foreach (var btn in bookPhotoButtons)
+        {
+            if (btn != null)
+            {
+                btn.interactable = true;
+
+                var cg = btn.GetComponent<CanvasGroup>();
+                if (cg != null)
+                {
+                    btn.gameObject.SetActive(true);
+                    cg.interactable = true;
+                    cg.blocksRaycasts = true;
+                }
+            }
+        }
+    }
+
+    IEnumerator ReenablePhotoButtonsAfterBookOpens()
+    {
+        Debug.Log("✔️ Book photo buttons renabled after book opens");
+        // Wait until book has visually opened (adjust timing if needed)
+        yield return new WaitForSeconds(1.0f);
+
+        SetPhotoButtonsInteractable(true);
+        EnableBookPhotoButtons();
+    }
+
+    IEnumerator HandleIncorrectMatchSequence()
+    {
+        // 1. Let the "incorrect" marker be visible briefly
+        yield return new WaitForSeconds(0.75f);
+
+        // 2. Close the book
+        HideAllBookPhotoMarkers();
+        book.CloseBook();
+
+        // 3. Disable all interaction on the book photo buttons
+        SetPhotoButtonsInteractable(false);
+        DisableBookPhotoButtons();
+
+        // 4. Wait for book closing animation (if needed)
+        yield return new WaitForSeconds(0.5f);
+
+        // 5. Deduct time from the timer (placeholder for later integration)
+        // Example: GameTimer.Instance.DeductTime(5f); // ← you'll implement this
+
+        // 6. Player must reopen the book manually using btn_useBook
+        Debug.Log("❌ Incorrect match. Book closed. Player must reopen it manually.");
+    }
+
+
 
 }

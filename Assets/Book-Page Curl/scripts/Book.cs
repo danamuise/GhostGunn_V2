@@ -90,7 +90,7 @@ public class Book : MonoBehaviour
     public Vector3 smallScale = new Vector3(0.68f, 0.68f, 0.68f);
     public Vector3 fullScale = new Vector3(1.59956f, 1.59956f, 1.59956f);
     public BookPhotoMatcher bookPhotoMatcher;
-
+    public UnityEvent onBookOpened;
     void Start()
     {
         if (bookPhotoMatcher != null)
@@ -579,8 +579,16 @@ public class Book : MonoBehaviour
 
     public void OpenBook()
     {
+        
         StopAllCoroutines();
         StartCoroutine(OpenBookRoutine());
+        StartCoroutine(NotifyBookOpenedAfterDelay());
+    }
+
+    private IEnumerator NotifyBookOpenedAfterDelay()
+    {
+        yield return new WaitForSeconds(1f); // Adjust for your book open animation time
+        onBookOpened?.Invoke();
     }
 
     private IEnumerator OpenBookRoutine()
