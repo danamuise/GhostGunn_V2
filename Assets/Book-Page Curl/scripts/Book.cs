@@ -18,6 +18,7 @@ public class Book : MonoBehaviour
     [SerializeField]
     RectTransform BookPanel;
     public Sprite background;
+    public GameObject pageLeft;
     public Sprite[] bookPages;
     public bool interactable = true;
     public bool enableShadowEffect = true;
@@ -74,17 +75,34 @@ public class Book : MonoBehaviour
     public Button btn_useBook;
 
     // Define open & closed positions/rotations
-    public Vector3 closedPosition = new Vector3(-55.22f, -750f, 0f);
-    public Vector3 closedRotation = new Vector3(0f, 0f, 12.16f);
+    public Vector3 closedPosition = new Vector3(243f, -23f, 0f);
+    public Vector3 closedRotation = new Vector3(0f, 0f, -26.3f);
 
     public Vector3 openPosition = new Vector3(-444f, 92f, 0f);
     public Vector3 openRotation = new Vector3(0f, 0f, 0f);
 
     public float openCloseDuration = 0.5f;
+    [Header("Book Parent container")]
+    public GameObject bookMainPrefab; // the parent to enable/disable
 
+    public Vector3 state4Position = new Vector3(245f, -15f, 0f);
+    public Vector3 offscreenPosition = new Vector3(729f, -15f, 0f);
+    public Vector3 smallScale = new Vector3(0.68f, 0.68f, 0.68f);
+    public Vector3 fullScale = new Vector3(1.59956f, 1.59956f, 1.59956f);
+    public BookPhotoMatcher bookPhotoMatcher;
 
     void Start()
     {
+        if (bookPhotoMatcher != null)
+        {
+            Debug.Log("🔒 Disabling book photo buttons at start.");
+            bookPhotoMatcher.SetPhotoButtonsInteractable(false);
+        }
+            
+
+        transform.localPosition = offscreenPosition;
+        transform.localEulerAngles = closedRotation;
+        transform.localScale = smallScale;
         // Validate canvas
         if (!canvas) canvas = GetComponentInParent<Canvas>();
         if (!canvas) Debug.LogError("Book should be a child to a Canvas!");
@@ -114,12 +132,12 @@ public class Book : MonoBehaviour
         ShadowLTR.rectTransform.pivot = new Vector2(0, (pageWidth / 2) / shadowPageHeight);
 
         // ✅ Initialize Book at closed position & rotation
-        transform.localPosition = closedPosition;
-        transform.localEulerAngles = closedRotation;
+        //transform.localPosition = closedPosition;
+        //transform.localEulerAngles = closedRotation;
 
         // ✅ Show only Use Book button; hide control buttons
-        SetUseBookButtonVisible(true);
-        SetControlButtonsVisible(false);
+        //SetUseBookButtonVisible(true);
+        //SetControlButtonsVisible(false);
 
         // ✅ Hook up buttons
         if (btn_useBook != null) btn_useBook.onClick.AddListener(OpenBook);
@@ -413,6 +431,7 @@ public class Book : MonoBehaviour
             currentPage += 2;
         else
             currentPage -= 2;
+
         LeftNext.transform.SetParent(BookPanel.transform, true);
         Left.transform.SetParent(BookPanel.transform, true);
         LeftNext.transform.SetParent(BookPanel.transform, true);
@@ -425,7 +444,41 @@ public class Book : MonoBehaviour
         ShadowLTR.gameObject.SetActive(false);
         if (OnFlip != null)
             OnFlip.Invoke();
+
+        // 🔍 Updated page number logging
+        if (currentPage <= 0)
+        {
+            Debug.Log("📖 Page: 0 and 0 (Cover)");
+        }
+        else
+        {
+            int leftPage = currentPage;
+            int rightPage = Mathf.Min(currentPage + 1, TotalPageCount);
+            Debug.Log($"📖 Page: {leftPage} and {rightPage}");
+        }
+        UpdatePageButtons();
+
+        // ✅ Enable/Disable pageLeft SpriteRenderer depending on currentPage
+        if (pageLeft != null)
+        {
+            var sr = pageLeft.GetComponent<SpriteRenderer>();
+            if (sr != null)
+                sr.enabled = currentPage >= 2;
+        }
+
+        if (bookPhotoMatcher != null)
+            bookPhotoMatcher.UpdateBookPhotosForPage(currentPage);
+        
+        // ✅ Only enable photo buttons if we're on pages 2 and 3
+        if (currentPage == 2 && bookPhotoMatcher != null)
+        {
+            Debug.Log("✅ Enabling photo buttons now that page 2–3 is visible.");
+            bookPhotoMatcher.SetPhotoButtonsInteractable(true);
+        }
+
     }
+
+
     public void TweenBack()
     {
         if (mode == FlipMode.RightToLeft)
@@ -506,10 +559,15 @@ public class Book : MonoBehaviour
         // Show the Use Book button again when closed
         SetUseBookButtonVisible(true);
 
-        // Animate back to closed spot
+        // ✅ Animate back to closed position, rotation AND scale down to smallScale
         StopAllCoroutines();
-        StartCoroutine(AnimateTransform(closedPosition, closedRotation, openCloseDuration));
+        StartCoroutine(AnimateTransform(closedPosition, closedRotation, smallScale, openCloseDuration));
+
+        if (bookPhotoMatcher != null)
+            bookPhotoMatcher.SetPhotoButtonsInteractable(false);
+
     }
+
 
 
     void SetControlButtonsVisible(bool visible)
@@ -521,41 +579,147 @@ public class Book : MonoBehaviour
 
     public void OpenBook()
     {
-        // Animate book into view
         StopAllCoroutines();
-        StartCoroutine(AnimateTransform(openPosition, openRotation, openCloseDuration));
+        StartCoroutine(OpenBookRoutine());
+    }
 
-        // Show next/prev/close
+    private IEnumerator OpenBookRoutine()
+    {
+        // ✅ Wait for animation to finish
+        yield return AnimateTransform(
+            openPosition,
+            openRotation,
+            new Vector3(1.59956002f, 1.59956002f, 1.59956002f),
+            openCloseDuration
+        );
+
         SetControlButtonsVisible(true);
-
-        // Hide the Use Book button while open
         SetUseBookButtonVisible(false);
     }
 
 
 
-    IEnumerator AnimateTransform(Vector3 targetPosition, Vector3 targetRotation, float duration)
+    IEnumerator AnimateTransform(Vector3 targetPosition, Vector3 targetRotation, Vector3 targetScale, float duration)
     {
         Vector3 startPos = transform.localPosition;
         Vector3 startRot = transform.localEulerAngles;
+        Vector3 startScale = transform.localScale;
         float elapsed = 0f;
 
         while (elapsed < duration)
         {
-            transform.localPosition = Vector3.Lerp(startPos, targetPosition, elapsed / duration);
-            transform.localEulerAngles = Vector3.Lerp(startRot, targetRotation, elapsed / duration);
+            float t = elapsed / duration;
+            float easedT = EaseOutCubic(t);
+
+            transform.localPosition = Vector3.Lerp(startPos, targetPosition, easedT);
+            transform.localEulerAngles = Vector3.Lerp(startRot, targetRotation, easedT);
+            transform.localScale = Vector3.Lerp(startScale, targetScale, easedT);
+
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         transform.localPosition = targetPosition;
         transform.localEulerAngles = targetRotation;
+        transform.localScale = targetScale;
     }
+
+    //Overloaded function
+    IEnumerator AnimateTransform(Vector3 targetPos, Vector3 targetRot, float duration)
+    {
+        Vector3 startPos = transform.localPosition;
+        Vector3 startRot = transform.localEulerAngles;
+        Vector3 currentScale = transform.localScale; // keep scale unchanged
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            float easedT = EaseOutCubic(t);
+
+            transform.localPosition = Vector3.Lerp(startPos, targetPos, easedT);
+            transform.localEulerAngles = Vector3.Lerp(startRot, targetRot, easedT);
+            transform.localScale = currentScale;
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.localPosition = targetPos;
+        transform.localEulerAngles = targetRot;
+    }
+
 
     void SetUseBookButtonVisible(bool visible)
     {
         if (btn_useBook != null) btn_useBook.gameObject.SetActive(visible);
     }
 
+    public void MoveBookIn()
+    {
+        if (bookMainPrefab != null && !bookMainPrefab.activeSelf)
+        {
+            bookMainPrefab.SetActive(true);
+        }
+
+        StopAllCoroutines();
+
+        // ✅ Disable photo button interaction early
+        if (bookPhotoMatcher != null)
+        {
+            Debug.Log("🔒 Disabling photo buttons from MoveBookIn()");
+            bookPhotoMatcher.SetPhotoButtonsInteractable(false);
+        }
+
+        // Move in to closed position with initial scale (no scale change yet)
+        StartCoroutine(AnimateTransform(
+            closedPosition,
+            closedRotation,
+            new Vector3(0.68f, 0.68f, 0.68f),
+            openCloseDuration * 0.8f
+        ));
+
+        SetControlButtonsVisible(false);
+        SetUseBookButtonVisible(true);
+    }
+
+
+
+    private float EaseOutCubic(float t)
+    {
+        return 1 - Mathf.Pow(1 - t, 3);
+    }
+
+    private void UpdatePageButtons()
+    {
+        // Disable "Next" if we've reached or passed the final spread
+        bool atLastPage = currentPage >= TotalPageCount - 2;
+        bool atFirstPage = currentPage <= 0;
+
+        if (btn_next != null)
+            btn_next.interactable = !atLastPage;
+
+        if (btn_prev != null)
+            btn_prev.interactable = !atFirstPage;
+    }
+
+    public void MoveBookOut()
+    {
+        Debug.Log("📘 Moving book offscreen...");
+
+        StopAllCoroutines();
+        StartCoroutine(AnimateTransform(
+            offscreenPosition,
+            closedRotation,
+            smallScale,
+            openCloseDuration * 0.8f
+        ));
+
+        SetControlButtonsVisible(false);
+        SetUseBookButtonVisible(false);
+
+        if (bookPhotoMatcher != null)
+            bookPhotoMatcher.SetPhotoButtonsInteractable(false);
+    }
 
 }

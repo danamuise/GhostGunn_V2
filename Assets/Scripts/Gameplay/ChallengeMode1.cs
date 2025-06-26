@@ -11,7 +11,7 @@ public class ChallengeMode1 : MonoBehaviour
     [SerializeField] private GameObject zombieGraphic1;
     [SerializeField] private GameObject familesGraphic;
     [SerializeField] private GameObject desktop;
-    [SerializeField] private GameObject stateAdvanceButton; // ✅ Renamed
+    [SerializeField] private GameObject stateAdvanceButton;
     [SerializeField] private GameObject civilianPhotos;
 
     [Header("Text Objects")]
@@ -29,6 +29,9 @@ public class ChallengeMode1 : MonoBehaviour
     [SerializeField] private float fadeOutDuration = 0.25f;
     [SerializeField] private float blinkSpeed = 0.2f;
 
+    [Header("Book Reference")]
+    [SerializeField] private Book book; // ✅ Link your Book here!
+
     private SpriteRenderer wordBalloonRenderer;
     private SpriteRenderer zombieGraphic0Renderer;
     private SpriteRenderer zombieGraphic1Renderer;
@@ -41,7 +44,7 @@ public class ChallengeMode1 : MonoBehaviour
 
     private void Awake()
     {
-        // Get renderers once
+        // Get renderers
         wordBalloonRenderer = wordBalloon.GetComponent<SpriteRenderer>();
         zombieGraphic0Renderer = zombieGraphic0.GetComponent<SpriteRenderer>();
         zombieGraphic1Renderer = zombieGraphic1.GetComponent<SpriteRenderer>();
@@ -49,7 +52,7 @@ public class ChallengeMode1 : MonoBehaviour
         desktopRenderer = desktop.GetComponent<SpriteRenderer>();
         stateAdvanceButtonRenderer = stateAdvanceButton.GetComponent<SpriteRenderer>();
 
-        // Ensure clean state
+        // Clean initial state
         wordBalloonRenderer.enabled = false;
         zombieGraphic0Renderer.enabled = false;
         zombieGraphic1Renderer.enabled = false;
@@ -78,7 +81,7 @@ public class ChallengeMode1 : MonoBehaviour
 
     public void PlayChallengeMusic()
     {
-        SFXManager.Instance.PlayMusic("challengeZone1", 0.5f);
+        //SFXManager.Instance.PlayMusic("challengeZone1", 0.5f);
         Debug.Log("🎵 Playing challengeZone1 music");
     }
 
@@ -87,7 +90,6 @@ public class ChallengeMode1 : MonoBehaviour
         SFXManager.Instance.Play("buttonBoing");
         Debug.Log("🔊 Played buttonBoing sound");
 
-        // Stop blinking (it will restart in the next stage if needed)
         if (blinkCoroutine != null)
             StopCoroutine(blinkCoroutine);
         stateAdvanceButtonRenderer.enabled = true;
@@ -98,6 +100,8 @@ public class ChallengeMode1 : MonoBehaviour
 
     private void RunCurrentState()
     {
+        Debug.Log($"🚦 Running State: {currentState}");
+
         switch (currentState)
         {
             case 1:
@@ -109,8 +113,11 @@ public class ChallengeMode1 : MonoBehaviour
             case 3:
                 Stage3sequence();
                 break;
+            case 4:
+                Stage4sequence();
+                break;
             default:
-                Debug.Log("🚦 State not implemented: " + currentState);
+                Debug.Log($"🚦 State not implemented: {currentState}");
                 break;
         }
     }
@@ -125,18 +132,14 @@ public class ChallengeMode1 : MonoBehaviour
 
     private IEnumerator Stage0sequenceCoroutine()
     {
-        // Animate Ghost
         yield return StartCoroutine(MoveGhostWithOvershoot());
 
-        // Word balloon & text
         wordBalloonRenderer.enabled = true;
         CL1_textObject.gameObject.SetActive(true);
 
-        // Fade in zombieGraphic0
         zombieGraphic0Renderer.enabled = true;
         yield return StartCoroutine(FadeInSprite(zombieGraphic0Renderer));
 
-        // Enable & blink advance button
         stateAdvanceButtonRenderer.enabled = true;
         blinkCoroutine = StartCoroutine(BlinkSprite(stateAdvanceButtonRenderer));
     }
@@ -149,18 +152,14 @@ public class ChallengeMode1 : MonoBehaviour
 
     private IEnumerator Stage1sequenceCoroutine()
     {
-        // Fade out zombieGraphic0
         yield return StartCoroutine(FadeOutToBlack(zombieGraphic0Renderer));
 
-        // Fade in zombieGraphic1
         zombieGraphic1Renderer.enabled = true;
         yield return StartCoroutine(FadeInSprite(zombieGraphic1Renderer));
 
-        // Switch text
         CL1_textObject.gameObject.SetActive(false);
         CL2_textObject.gameObject.SetActive(true);
 
-        // Blink advance button again
         blinkCoroutine = StartCoroutine(BlinkSprite(stateAdvanceButtonRenderer));
     }
 
@@ -172,18 +171,14 @@ public class ChallengeMode1 : MonoBehaviour
 
     private IEnumerator Stage2sequenceCoroutine()
     {
-        // Fade out zombieGraphic1
         yield return StartCoroutine(FadeOutToBlack(zombieGraphic1Renderer));
 
-        // Fade in familesGraphic
         familesGraphicRenderer.enabled = true;
         yield return StartCoroutine(FadeInSprite(familesGraphicRenderer));
 
-        // Switch text
         CL2_textObject.gameObject.SetActive(false);
         CL3_textObject.gameObject.SetActive(true);
 
-        // Blink advance button again
         blinkCoroutine = StartCoroutine(BlinkSprite(stateAdvanceButtonRenderer));
     }
 
@@ -195,23 +190,46 @@ public class ChallengeMode1 : MonoBehaviour
 
     private IEnumerator Stage3sequenceCoroutine()
     {
-        // Fade out familesGraphic
         yield return StartCoroutine(FadeOutToBlack(familesGraphicRenderer));
 
-        // Fade in desktop
         desktopRenderer.enabled = true;
         yield return StartCoroutine(FadeInSprite(desktopRenderer));
 
-        // Switch text
         CL3_textObject.gameObject.SetActive(false);
         CL4_textObject.gameObject.SetActive(true);
 
-        // Enable civilianPhotos
         civilianPhotos.SetActive(true);
 
-        // Blink advance button again
         blinkCoroutine = StartCoroutine(BlinkSprite(stateAdvanceButtonRenderer));
     }
+
+    public void Stage4sequence()
+    {
+        Debug.Log("▶ Stage 4 sequence STARTED");
+        MoveBookInForStage4();
+    }
+
+    private void MoveBookInForStage4()
+    {
+        if (book != null)
+        {
+            // ✅ Enable the Book GameObject first
+            if (!book.gameObject.activeSelf)
+            {
+                book.gameObject.SetActive(true);
+                Debug.Log("📖 Book GameObject activated");
+            }
+
+            // ✅ Then move it in
+            book.MoveBookIn();
+            Debug.Log("📖 Called Book.MoveBookIn() from Stage 4");
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ Book reference not assigned in ChallengeMode1!");
+        }
+    }
+
 
     // -------------------- UTILS --------------------
 
