@@ -7,6 +7,7 @@ public class ChallengeMode1 : MonoBehaviour
     [Header("Scene Objects")]
     [SerializeField] private GameObject ghost;
     [SerializeField] private GameObject wordBalloon;
+    [SerializeField] public GameObject wordBalloon1;
     [SerializeField] private GameObject zombieGraphic0;
     [SerializeField] private GameObject zombieGraphic1;
     [SerializeField] private GameObject familesGraphic;
@@ -19,6 +20,10 @@ public class ChallengeMode1 : MonoBehaviour
     [SerializeField] private TextMeshProUGUI CL2_textObject;
     [SerializeField] private TextMeshProUGUI CL3_textObject;
     [SerializeField] private TextMeshProUGUI CL4_textObject;
+    [SerializeField] private TextMeshProUGUI CL5_textObject;
+    [SerializeField] public TextMeshProUGUI CL6_textObject;
+    [SerializeField] public TextMeshProUGUI CL7_textObject;
+    [SerializeField] public TextMeshProUGUI CL8_textObject;
 
     [Header("Animation Settings")]
     [SerializeField] private float ghostStartY = -6.20f;
@@ -64,6 +69,7 @@ public class ChallengeMode1 : MonoBehaviour
         CL2_textObject.gameObject.SetActive(false);
         CL3_textObject.gameObject.SetActive(false);
         CL4_textObject.gameObject.SetActive(false);
+        CL5_textObject.gameObject.SetActive(false);
 
         civilianPhotos.SetActive(false);
 
@@ -206,8 +212,43 @@ public class ChallengeMode1 : MonoBehaviour
     public void Stage4sequence()
     {
         Debug.Log("▶ Stage 4 sequence STARTED");
+
+        // Disable CL4 text and word balloon
+        CL4_textObject.gameObject.SetActive(false);
+        wordBalloon.SetActive(false);
+        stateAdvanceButton.SetActive(false);
+
+        StartCoroutine(Stage4sequenceCoroutine());
+        StartCoroutine(DelayedWordBalloon1AndTextToggle());
+    }
+
+    private IEnumerator DelayedWordBalloon1AndTextToggle()
+    {
+        yield return new WaitForSeconds(1f);
+
+        wordBalloon1.SetActive(true);
+        CL5_textObject.gameObject.SetActive(true);
+    }
+    public void HideWordBalloon1AndText()
+    {
+        wordBalloon1.SetActive(false);
+        CL5_textObject.gameObject.SetActive(false);
+        CL6_textObject.gameObject.SetActive(false);
+        CL7_textObject.gameObject.SetActive(false);
+        CL8_textObject.gameObject.SetActive(false);
+    }
+
+    private IEnumerator Stage4sequenceCoroutine()
+    {
+        // Move ghost from (0.875, -4.7199, 0) to (-0.3389, -4.7199, 0)
+        Vector3 from = ghost.transform.position;
+        Vector3 to = new Vector3(-0.3389f, from.y, from.z);
+        yield return StartCoroutine(MoveGhostToNewXPosition(from, to, 1.0f));
+
+        // Now open the book
         MoveBookInForStage4();
     }
+
 
     private void MoveBookInForStage4()
     {
@@ -314,4 +355,32 @@ public class ChallengeMode1 : MonoBehaviour
             yield return new WaitForSeconds(blinkSpeed);
         }
     }
+
+    private IEnumerator MoveGhostToNewXPosition(Vector3 from, Vector3 to, float duration)
+    {
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float normalized = t / duration;
+            float eased = EaseInOutCubic(normalized);
+            ghost.transform.position = Vector3.Lerp(from, to, eased);
+            yield return null;
+        }
+
+        ghost.transform.position = to;
+    }
+
+    private float EaseInOutCubic(float x)
+    {
+        return x < 0.5f ? 4 * x * x * x : 1 - Mathf.Pow(-2 * x + 2, 3) / 2;
+    }
+
+    public void ReturnGhostToOriginalPosition()
+    {
+        Vector3 from = ghost.transform.position;
+        Vector3 to = new Vector3(0.875f, from.y, from.z);
+        StartCoroutine(MoveGhostToNewXPosition(from, to, 1.0f));
+    }
+
 }

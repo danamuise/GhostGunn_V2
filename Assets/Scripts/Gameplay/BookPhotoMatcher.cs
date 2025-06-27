@@ -22,6 +22,8 @@ public class BookPhotoMatcher : MonoBehaviour
 
     [Header("Parent Animator for Slide Outs")]
     public Animator civilianPhotosParentAnimator;
+    public ChallengeMode1 challengeManager;
+    private int wrongPhotoClickCount = 0;
 
     void Start()
     {
@@ -39,9 +41,17 @@ public class BookPhotoMatcher : MonoBehaviour
     void OnBookOpenedByPlayer()
     {
         Debug.Log("📖 Book officially opened by player — enabling photo buttons");
+
+        // Reset hint text and word balloon
+        if (challengeManager != null)
+        {
+            challengeManager.HideWordBalloon1AndText();
+        }
+
         SetPhotoButtonsInteractable(true);
         EnableBookPhotoButtons();
     }
+
 
     void OnPhotoButtonClicked(int index)
     {
@@ -125,14 +135,41 @@ public class BookPhotoMatcher : MonoBehaviour
         if (currentCivilianIndex >= civilianPhotoIDs.Length)
         {
             Debug.Log("✅ All civilians matched. Unlock power-up!");
+
+            // Move ghost to original position
+            if (challengeManager != null)
+            {
+                challengeManager.ReturnGhostToOriginalPosition();
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ challengeManager reference not assigned!");
+            }
+
+            // Hide btn_useBook
+            if (book != null && book.btn_useBook != null)
+            {
+                book.btn_useBook.gameObject.SetActive(false);
+            }
+
+
+
+            // Move book off screen to its original hidden position
+            if (book != null)
+            {
+                book.MoveBookOut(); // Assuming this moves the book back to its original off-screen spot
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ Book reference not assigned!");
+            }
+
             return;
         }
 
         Debug.Log($"🔍 Now searching for photo ID: {civilianPhotoIDs[currentCivilianIndex]}");
-
-        // Show next photo (or whatever your logic does)
-        //StartCoroutine(ReenablePhotoButtonsAfterBookOpens());
     }
+
 
     public void SetPagePhotoIDs(int id0, int id1, int id2, int id3)
     {
@@ -251,24 +288,45 @@ public class BookPhotoMatcher : MonoBehaviour
         // 1. Let the "incorrect" marker be visible briefly
         yield return new WaitForSeconds(0.75f);
 
-        // 2. Close the book
+        // 2. Show feedback message based on how many incorrects so far
+        if (challengeManager != null)
+        {
+            int cycleIndex = wrongPhotoClickCount % 3;
+
+            challengeManager.HideWordBalloon1AndText(); // Reset all first
+
+            switch (cycleIndex)
+            {
+                case 0:
+                    challengeManager.CL6_textObject.gameObject.SetActive(true);
+                    break;
+                case 1:
+                    challengeManager.CL7_textObject.gameObject.SetActive(true);
+                    break;
+                case 2:
+                    challengeManager.CL8_textObject.gameObject.SetActive(true);
+                    break;
+            }
+
+            challengeManager.wordBalloon1.SetActive(true);
+        }
+
+        wrongPhotoClickCount++;
+
+        // 3. Close the book
         HideAllBookPhotoMarkers();
         book.CloseBook();
 
-        // 3. Disable all interaction on the book photo buttons
+        // 4. Disable all interaction on the book photo buttons
         SetPhotoButtonsInteractable(false);
         DisableBookPhotoButtons();
 
-        // 4. Wait for book closing animation (if needed)
+        // 5. Wait for book closing animation (if needed)
         yield return new WaitForSeconds(0.5f);
 
-        // 5. Deduct time from the timer (placeholder for later integration)
-        // Example: GameTimer.Instance.DeductTime(5f); // ← you'll implement this
-
-        // 6. Player must reopen the book manually using btn_useBook
+        // 6. Log
         Debug.Log("❌ Incorrect match. Book closed. Player must reopen it manually.");
     }
-
 
 
 }
