@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\assets\\scripts\\gameplay\\challengemode1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gameplay\\challengemode1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|c:\\users\\danam\\documents\\github\\ghostgunn_v2\\assets\\scripts\\gameplay\\bookphotomatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\assets\\scripts\\gameplay\\bookphotomatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gameplay\\bookphotomatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\assets\\book-page curl\\scripts\\book.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|solutionrelative:assets\\book-page curl\\scripts\\book.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|c:\\users\\danam\\documents\\github\\ghostgunn_v2\\assets\\scripts\\gameplay\\challengemode1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gameplay\\challengemode1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0070C975-C8DA-4B1E-081C-29FCE583850E}|Assembly-CSharp.csproj|C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\assets\\scripts\\gameplay\\challengelevel1fxcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -166,7 +166,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
@@ -182,13 +182,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "BookPhotoMatcher.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\Assets\\Scripts\\Gameplay\\BookPhotoMatcher.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\BookPhotoMatcher.cs",
               "ToolTip": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\Assets\\Scripts\\Gameplay\\BookPhotoMatcher.cs",
               "RelativeToolTip": "Assets\\Scripts\\Gameplay\\BookPhotoMatcher.cs",
-              "ViewState": "AgIAABkBAAAAAAAAAAAawCwBAAAtAAAAAAAAAA==",
+              "ViewState": "AgIAAJUAAAAAAAAAAAAvwKwAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-25T18:05:21.381Z",
               "EditorCaption": ""
@@ -207,13 +207,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Book.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\Assets\\Book-Page Curl\\scripts\\Book.cs",
               "RelativeDocumentMoniker": "Assets\\Book-Page Curl\\scripts\\Book.cs",
               "ToolTip": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\Assets\\Book-Page Curl\\scripts\\Book.cs",
               "RelativeToolTip": "Assets\\Book-Page Curl\\scripts\\Book.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAAMoCAABACB0V+DIxwNgCAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-19T22:49:44.071Z",
               "EditorCaption": ""
@@ -228,8 +228,7 @@
               "RelativeToolTip": "Assets\\Scripts\\Gameplay\\ChallengeLevel1FXController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T19:44:54.831Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-18T19:44:54.831Z"
             },
             {
               "$type": "Document",
@@ -241,8 +240,7 @@
               "RelativeToolTip": "Assets\\Scripts\\Gameplay\\CL1_buttonHandler.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-17T04:40:08.775Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-17T04:40:08.775Z"
             },
             {
               "$type": "Document",
@@ -306,7 +304,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "ChallengeMode1.cs",
               "DocumentMoniker": "C:\\Users\\danam\\Documents\\GitHub\\GhostGunn_V2\\Assets\\Scripts\\Gameplay\\ChallengeMode1.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gameplay\\ChallengeMode1.cs",

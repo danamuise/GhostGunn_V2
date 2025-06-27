@@ -74,12 +74,15 @@ public class BookPhotoMatcher : MonoBehaviour
         {
             Debug.Log($"photo{selectedID}: correct");
             ShowFeedback(index, true);
+            SFXManager.Instance.Play("correctAnswer");
             StartCoroutine(HandleCorrectMatchSequence());
         }
         else
         {
             Debug.Log($"photo{selectedID}: incorrect");
             ShowFeedback(index, false);
+            SFXManager.Instance.Play("incorrectAnswer");
+
             // ❌ Do NOT disable interactables immediately — allow marker to show
             StartCoroutine(HandleIncorrectMatchSequence());
         }

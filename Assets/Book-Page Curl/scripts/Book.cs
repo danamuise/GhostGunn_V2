@@ -730,4 +730,12 @@ public class Book : MonoBehaviour
             bookPhotoMatcher.SetPhotoButtonsInteractable(false);
     }
 
+    public void PlayButtonClickSound()
+    {
+        if (SFXManager.Instance != null)
+        {
+            SFXManager.Instance.Play("buttonClick0");
+        }
+    }
+
 }
