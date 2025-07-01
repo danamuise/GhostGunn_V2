@@ -25,6 +25,7 @@ public class BookPhotoMatcher : MonoBehaviour
     public ChallengeMode1 challengeManager;
     private int wrongPhotoClickCount = 0;
 
+    public Sprite challengePUaward;
     void Start()
     {
         currentCivilianIndex = 0;
@@ -94,20 +95,15 @@ public class BookPhotoMatcher : MonoBehaviour
     IEnumerator HandleCorrectMatchSequence()
     {
         SetPhotoButtonsInteractable(false);
-        // 1. Wait 0.75s after showing "correct" marker
         yield return new WaitForSeconds(0.75f);
 
-        // 2. Close the book
         HideAllBookPhotoMarkers();
-        SetPhotoButtonsInteractable(false);  // Make extra sure before book closes
+        SetPhotoButtonsInteractable(false);
         book.CloseBook();
-        // Also disable raycasts immediately
         DisableBookPhotoButtons();
-
-        // 3. Wait for book closing to complete (~0.5s)
         yield return new WaitForSeconds(0.5f);
 
-        // 4. Trigger stamp param on the current civilian photo
+        // trigger stamp animation
         if (currentCivilianIndex < civilianAnimators.Length && civilianAnimators[currentCivilianIndex] != null)
         {
             string stampParam = $"stamp{currentCivilianIndex}";
@@ -115,10 +111,8 @@ public class BookPhotoMatcher : MonoBehaviour
             Debug.Log($"📬 Triggered animation bool '{stampParam}' on civilian photo {currentCivilianIndex}");
         }
 
-        // 5. Wait 0.75s before slide-out
         yield return new WaitForSeconds(0.75f);
 
-        // 6. Trigger slideOutX on parent
         if (civilianPhotosParentAnimator != null)
         {
             string slideOutParam = $"slideOut{currentCivilianIndex}";
@@ -126,10 +120,28 @@ public class BookPhotoMatcher : MonoBehaviour
             Debug.Log($"📤 Triggered animation bool '{slideOutParam}' on CivilianPhotos");
         }
 
-        // 7. Wait before advancing logic
         yield return new WaitForSeconds(1.2f);
+
+        // ➡️ NEW: show CL9 or CL10 depending on which photo was matched
+        if (challengeManager != null)
+        {
+            challengeManager.HideWordBalloon1AndText(); // always clear
+
+            if (currentCivilianIndex == 0)
+            {
+                challengeManager.CL9_textObject.gameObject.SetActive(true);
+                challengeManager.wordBalloon1.SetActive(true);
+            }
+            else if (currentCivilianIndex == 1)
+            {
+                challengeManager.CL10_textObject.gameObject.SetActive(true);
+                challengeManager.wordBalloon1.SetActive(true);
+            }
+        }
+
         AdvanceToNextCivilian();
     }
+
 
     void AdvanceToNextCivilian()
     {
@@ -173,6 +185,19 @@ public class BookPhotoMatcher : MonoBehaviour
         Debug.Log($"🔍 Now searching for photo ID: {civilianPhotoIDs[currentCivilianIndex]}");
     }
 
+    private void finalStage()
+    {
+        //if player was successfull
+        //-- after 0.5 seconds to allow ghost to return to position
+        //show wordBaloon0
+        //show CL_text11
+
+
+
+
+        //if player failed. 
+
+    }
 
     public void SetPagePhotoIDs(int id0, int id1, int id2, int id3)
     {

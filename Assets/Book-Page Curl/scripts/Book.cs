@@ -553,20 +553,24 @@ public class Book : MonoBehaviour
         Right.transform.localEulerAngles = Vector3.zero;
         Right.transform.localPosition = Vector3.zero;
 
-        // Hide next/prev/close
         SetControlButtonsVisible(false);
-
-        // Show the Use Book button again when closed
         SetUseBookButtonVisible(true);
 
-        // ✅ Animate back to closed position, rotation AND scale down to smallScale
         StopAllCoroutines();
         StartCoroutine(AnimateTransform(closedPosition, closedRotation, smallScale, openCloseDuration));
 
         if (bookPhotoMatcher != null)
             bookPhotoMatcher.SetPhotoButtonsInteractable(false);
 
+        // ✅ force pageLeft hidden
+        if (pageLeft != null)
+        {
+            var sr = pageLeft.GetComponent<SpriteRenderer>();
+            if (sr != null)
+                sr.enabled = false;
+        }
     }
+
 
 
 

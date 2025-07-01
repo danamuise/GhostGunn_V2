@@ -100,7 +100,7 @@ MonoBehaviour:
   - name: IntroMusic
     clip: {fileID: 8300000, guid: 87e44cc4d46d05d4caffdf52030c07ed, type: 3}
   - name: challengeZone1
-    clip: {fileID: 8300000, guid: 65913366c2770104dacb58ec1349e368, type: 3}
+    clip: {fileID: 8300000, guid: b10bc9e52305ef84f9212a346a7e3f6d, type: 3}
   - name: GameOver
     clip: {fileID: 8300000, guid: 92144c77a4b93e24682c5cb6351e877b, type: 3}
   - name: NukeSequenceSFX

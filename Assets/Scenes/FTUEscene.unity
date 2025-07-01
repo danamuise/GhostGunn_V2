@@ -5336,6 +5336,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1587376602}
     m_Modifications:
+    - target: {fileID: 2457700951746035830, guid: 9cf84001ed0cfb442b6ce83a2bcf559d, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 0cb29e7a942a23c4ab2fcb1808f85aa3, type: 2}
+    - target: {fileID: 2457700951746035830, guid: 9cf84001ed0cfb442b6ce83a2bcf559d, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -3704634820310649970, guid: 0cb29e7a942a23c4ab2fcb1808f85aa3, type: 2}
+    - target: {fileID: 2457700951746035830, guid: 9cf84001ed0cfb442b6ce83a2bcf559d, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2613108100443552643, guid: 9cf84001ed0cfb442b6ce83a2bcf559d, type: 3}
       propertyPath: m_Name
       value: WordBalloon0

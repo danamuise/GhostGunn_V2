@@ -14,6 +14,8 @@ public class ChallengeMode1 : MonoBehaviour
     [SerializeField] private GameObject desktop;
     [SerializeField] private GameObject stateAdvanceButton;
     [SerializeField] private GameObject civilianPhotos;
+    [SerializeField] private GameObject timerObject;
+    [SerializeField] private GameObject timeBar;
 
     [Header("Text Objects")]
     [SerializeField] private TextMeshProUGUI CL1_textObject;
@@ -24,6 +26,8 @@ public class ChallengeMode1 : MonoBehaviour
     [SerializeField] public TextMeshProUGUI CL6_textObject;
     [SerializeField] public TextMeshProUGUI CL7_textObject;
     [SerializeField] public TextMeshProUGUI CL8_textObject;
+    [SerializeField] public TextMeshProUGUI CL9_textObject;
+    [SerializeField] public TextMeshProUGUI CL10_textObject;
 
     [Header("Animation Settings")]
     [SerializeField] private float ghostStartY = -6.20f;
@@ -87,7 +91,7 @@ public class ChallengeMode1 : MonoBehaviour
 
     public void PlayChallengeMusic()
     {
-        //SFXManager.Instance.PlayMusic("challengeZone1", 0.5f);
+        SFXManager.Instance.PlayMusic("challengeZone1", 0.5f);
         Debug.Log("🎵 Playing challengeZone1 music");
     }
 
@@ -236,6 +240,8 @@ public class ChallengeMode1 : MonoBehaviour
         CL6_textObject.gameObject.SetActive(false);
         CL7_textObject.gameObject.SetActive(false);
         CL8_textObject.gameObject.SetActive(false);
+        CL9_textObject.gameObject.SetActive(false);
+        CL10_textObject.gameObject.SetActive(false);
     }
 
     private IEnumerator Stage4sequenceCoroutine()
@@ -264,6 +270,17 @@ public class ChallengeMode1 : MonoBehaviour
             // ✅ Then move it in
             book.MoveBookIn();
             Debug.Log("📖 Called Book.MoveBookIn() from Stage 4");
+
+            // ✅ Enable timerObject, but do not start timer yet
+            if (timerObject != null)
+            {
+                timerObject.SetActive(true);
+                Debug.Log("⏱️ Timer object enabled (not started yet)");
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ TimerObject reference not assigned in ChallengeMode1!");
+            }
         }
         else
         {
