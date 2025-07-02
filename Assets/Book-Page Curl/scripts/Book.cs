@@ -571,7 +571,47 @@ public class Book : MonoBehaviour
         }
     }
 
+    public void HideBook()
+    {
+        currentPage = 0;
+        UpdateSprites();
 
+        Left.gameObject.SetActive(false);
+        Right.gameObject.SetActive(false);
+        Shadow.gameObject.SetActive(false);
+        ShadowLTR.gameObject.SetActive(false);
+        pageDragging = false;
+
+        if (currentCoroutine != null)
+        {
+            StopCoroutine(currentCoroutine);
+            currentCoroutine = null;
+        }
+
+        ClippingPlane.transform.localEulerAngles = Vector3.zero;
+        ClippingPlane.transform.localPosition = Vector3.zero;
+        Left.transform.localEulerAngles = Vector3.zero;
+        Left.transform.localPosition = Vector3.zero;
+        Right.transform.localEulerAngles = Vector3.zero;
+        Right.transform.localPosition = Vector3.zero;
+
+        SetControlButtonsVisible(false);
+        SetUseBookButtonVisible(true);
+
+        StopAllCoroutines();
+        StartCoroutine(AnimateTransform(offscreenPosition, closedRotation, smallScale, openCloseDuration));
+
+        if (bookPhotoMatcher != null)
+            bookPhotoMatcher.SetPhotoButtonsInteractable(false);
+
+        // ✅ force pageLeft hidden
+        if (pageLeft != null)
+        {
+            var sr = pageLeft.GetComponent<SpriteRenderer>();
+            if (sr != null)
+                sr.enabled = false;
+        }
+    }
 
 
     void SetControlButtonsVisible(bool visible)

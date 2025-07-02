@@ -150,6 +150,15 @@ public class BookPhotoMatcher : MonoBehaviour
         if (currentCivilianIndex >= civilianPhotoIDs.Length)
         {
             Debug.Log("✅ All civilians matched. Unlock power-up!");
+            if (challengeManager != null)
+            {
+                challengeManager.Stage6sequence();
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ challengeManager reference not assigned!");
+            }
+
 
             // Move ghost to original position
             if (challengeManager != null)
@@ -168,7 +177,7 @@ public class BookPhotoMatcher : MonoBehaviour
             }
 
 
-
+            /*
             // Move book off screen to its original hidden position
             if (book != null)
             {
@@ -178,7 +187,7 @@ public class BookPhotoMatcher : MonoBehaviour
             {
                 Debug.LogWarning("⚠️ Book reference not assigned!");
             }
-
+            */
             return;
         }
 

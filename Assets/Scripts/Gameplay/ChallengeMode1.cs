@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class ChallengeMode1 : MonoBehaviour
@@ -16,6 +17,7 @@ public class ChallengeMode1 : MonoBehaviour
     [SerializeField] private GameObject civilianPhotos;
     [SerializeField] private GameObject timerObject;
     [SerializeField] private GameObject timeBar;
+    [SerializeField] private Button btn_nextLevel;
 
     [Header("Text Objects")]
     [SerializeField] private TextMeshProUGUI CL1_textObject;
@@ -28,6 +30,8 @@ public class ChallengeMode1 : MonoBehaviour
     [SerializeField] public TextMeshProUGUI CL8_textObject;
     [SerializeField] public TextMeshProUGUI CL9_textObject;
     [SerializeField] public TextMeshProUGUI CL10_textObject;
+    [SerializeField] public TextMeshProUGUI CL11_textObject;
+    [SerializeField] public TextMeshProUGUI CL12_textObject;
 
     [Header("Animation Settings")]
     [SerializeField] private float ghostStartY = -6.20f;
@@ -36,10 +40,12 @@ public class ChallengeMode1 : MonoBehaviour
     [SerializeField] private float ghostMoveDuration = 1.0f;
     [SerializeField] private float fadeInDuration = 0.25f;
     [SerializeField] private float fadeOutDuration = 0.25f;
-    [SerializeField] private float blinkSpeed = 0.2f;
+    [SerializeField] private float blinkSpeed = 0.5f;
+
+    private bool timerStarted = false;
 
     [Header("Book Reference")]
-    [SerializeField] private Book book; // ✅ Link your Book here!
+    [SerializeField] private Book book;
 
     private SpriteRenderer wordBalloonRenderer;
     private SpriteRenderer zombieGraphic0Renderer;
@@ -53,7 +59,6 @@ public class ChallengeMode1 : MonoBehaviour
 
     private void Awake()
     {
-        // Get renderers
         wordBalloonRenderer = wordBalloon.GetComponent<SpriteRenderer>();
         zombieGraphic0Renderer = zombieGraphic0.GetComponent<SpriteRenderer>();
         zombieGraphic1Renderer = zombieGraphic1.GetComponent<SpriteRenderer>();
@@ -77,7 +82,6 @@ public class ChallengeMode1 : MonoBehaviour
 
         civilianPhotos.SetActive(false);
 
-        // Place ghost at start position
         Vector3 pos = ghost.transform.position;
         pos.y = ghostStartY;
         ghost.transform.position = pos;
@@ -98,10 +102,10 @@ public class ChallengeMode1 : MonoBehaviour
     public void OnAdvanceButtonClicked()
     {
         SFXManager.Instance.Play("buttonBoing");
-        Debug.Log("🔊 Played buttonBoing sound");
 
         if (blinkCoroutine != null)
             StopCoroutine(blinkCoroutine);
+
         stateAdvanceButtonRenderer.enabled = true;
 
         currentState++;
@@ -125,6 +129,15 @@ public class ChallengeMode1 : MonoBehaviour
                 break;
             case 4:
                 Stage4sequence();
+                break;
+            case 5:
+                Stage5sequence();
+                break;
+            case 6:
+                Stage6sequence();
+                break;
+            case 7:
+                Stage7sequence();
                 break;
             default:
                 Debug.Log($"🚦 State not implemented: {currentState}");
@@ -217,7 +230,6 @@ public class ChallengeMode1 : MonoBehaviour
     {
         Debug.Log("▶ Stage 4 sequence STARTED");
 
-        // Disable CL4 text and word balloon
         CL4_textObject.gameObject.SetActive(false);
         wordBalloon.SetActive(false);
         stateAdvanceButton.SetActive(false);
@@ -233,6 +245,7 @@ public class ChallengeMode1 : MonoBehaviour
         wordBalloon1.SetActive(true);
         CL5_textObject.gameObject.SetActive(true);
     }
+
     public void HideWordBalloon1AndText()
     {
         wordBalloon1.SetActive(false);
@@ -246,50 +259,159 @@ public class ChallengeMode1 : MonoBehaviour
 
     private IEnumerator Stage4sequenceCoroutine()
     {
-        // Move ghost from (0.875, -4.7199, 0) to (-0.3389, -4.7199, 0)
         Vector3 from = ghost.transform.position;
         Vector3 to = new Vector3(-0.3389f, from.y, from.z);
         yield return StartCoroutine(MoveGhostToNewXPosition(from, to, 1.0f));
 
-        // Now open the book
         MoveBookInForStage4();
     }
-
 
     private void MoveBookInForStage4()
     {
         if (book != null)
         {
-            // ✅ Enable the Book GameObject first
             if (!book.gameObject.activeSelf)
             {
                 book.gameObject.SetActive(true);
                 Debug.Log("📖 Book GameObject activated");
             }
-
-            // ✅ Then move it in
             book.MoveBookIn();
             Debug.Log("📖 Called Book.MoveBookIn() from Stage 4");
 
-            // ✅ Enable timerObject, but do not start timer yet
             if (timerObject != null)
             {
                 timerObject.SetActive(true);
                 Debug.Log("⏱️ Timer object enabled (not started yet)");
             }
+        }
+    }
+
+    public void Stage5sequence()
+    {
+        Debug.Log("▶ Stage 5 started: gameplay timer begins");
+
+        if (timerStarted)
+        {
+            Debug.Log("▶ Stage 5 already started, ignoring duplicate call.");
+            return;
+        }
+        timerStarted = true;
+
+        if (timeBar != null)
+        {
+            timeBar.transform.localScale = new Vector3(1f, timeBar.transform.localScale.y, timeBar.transform.localScale.z);
+            timeBar.SetActive(true);
+        }
+        StartCoroutine(StartStage5Timer(60f));
+    }
+
+    private IEnumerator StartStage5Timer(float duration)
+    {
+        Debug.Log("⏱️ Timer coroutine STARTED");
+
+        float timeRemaining = duration;
+        float fullWidth = 356.6f;
+        Transform tf = timeBar.transform;
+        tf.localScale = new Vector3(fullWidth, tf.localScale.y, tf.localScale.z);
+
+        while (timeRemaining > 0)
+        {
+            timeRemaining -= Time.deltaTime;
+            float percent = Mathf.Clamp01(timeRemaining / duration);
+            float scaledX = percent * fullWidth;
+            tf.localScale = new Vector3(scaledX, tf.localScale.y, tf.localScale.z);
+            yield return null;
+        }
+
+        Debug.Log("challenge failed");
+
+        if (timeBar != null)
+        {
+            timerObject.SetActive(false);
+        }
+
+        currentState = 7;
+        RunCurrentState();
+    }
+
+    public void Stage6sequence()
+    {
+        Debug.Log("✅ Challenge Success - Stage 6");
+        CleanupAfterChallenge();
+
+        // play the succeed animation on finalPhotos
+        GameObject finalPhotos = GameObject.Find("finalPhotos");
+        if (finalPhotos != null)
+        {
+            Animator anim = finalPhotos.GetComponent<Animator>();
+            if (anim != null)
+            {
+                anim.SetBool("succeed", true);
+                Debug.Log("🎞️ finalPhotos animator 'succeed' bool set true");
+            }
             else
             {
-                Debug.LogWarning("⚠️ TimerObject reference not assigned in ChallengeMode1!");
+                Debug.LogWarning("⚠️ finalPhotos has no Animator attached");
             }
         }
         else
         {
-            Debug.LogWarning("⚠️ Book reference not assigned in ChallengeMode1!");
+            Debug.LogWarning("⚠️ finalPhotos object not found in scene");
+        }
+
+        // show CL_text11
+        if (CL11_textObject != null)
+        {
+            CL11_textObject.gameObject.SetActive(true);
+            Debug.Log("📝 CL11_textObject shown in Stage 6");
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ CL11_textObject not assigned in Inspector");
         }
     }
 
 
+    public void Stage7sequence()
+    {
+        Debug.Log("❌ Challenge Failed - Stage 7");
+        CleanupAfterChallenge();
+
+        GameObject finalPhotos = GameObject.Find("finalPhotos");
+        if (finalPhotos != null)
+        {
+            Animator anim = finalPhotos.GetComponent<Animator>();
+            if (anim != null)
+            {
+                anim.SetBool("fail", true);
+            }
+        }
+
+        if (CL12_textObject != null)
+        {
+            CL12_textObject.gameObject.SetActive(true);
+        }
+    }
+
     // -------------------- UTILS --------------------
+
+    private IEnumerator BlinkSprite(SpriteRenderer renderer)
+    {
+        while (true)
+        {
+            renderer.enabled = !renderer.enabled;
+            yield return new WaitForSeconds(blinkSpeed);
+        }
+    }
+
+    private IEnumerator BlinkGameObject(GameObject go)
+    {
+        while (true)
+        {
+            go.SetActive(!go.activeSelf);
+            yield return new WaitForSeconds(blinkSpeed);
+        }
+    }
 
     private IEnumerator MoveGhostWithOvershoot()
     {
@@ -340,7 +462,6 @@ public class ChallengeMode1 : MonoBehaviour
             renderer.color = c;
             yield return null;
         }
-
         c.a = 1;
         renderer.color = c;
     }
@@ -359,18 +480,8 @@ public class ChallengeMode1 : MonoBehaviour
             renderer.color = Color.Lerp(startColor, endColor, t / fadeOutDuration);
             yield return null;
         }
-
         renderer.color = endColor;
         renderer.enabled = false;
-    }
-
-    private IEnumerator BlinkSprite(SpriteRenderer renderer)
-    {
-        while (true)
-        {
-            renderer.enabled = !renderer.enabled;
-            yield return new WaitForSeconds(blinkSpeed);
-        }
     }
 
     private IEnumerator MoveGhostToNewXPosition(Vector3 from, Vector3 to, float duration)
@@ -380,11 +491,9 @@ public class ChallengeMode1 : MonoBehaviour
         {
             t += Time.deltaTime;
             float normalized = t / duration;
-            float eased = EaseInOutCubic(normalized);
-            ghost.transform.position = Vector3.Lerp(from, to, eased);
+            ghost.transform.position = Vector3.Lerp(from, to, EaseInOutCubic(normalized));
             yield return null;
         }
-
         ghost.transform.position = to;
     }
 
@@ -398,6 +507,105 @@ public class ChallengeMode1 : MonoBehaviour
         Vector3 from = ghost.transform.position;
         Vector3 to = new Vector3(0.875f, from.y, from.z);
         StartCoroutine(MoveGhostToNewXPosition(from, to, 1.0f));
+    }
+
+    private void CleanupAfterChallenge()
+    {
+        Debug.Log("🚦 Cleaning up challenge stage");
+
+        if (book != null)
+        {
+            book.HideBook();
+            Debug.Log("📕 Book moved offscreen and scaled to zero.");
+        }
+
+        // Hide book control buttons
+        if (book.btn_next != null) book.btn_next.gameObject.SetActive(false);
+        if (book.btn_close != null) book.btn_close.gameObject.SetActive(false);
+        if (book.btn_useBook != null) book.btn_useBook.gameObject.SetActive(false);
+
+        // Show next-level button with fade blink
+        if (btn_nextLevel != null)
+        {
+            btn_nextLevel.gameObject.SetActive(true);
+            StartCoroutine(BlinkUIButtonImage(btn_nextLevel));
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ btn_nextLevel not found");
+        }
+
+        // Show word balloon
+        if (wordBalloon != null)
+        {
+            wordBalloon.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ wordBalloon not found in scene");
+        }
+
+        // Hide timer
+        if (timerObject != null)
+        {
+            timerObject.SetActive(false);
+        }
+
+        // Hide civilian photos
+        if (civilianPhotos != null)
+        {
+            civilianPhotos.SetActive(false);
+        }
+
+        // ✅ Hide all text objects CL1 through CL9 and wordBalloon1
+        CL1_textObject?.gameObject.SetActive(false);
+        CL2_textObject?.gameObject.SetActive(false);
+        CL3_textObject?.gameObject.SetActive(false);
+        CL4_textObject?.gameObject.SetActive(false);
+        CL5_textObject?.gameObject.SetActive(false);
+        CL6_textObject?.gameObject.SetActive(false);
+        CL7_textObject?.gameObject.SetActive(false);
+        CL8_textObject?.gameObject.SetActive(false);
+        CL9_textObject?.gameObject.SetActive(false);
+
+        if (wordBalloon1 != null)
+        {
+            wordBalloon1.SetActive(false);
+        }
+    }
+
+
+    private IEnumerator BlinkUIButtonImage(Button button)
+    {
+        Image img = button.GetComponent<Image>();
+        if (img == null)
+        {
+            Debug.LogWarning("⚠️ Button has no Image component to blink");
+            yield break;
+        }
+
+        Color originalColor = img.color;
+        Color darkColor = originalColor * 0.5f; // 50% darker
+        darkColor.a = originalColor.a;          // keep original alpha
+
+        while (true)
+        {
+            float t = 0f;
+            while (t < blinkSpeed)
+            {
+                t += Time.deltaTime;
+                img.color = Color.Lerp(originalColor, darkColor, t / blinkSpeed);
+                yield return null;
+            }
+
+            t = 0f;
+            while (t < blinkSpeed)
+            {
+                t += Time.deltaTime;
+                img.color = Color.Lerp(darkColor, originalColor, t / blinkSpeed);
+                yield return null;
+            }
+        }
     }
 
 }
