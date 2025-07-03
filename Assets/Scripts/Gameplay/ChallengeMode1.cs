@@ -54,6 +54,7 @@ public class ChallengeMode1 : MonoBehaviour
     private SpriteRenderer familesGraphicRenderer;
     private SpriteRenderer desktopRenderer;
     private SpriteRenderer stateAdvanceButtonRenderer;
+    private bool challengeCompleted = false;
 
     private Coroutine blinkCoroutine;
     private int currentState = 0;
@@ -324,20 +325,29 @@ public class ChallengeMode1 : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log("challenge failed");
-
-        if (timeBar != null)
+        if (!challengeCompleted)
         {
-            timerObject.SetActive(false);
+            Debug.Log("challenge failed");
+
+            if (timeBar != null)
+            {
+                timerObject.SetActive(false);
+            }
+
+            currentState = 7;
+            RunCurrentState();
+        }
+        else
+        {
+            Debug.Log("✅ Challenge already completed, ignoring timer expiry.");
         }
 
-        currentState = 7;
-        RunCurrentState();
     }
 
     public void Stage6sequence()
     {
         Debug.Log("✅ Challenge Success - Stage 6");
+        challengeCompleted = true;
         CleanupAfterChallenge();
         // enable firePUicon, then animate it to Y=-4.0 from its current position of Y=-5.72
         if (firePUicon != null)

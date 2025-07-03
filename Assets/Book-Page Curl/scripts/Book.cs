@@ -693,8 +693,9 @@ public class Book : MonoBehaviour
 
         SetControlButtonsVisible(true);
         SetUseBookButtonVisible(false);
-    }
 
+        UpdatePageButtons();  // ✅ added to fix the next-button fade bug
+    }
 
 
     IEnumerator AnimateTransform(Vector3 targetPosition, Vector3 targetRotation, Vector3 targetScale, float duration)
