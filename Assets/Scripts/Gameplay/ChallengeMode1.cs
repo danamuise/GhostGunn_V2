@@ -18,6 +18,7 @@ public class ChallengeMode1 : MonoBehaviour
     [SerializeField] private GameObject timerObject;
     [SerializeField] private GameObject timeBar;
     [SerializeField] private Button btn_nextLevel;
+    [SerializeField] private GameObject firePUicon;
 
     [Header("Text Objects")]
     [SerializeField] private TextMeshProUGUI CL1_textObject;
@@ -338,7 +339,14 @@ public class ChallengeMode1 : MonoBehaviour
     {
         Debug.Log("✅ Challenge Success - Stage 6");
         CleanupAfterChallenge();
-
+        // enable firePUicon, then animate it to Y=-4.0 from its current position of Y=-5.72
+        if (firePUicon != null)
+        {
+            firePUicon.SetActive(true);
+            Vector3 targetPosition = firePUicon.transform.position;
+            targetPosition.y = -4.0f;
+            StartCoroutine(AnimateFirePU(targetPosition, 0.5f)); // half-second animation
+        }
         // play the succeed animation on finalPhotos
         GameObject finalPhotos = GameObject.Find("finalPhotos");
         if (finalPhotos != null)
@@ -374,6 +382,7 @@ public class ChallengeMode1 : MonoBehaviour
 
     public void Stage7sequence()
     {
+        
         Debug.Log("❌ Challenge Failed - Stage 7");
         CleanupAfterChallenge();
 
@@ -392,6 +401,21 @@ public class ChallengeMode1 : MonoBehaviour
             CL12_textObject.gameObject.SetActive(true);
         }
     }
+
+    // coroutine to animate the firePUicon Y position smoothly
+    private IEnumerator AnimateFirePU(Vector3 targetPos, float duration)
+    {
+        Vector3 startPos = firePUicon.transform.position;
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            firePUicon.transform.position = Vector3.Lerp(startPos, targetPos, elapsed / duration);
+            yield return null;
+        }
+        firePUicon.transform.position = targetPos;
+    }
+
 
     // -------------------- UTILS --------------------
 

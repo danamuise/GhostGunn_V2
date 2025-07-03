@@ -91,6 +91,10 @@ public class Book : MonoBehaviour
     public Vector3 fullScale = new Vector3(1.59956f, 1.59956f, 1.59956f);
     public BookPhotoMatcher bookPhotoMatcher;
     public UnityEvent onBookOpened;
+    //prevents conflict with page turning and book close
+    public bool isPageTurning { get; private set; }
+    private bool pageTurnButtonClicked = false;
+
     void Start()
     {
         if (bookPhotoMatcher != null)
@@ -141,7 +145,10 @@ public class Book : MonoBehaviour
 
         // ✅ Hook up buttons
         if (btn_useBook != null) btn_useBook.onClick.AddListener(OpenBook);
-        if (btn_close != null) btn_close.onClick.AddListener(CloseBook);
+        if (btn_next != null) btn_next.onClick.AddListener(OnNextPageClicked);
+        if (btn_prev != null) btn_prev.onClick.AddListener(OnPrevPageClicked);
+
+        btn_close.onClick.AddListener(CloseBook);
     }
 
 
@@ -457,6 +464,8 @@ public class Book : MonoBehaviour
             Debug.Log($"📖 Page: {leftPage} and {rightPage}");
         }
         UpdatePageButtons();
+        pageTurnButtonClicked = false;
+        Debug.Log("✅ Page turn finished, flag reset to false.");
 
         // ✅ Enable/Disable pageLeft SpriteRenderer depending on currentPage
         if (pageLeft != null)
@@ -515,6 +524,8 @@ public class Book : MonoBehaviour
     }
     public IEnumerator TweenTo(Vector3 to, float duration, System.Action onFinish)
     {
+        isPageTurning = true;
+
         int steps = (int)(duration / 0.025f);
         Vector3 displacement = (to - f) / steps;
         for (int i = 0; i < steps - 1; i++)
@@ -526,11 +537,47 @@ public class Book : MonoBehaviour
 
             yield return new WaitForSeconds(0.025f);
         }
+
         if (onFinish != null)
             onFinish();
+
+        isPageTurning = false;
     }
+
     public void CloseBook()
     {
+        if (pageTurnButtonClicked)
+        {
+            Debug.Log("⏳ CloseBook requested after page button click — adding 1 second delay.");
+            StartCoroutine(DelayedCloseBook(1f));
+            return;
+        }
+
+        ActuallyCloseBook();
+    }
+
+    private IEnumerator DelayedCloseBook(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ActuallyCloseBook();
+    }
+
+
+    private IEnumerator WaitForPageTurnAndClose()
+    {
+        while (isPageTurning)
+        {
+            yield return null;
+        }
+        // add a short buffer delay after turn
+        yield return new WaitForSeconds(0.5f);
+        ActuallyCloseBook();
+    }
+
+    private void ActuallyCloseBook()
+    {
+        Debug.Log("📕 Actually closing book cleanly");
+
         currentPage = 0;
         UpdateSprites();
 
@@ -556,13 +603,11 @@ public class Book : MonoBehaviour
         SetControlButtonsVisible(false);
         SetUseBookButtonVisible(true);
 
-        StopAllCoroutines();
         StartCoroutine(AnimateTransform(closedPosition, closedRotation, smallScale, openCloseDuration));
 
         if (bookPhotoMatcher != null)
             bookPhotoMatcher.SetPhotoButtonsInteractable(false);
 
-        // ✅ force pageLeft hidden
         if (pageLeft != null)
         {
             var sr = pageLeft.GetComponent<SpriteRenderer>();
@@ -570,6 +615,7 @@ public class Book : MonoBehaviour
                 sr.enabled = false;
         }
     }
+
 
     public void HideBook()
     {
@@ -780,6 +826,18 @@ public class Book : MonoBehaviour
         {
             SFXManager.Instance.Play("buttonClick0");
         }
+    }
+
+    private void OnNextPageClicked()
+    {
+        pageTurnButtonClicked = true;
+        Debug.Log("➡️ Next page button clicked, flag set true.");
+    }
+
+    private void OnPrevPageClicked()
+    {
+        pageTurnButtonClicked = true;
+        Debug.Log("⬅️ Prev page button clicked, flag set true.");
     }
 
 }

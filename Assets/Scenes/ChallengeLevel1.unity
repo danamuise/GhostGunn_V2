@@ -730,6 +730,7 @@ MonoBehaviour:
   timerObject: {fileID: 496440155}
   timeBar: {fileID: 5351384514762073658}
   btn_nextLevel: {fileID: 600312435}
+  firePUicon: {fileID: 1497625780}
   CL1_textObject: {fileID: 9125471798250368985}
   CL2_textObject: {fileID: 1255398467}
   CL3_textObject: {fileID: 73225450}
@@ -3548,6 +3549,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 342989583}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1497625780 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 658462829164695922, guid: 74283f92fc75a43458c12929c191acda, type: 3}
+  m_PrefabInstance: {fileID: 4706894660002093719}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1559330251 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4680995394605545857, guid: b551869cdbc84ea4f92361e77a512bc5, type: 3}
@@ -4770,6 +4776,67 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!1001 &4706894660002093719
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 456411954287410494, guid: 74283f92fc75a43458c12929c191acda, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 456411954287410494, guid: 74283f92fc75a43458c12929c191acda, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -5.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 456411954287410494, guid: 74283f92fc75a43458c12929c191acda, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 456411954287410494, guid: 74283f92fc75a43458c12929c191acda, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 456411954287410494, guid: 74283f92fc75a43458c12929c191acda, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 456411954287410494, guid: 74283f92fc75a43458c12929c191acda, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 456411954287410494, guid: 74283f92fc75a43458c12929c191acda, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 456411954287410494, guid: 74283f92fc75a43458c12929c191acda, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 456411954287410494, guid: 74283f92fc75a43458c12929c191acda, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 456411954287410494, guid: 74283f92fc75a43458c12929c191acda, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 658462829164695922, guid: 74283f92fc75a43458c12929c191acda, type: 3}
+      propertyPath: m_Name
+      value: FirePUicon
+      objectReference: {fileID: 0}
+    - target: {fileID: 658462829164695922, guid: 74283f92fc75a43458c12929c191acda, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 74283f92fc75a43458c12929c191acda, type: 3}
 --- !u!222 &5059657903727104231
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5374,3 +5441,4 @@ SceneRoots:
   - {fileID: 590276955}
   - {fileID: 1089556741}
   - {fileID: 496440156}
+  - {fileID: 4706894660002093719}
