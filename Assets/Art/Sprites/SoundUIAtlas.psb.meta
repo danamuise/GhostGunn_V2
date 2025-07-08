@@ -94,10 +94,10 @@ ScriptedImporter:
     spritePosition: {x: 0, y: 0}
   mosaicSpriteImportData: []
   rigSpriteImportData:
-  - name: Layer 6
+  - name: moveUIinButton
     originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
+    pivot: {x: 0.47146553, y: 0.50000167}
+    alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
@@ -115,7 +115,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 106, y: 49}
     spritePosition: {x: 5, y: 7}
-  - name: Layer 4
+  - name: moveUIoutButton
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -136,7 +136,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 4, y: 83}
     spritePosition: {x: 5, y: 7}
-  - name: Layer 8
+  - name: soundOnButton
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -157,7 +157,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 97, y: 4}
     spritePosition: {x: 22, y: 4}
-  - name: Layer 5
+  - name: soundOfButton
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -178,7 +178,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 4, y: 49}
     spritePosition: {x: 22, y: 4}
-  - name: Layer 9
+  - name: musicOnButton
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -199,7 +199,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 38, y: 49}
     spritePosition: {x: 47, y: 4}
-  - name: Layer 7
+  - name: musicOffButton
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -220,7 +220,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 72, y: 49}
     spritePosition: {x: 47, y: 4}
-  - name: Layer 1
+  - name: background
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0

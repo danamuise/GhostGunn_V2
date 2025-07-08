@@ -10,6 +10,11 @@ public class GameOver : MonoBehaviour
     private void Start()
     {
         SFXManager.Instance.PlayMusic("GameOver", 0.3f);
+
+        // sync to GameState
+        GameState.Instance.CurrentScore = ScoreKeeper.finalScore;
+        GameState.Instance.CheckAndUpdateHighScores();
+
         if (scoreText != null)
         {
             scoreText.text = ScoreKeeper.finalScore.ToString();

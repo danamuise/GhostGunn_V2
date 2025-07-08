@@ -6,25 +6,31 @@ public class ClickableSpriteButton : MonoBehaviour
     {
         MoveUIOut,
         MoveUIIn,
-        ToggleMusic
+        ToggleMusic,
+        ToggleSFX
     }
 
     public ButtonAction action;
 
     private void OnMouseDown()
     {
-        if (action == ButtonAction.MoveUIOut)
+        switch (action)
         {
-            SFXManager.Instance.MoveUIOut();
-        }
-        else if (action == ButtonAction.MoveUIIn)
-        {
-            SFXManager.Instance.MoveUIIn();
-        }
-        else if (action == ButtonAction.ToggleMusic)
-        {
-            Debug.Log("Toggle Music");
-            SFXManager.Instance.ToggleMusic();
+            case ButtonAction.MoveUIOut:
+                SFXManager.Instance.MoveUIOut();
+                break;
+            case ButtonAction.MoveUIIn:
+                SFXManager.Instance.MoveUIIn();
+                break;
+            case ButtonAction.ToggleMusic:
+                Debug.Log("Toggle Music");
+                SFXManager.Instance.ToggleMusic();
+                break;
+            case ButtonAction.ToggleSFX:
+                Debug.Log("Toggle SFX");
+                SFXManager.Instance.ToggleSFX(); // 👈 New case
+                break;
         }
     }
+
 }

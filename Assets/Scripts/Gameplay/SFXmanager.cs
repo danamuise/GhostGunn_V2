@@ -15,6 +15,7 @@ public class SFXManager : MonoBehaviour
     public GameObject soundOnButton;
     public GameObject musicOnButton;
     public GameObject musicOffButton;
+    private bool isSFXOn = true; // Track sound effect state
 
     [System.Serializable]
     public class NamedAudioClip
@@ -58,10 +59,24 @@ public class SFXManager : MonoBehaviour
         musicSource.playOnAwake = false;
         musicSource.spatialBlend = 0f;
 
-        // Set initial button states
+        // Load saved toggle preferences
+        isSFXOn = PlayerPrefs.GetInt("SFX_ENABLED", 1) == 1;
+        isMusicOn = PlayerPrefs.GetInt("MUSIC_ENABLED", 1) == 1;
+
+        soundOnButton.SetActive(isSFXOn);
+        soundOffButton.SetActive(!isSFXOn);
+        musicOnButton.SetActive(isMusicOn);
+        musicOffButton.SetActive(!isMusicOn);
+
+        if (!isMusicOn)
+        {
+            musicSource.Stop();
+        }
+
         moveUIoutButton.SetActive(true);
         moveUIinButton.SetActive(false);
     }
+
 
     private void BuildSFXSources()
     {
@@ -103,6 +118,8 @@ public class SFXManager : MonoBehaviour
 
     public void Play(string soundName, float volume = 1f, float pitchMin = 0.95f, float pitchMax = 1.05f)
     {
+        if (!isSFXOn) return; // 🔇 Respect SFX toggle
+
         if (!sfxSources.TryGetValue(soundName, out AudioSource source))
         {
             Debug.LogWarning($"🔇 SFXManager: No AudioSource found for '{soundName}'");
@@ -113,14 +130,14 @@ public class SFXManager : MonoBehaviour
         source.volume = volume;
         source.PlayOneShot(source.clip);
 
-        // Add a debug log to show which sound is being played
         Debug.Log($"🎧 Playing SFX: {soundName}");
     }
 
 
+
     public void PlayRandom(string[] soundNames, float volume = 1f, float pitchMin = 0.95f, float pitchMax = 1.05f)
     {
-        if (soundNames == null || soundNames.Length == 0) return;
+        if (!isSFXOn || soundNames == null || soundNames.Length == 0) return;
 
         string chosen;
         int attempts = 0;
@@ -134,6 +151,7 @@ public class SFXManager : MonoBehaviour
         lastRandomSFXName = chosen;
         Play(chosen, volume, pitchMin, pitchMax);
     }
+
 
     // 🎵 Play music by name
     public void PlayMusic(string musicName, float volume = 1f)
@@ -223,30 +241,73 @@ public class SFXManager : MonoBehaviour
 
     public void ToggleMusic()
     {
+        isMusicOn = !isMusicOn;
+        PlayerPrefs.SetInt("MUSIC_ENABLED", isMusicOn ? 1 : 0);
+        PlayerPrefs.Save();
+
         if (isMusicOn)
         {
-            Debug.Log(" music OFF");
-            musicSource.Stop();
-            musicOnButton.SetActive(false);
-            musicOffButton.SetActive(true);
-            isMusicOn = false; // Update toggle state
-            MoveUIIn();
+            if (musicSource.clip != null)
+            {
+                musicSource.Play();
+                Debug.Log("🎵 Music ON");
+            }
+            else
+            {
+                Debug.LogWarning("🎵 No music clip assigned to resume playback!");
+            }
         }
         else
         {
-           if (musicSource.clip != null)
+            musicSource.Stop();
+            Debug.Log("🔇 Music OFF");
+        }
+
+        musicOnButton.SetActive(isMusicOn);
+        musicOffButton.SetActive(!isMusicOn);
+        MoveUIIn();
+    }
+
+    public void ToggleSFX()
+    {
+        if (isSFXOn)
+        {
+            Debug.Log("🔇 Sound OFF");
+            soundOnButton.SetActive(false);
+            soundOffButton.SetActive(true);
+            isSFXOn = false;
+            PlayerPrefs.SetInt("SFX_ENABLED", 0);
+        }
+        else
+        {
+            Debug.Log("🔊 Sound ON");
+            soundOnButton.SetActive(true);
+            soundOffButton.SetActive(false);
+            isSFXOn = true;
+            PlayerPrefs.SetInt("SFX_ENABLED", 1);
+        }
+
+        PlayerPrefs.Save();
+        MoveUIIn();
+    }
+
+    /// <summary>
+    /// TESTING ONLY - DELETE AFTER USE
+    /// </summary>
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
+
+            if (hit.collider != null)
             {
-                Debug.Log(" music ON");
-                //musicSource.volume = 1f;
-                musicSource.Play();
-                musicOnButton.SetActive(true);
-                musicOffButton.SetActive(false);
-                isMusicOn = true; // Update toggle state
-                MoveUIIn();
-                }
+                Debug.Log($"🖱 Click hit: {hit.collider.gameObject.name}");
+            }
             else
             {
-               Debug.LogWarning("🎵 No music clip assigned to resume playback!");
+                Debug.Log("🖱 Click hit: nothing");
             }
         }
     }

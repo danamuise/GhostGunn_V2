@@ -157,7 +157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0069, y: -0.639}
+  m_AnchoredPosition: {x: 0.0069, y: -1.135}
   m_SizeDelta: {x: 4.7591, y: 0.98}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!210 &55924993
@@ -201,8 +201,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 1845493759
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0.42745098}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -946,6 +946,34 @@ PrefabInstance:
       propertyPath: m_Name
       value: SFXmanager
       objectReference: {fileID: 0}
+    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
+      propertyPath: soundUI
+      value: 
+      objectReference: {fileID: -8653719598885068355, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
+      propertyPath: musicOnButton
+      value: 
+      objectReference: {fileID: 2472733510164913061, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
+      propertyPath: soundOnButton
+      value: 
+      objectReference: {fileID: 3687438599938812024, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
+      propertyPath: moveUIinButton
+      value: 
+      objectReference: {fileID: -2446894718060042417, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
+      propertyPath: musicOffButton
+      value: 
+      objectReference: {fileID: 7152835125427472410, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
+      propertyPath: soundOffButton
+      value: 
+      objectReference: {fileID: 4069514448366513052, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
+      propertyPath: moveUIoutButton
+      value: 
+      objectReference: {fileID: 6803244797375503701, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
