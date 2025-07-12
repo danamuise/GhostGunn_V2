@@ -12,8 +12,8 @@ public class GameOver : MonoBehaviour
         SFXManager.Instance.PlayMusic("GameOver", 0.3f);
 
         // sync to GameState
-        GameState.Instance.CurrentScore = ScoreKeeper.finalScore;
-        GameState.Instance.CheckAndUpdateHighScores();
+        //GameState.Instance.CurrentScore = ScoreKeeper.finalScore;
+        //GameState.Instance.CheckAndUpdateHighScores();
 
         if (scoreText != null)
         {
@@ -28,6 +28,11 @@ public class GameOver : MonoBehaviour
 
     public void OnPlayAgainPressed()
     {
-        SceneManager.LoadScene("Level1Scene"); // Use the exact name of your gameplay scene
+        SceneManager.LoadScene("MainGameScene"); // If playing again from the start
+    }
+
+    public void OnContinueClicked()
+    {
+        SceneManager.LoadScene("AdsScene"); // If continuing game after an ad
     }
 }

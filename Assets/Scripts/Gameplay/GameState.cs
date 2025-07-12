@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameState : MonoBehaviour
 {
@@ -9,9 +9,11 @@ public class GameState : MonoBehaviour
     public int CurrentScore { get; set; }
     public int CurrentLevel { get; set; }
     public int AvailableSpecialWeapons { get; set; }
+    public int SavedTargetHealth { get; set; } = -1;
 
     public int[] HighScores { get; private set; } = new int[5];
-
+    public int SavedBulletCount { get; set; } = -1;
+    public bool ContinueFromLastSave { get; set; } = false; // are we starting fresh or are we continuing a game?
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -72,4 +74,32 @@ public class GameState : MonoBehaviour
             }
         }
     }
+
+    public void SaveState()
+    {
+        TargetHealthCurve curve = FindObjectOfType<TargetHealthCurve>();
+        GameManager gm = FindObjectOfType<GameManager>();
+        GhostShooter shooter = FindObjectOfType<GhostShooter>();
+
+        if (curve != null && gm != null && shooter != null)
+        {
+            int move = gm.GetMoveCount();
+            SavedTargetHealth = curve.GetHealthForMove(move);
+            SavedBulletCount = shooter.bulletPool.GetEnabledBulletCount(); // ✅ changed here
+
+            Debug.LogFormat("<color=green>💾 GameState saved — Health: {0}, Bullets: {1}</color>", SavedTargetHealth, SavedBulletCount);
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ GameState.SaveState() — Missing curve, manager, or shooter.");
+        }
+    }
+
+
+    public void LoadState()
+    {
+        Debug.Log($"📦 GameState loaded — Health: {SavedTargetHealth}, Bullets: {SavedBulletCount}");
+
+    }
+
 }

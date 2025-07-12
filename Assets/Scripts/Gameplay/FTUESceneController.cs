@@ -22,7 +22,7 @@ public class FTUESceneController : MonoBehaviour
     {
         PlayerPrefs.SetInt("HasSeenFTUE", 1); // optional: one-time flag
         PlayerPrefs.Save();
-        SceneManager.LoadScene("Level1Scene");
+        SceneManager.LoadScene("MainGameScene");
     }
 }
 

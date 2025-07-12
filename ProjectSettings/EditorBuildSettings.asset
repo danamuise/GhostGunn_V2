@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/SplashScreenB.unity
     guid: e23b98a2249772f468061f68218bdc41
   - enabled: 1
-    path: Assets/Scenes/Level1Scene.unity
+    path: Assets/Scenes/MainGameScene.unity
     guid: 48102efacb7d7054e901dd6bdde5b0dd
   - enabled: 1
     path: Assets/Scenes/GameOverScene.unity
@@ -26,5 +26,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ChallengeLevel1.unity
     guid: c9d80987943a25149bceb015546a61e0
+  - enabled: 1
+    path: Assets/Scenes/AdsScene.unity
+    guid: 412c551a69019e647ab9098daf634e0d
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

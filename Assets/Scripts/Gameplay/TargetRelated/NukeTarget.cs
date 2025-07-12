@@ -24,15 +24,17 @@ public class NukeTarget : MonoBehaviour
             {
                 nukeSequenceObject.SetActive(true);
                 Debug.Log("💥 NukeSequence GameObject enabled!");
+
+                // ✅ Save the game here and log in green
+                GameState.Instance.SaveState();
             }
             else
             {
                 Debug.LogWarning("⚠️ NukeSequence GameObject reference is missing!");
             }
 
-            Destroy(gameObject); 
-
-
+            Destroy(gameObject);
         }
     }
+
 }
