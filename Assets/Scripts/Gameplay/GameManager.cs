@@ -29,11 +29,44 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        // 🧪 Detect if this GameManager is stuck in the persistent scene (from DontDestroyOnLoad)
+        if (string.IsNullOrEmpty(gameObject.scene.name))
+        {
+            Debug.LogWarning("🧟‍♂️ GameManager is in the DontDestroyOnLoad scene — destroying.");
+            Destroy(gameObject);
+            return;
+        }
+
         roundInProgress = false;
     }
 
+
+
     private void Start()
     {
+        Debug.Log("📦 GameManager.Start() called");
+        if (grid == null) grid = FindObjectOfType<TargetGridManager>();
+        if (targetManager == null) targetManager = FindObjectOfType<TargetManager>();
+        if (gridTargetSpawner == null) gridTargetSpawner = FindObjectOfType<GridTargetSpawner>();
+        if (gun == null) gun = FindObjectOfType<GhostShooter>();
+        if (uiManager == null) uiManager = FindObjectOfType<UIManager>();
+
+        Debug.Log($"[Init] Rebinding scene refs: Grid={grid}, TargetMgr={targetManager}, Gun={gun}, UIManager={uiManager}");
+
+        /** if (GameState.Instance.ContinueFromLastSave)
+        {
+            Debug.Log("🔁 Continuing from saved state…");
+            Debug.Log($"Health base: {GameState.Instance.SavedTargetHealth}");
+            Debug.Log($"Bullets: {GameState.Instance.SavedBulletCount}");
+
+            GameState.Instance.ContinueFromLastSave = false; // reset after use
+        }
+        else
+        {
+            Debug.Log("🆕 Starting fresh — new level, no saved data.");
+        }
+        **/
+
         SFXManager.Instance.PlayMusic("mainBGmusic", 0.3f);
         grid.InitializeGrid();
         gun.EnableGun(true);

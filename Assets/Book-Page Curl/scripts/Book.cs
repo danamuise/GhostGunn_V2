@@ -6,6 +6,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 public enum FlipMode
 {
     RightToLeft,
@@ -841,4 +842,9 @@ public class Book : MonoBehaviour
         Debug.Log("⬅️ Prev page button clicked, flag set true.");
     }
 
+    public void NextLevel()
+    {
+        GameState.Instance.ContinueFromLastSave = true;
+        SceneManager.LoadScene("MainGameScene"); // If playing again from the start
+    }
 }
