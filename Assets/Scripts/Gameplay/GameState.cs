@@ -85,9 +85,10 @@ public class GameState : MonoBehaviour
         {
             int move = gm.GetMoveCount();
             SavedTargetHealth = curve.GetHealthForMove(move);
-            SavedBulletCount = shooter.bulletPool.GetEnabledBulletCount(); // ✅ changed here
+            SavedBulletCount = shooter.bulletPool.GetEnabledBulletCount();
+            CurrentScore = gm.GetScore(); // ✅ Save score too
 
-            Debug.LogFormat("<color=green>💾 GameState saved — Health: {0}, Bullets: {1}</color>", SavedTargetHealth, SavedBulletCount);
+            Debug.LogFormat("<color=green>💾 GameState saved — Health: {0}, Bullets: {1}, Score: {2}</color>", SavedTargetHealth, SavedBulletCount, CurrentScore);
         }
         else
         {
@@ -95,11 +96,10 @@ public class GameState : MonoBehaviour
         }
     }
 
-
     public void LoadState()
     {
-        Debug.Log($"📦 GameState loaded — Health: {SavedTargetHealth}, Bullets: {SavedBulletCount}");
-
+        Debug.Log($"📦 GameState loaded — Health: {SavedTargetHealth}, Bullets: {SavedBulletCount}, Score: {CurrentScore}");
     }
+
 
 }

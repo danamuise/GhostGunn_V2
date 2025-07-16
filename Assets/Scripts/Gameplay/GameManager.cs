@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public float NukeFullCharge = 1000f;
     public SpriteRenderer nukeOutline;
     private float nukeChargeProgress = 0f;
-    private bool nukeArmed = false; // ✅ One-time trigger flag
+    private bool nukeArmed = false;
 
     private SpriteRenderer nukeIconSR;
     private Material nukeIconMaterial;
@@ -32,8 +32,6 @@ public class GameManager : MonoBehaviour
         roundInProgress = false;
     }
 
-
-
     private void Start()
     {
         if (grid == null) grid = FindObjectOfType<TargetGridManager>();
@@ -46,12 +44,12 @@ public class GameManager : MonoBehaviour
 
         if (GameState.Instance.ContinueFromLastSave)
         {
-
             Debug.Log("🔁 Continuing from saved state…");
             Debug.Log($"Health base: {GameState.Instance.SavedTargetHealth}");
             Debug.Log($"Bullets: {GameState.Instance.SavedBulletCount}");
 
-            GameState.Instance.ContinueFromLastSave = false; // reset after use
+            totalScore = GameState.Instance.CurrentScore;
+            uiManager.UpdateScoreDisplay(totalScore);
         }
         else
         {
@@ -80,6 +78,11 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.LogWarning("⚠️ NukeIcon not found in scene!");
+        }
+
+        if (GameState.Instance.ContinueFromLastSave)
+        {
+            StartCoroutine(ResetContinueFlag());
         }
     }
 
@@ -136,7 +139,7 @@ public class GameManager : MonoBehaviour
 
             if (!nukeArmed && nukeChargeProgress >= 1f)
             {
-                nukeArmed = true; // ✅ Trigger once
+                nukeArmed = true;
                 Debug.Log("💣 Nuke is fully charged!");
 
                 GameObject nukeIcon = GameObject.Find("NukeIcon");
@@ -180,8 +183,6 @@ public class GameManager : MonoBehaviour
         if (LeadArea() == 9)
         {
             Debug.Log("⚠️ Area 10 objects detected. Checking for targets only…");
-
-            // Check if there are any actual targets in Area 10
             bool hasTargets = HasTargetsInRow(9);
 
             if (hasTargets)
@@ -193,8 +194,6 @@ public class GameManager : MonoBehaviour
             else
             {
                 Debug.Log("✅ Only power-ups in Area 10 — destroying them and continuing game.");
-
-                // Destroy power-ups in Area 10
                 int cols = grid.GetColumnCount();
                 for (int col = 0; col < cols; col++)
                 {
@@ -211,7 +210,6 @@ public class GameManager : MonoBehaviour
         gun.EnableGun(true);
         roundInProgress = false;
     }
-
 
     private void TriggerGameOver()
     {
@@ -248,7 +246,7 @@ public class GameManager : MonoBehaviour
     public void ResetNukeChargeBar()
     {
         nukeChargeProgress = 0f;
-        nukeArmed = false; // ✅ Reset flag
+        nukeArmed = false;
         if (nukeChargeBar != null)
             nukeChargeBar.transform.localScale = new Vector3(1f, 0f, 1f);
 
@@ -261,14 +259,11 @@ public class GameManager : MonoBehaviour
     private bool HasTargetsInRow(int rowIndex)
     {
         int cols = grid.GetColumnCount();
-
         for (int col = 0; col < cols; col++)
         {
             GameObject obj = grid.GetTargetAt(col, rowIndex);
             if (obj != null && obj.CompareTag("Target"))
-            {
                 return true;
-            }
         }
         return false;
     }
@@ -286,5 +281,12 @@ public class GameManager : MonoBehaviour
     public int GetMoveCount()
     {
         return moveCount;
+    }
+
+    private IEnumerator ResetContinueFlag()
+    {
+        yield return new WaitForSeconds(1.5f); // ⏳ Wait for everything to spawn
+        Debug.Log("🧹 Resetting ContinueFromLastSave = false");
+        //GameState.Instance.ContinueFromLastSave = false;
     }
 }

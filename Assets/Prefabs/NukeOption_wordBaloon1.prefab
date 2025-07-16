@@ -69,8 +69,8 @@ MonoBehaviour:
   m_text: You have recieved the nuclear option! Charge it up and shoot it for maximum
     damage!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 490a26c1830edb743abd5de0354bd8d2, type: 2}
-  m_sharedMaterial: {fileID: -3704634820310649970, guid: 490a26c1830edb743abd5de0354bd8d2, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0cb29e7a942a23c4ab2fcb1808f85aa3, type: 2}
+  m_sharedMaterial: {fileID: -3704634820310649970, guid: 0cb29e7a942a23c4ab2fcb1808f85aa3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

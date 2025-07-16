@@ -173,4 +173,51 @@ public class BulletPool : MonoBehaviour
     }
 
     public int GetActiveBulletCount() => activeBulletCount;
+
+    public void SetTankedBulletCount(int count)
+    {
+        Debug.Log($"🛠️ Restoring {count} bullets to tank from saved state…");
+
+        int currentTanked = GetTankedBulletCount();
+
+        // 1. Activate bullets until we reach the target count
+        foreach (GameObject bulletGO in pool)
+        {
+            if (GetTankedBulletCount() >= count)
+                break;
+
+            GhostBullet bullet = bulletGO.GetComponent<GhostBullet>();
+
+            if (!bulletGO.activeInHierarchy)
+            {
+                bulletGO.SetActive(true);
+            }
+
+            if (bullet != null && !bullet.IsInTank)
+            {
+                bullet.EnterTank();
+                Vector3 pos = bulletGO.transform.position;
+                bulletGO.transform.position = new Vector3(pos.x, pos.y + tankVerticalOffset, pos.z);
+            }
+        }
+
+        // 2. Deactivate excess tanked bullets
+        foreach (GameObject bulletGO in pool)
+        {
+            if (GetTankedBulletCount() <= count)
+                break;
+
+            GhostBullet bullet = bulletGO.GetComponent<GhostBullet>();
+            if (bullet != null && bullet.IsInTank)
+            {
+                bulletGO.SetActive(false);
+            }
+        }
+
+        if (ghostTankUI != null)
+        {
+            ghostTankUI.SetBulletCounts(GetTankedBulletCount(), GetEnabledBulletCount());
+            Debug.Log($"📟 Bullet count after restore: {GetTankedBulletCount()} in tank / {GetEnabledBulletCount()} total");
+        }
+    }
 }

@@ -20,8 +20,16 @@ public class GhostShooter : MonoBehaviour
     }
     private void Start()
     {
+        if (GameState.Instance.ContinueFromLastSave && GameState.Instance.SavedBulletCount > 0)
+        {
+            int desiredCount = GameState.Instance.SavedBulletCount;
+            bulletPool.SetTankedBulletCount(desiredCount);
+            Debug.Log($"📥 GhostShooter restored bullet count from GameState: {desiredCount}");
+        }
+
         RefreshHUD(); // Ensures HUD is accurate on game start
     }
+
     void Update()
     {
         // 🛑 Prevent input if clicking on UI

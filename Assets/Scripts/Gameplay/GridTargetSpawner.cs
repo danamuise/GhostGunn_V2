@@ -71,7 +71,16 @@ public class GridTargetSpawner : MonoBehaviour
 
         lastEmptyColumn = emptyCol;
 
-        int baseHealth = targetHealthCurve != null ? targetHealthCurve.GetHealthForMove(moveCount) : 1;
+        int baseHealth;
+        if (GameState.Instance.ContinueFromLastSave && GameState.Instance.SavedTargetHealth > 0)
+        {
+            baseHealth = GameState.Instance.SavedTargetHealth;
+            Debug.Log($"📥 Using saved health from GameState: {baseHealth}");
+        }
+        else
+        {
+            baseHealth = targetHealthCurve != null ? targetHealthCurve.GetHealthForMove(moveCount) : 1;
+        }
 
         for (int i = 0; i < maxAllowed; i++)
         {
@@ -97,8 +106,12 @@ public class GridTargetSpawner : MonoBehaviour
             var anim = newTarget.GetComponent<TargetBehavior>();
             if (anim != null)
             {
-                int finalHealth = CalculateTargetHealth(baseHealth, moveCount);
+                Debug.Log($"📦 ContinueFromLastSave={GameState.Instance.ContinueFromLastSave}, SavedHealth={GameState.Instance.SavedTargetHealth}");
+                int finalHealth = GameState.Instance.ContinueFromLastSave? GameState.Instance.SavedTargetHealth: CalculateTargetHealth(baseHealth, moveCount);
+
                 anim.SetHealth(finalHealth);
+                Debug.Log($"🧬 SetHealth({finalHealth}) called on {newTarget.name}");
+
                 anim.AnimateToPosition(spawnPos, 0.5f, fromEndzone: true);
             }
 

@@ -35,4 +35,19 @@ public class GameOver : MonoBehaviour
     {
         SceneManager.LoadScene("AdsScene"); // If continuing game after an ad
     }
+
+    public void setFlag ()
+    {
+        // If playing again from the start
+        GameState.Instance.ContinueFromLastSave = false;
+        SceneManager.LoadScene("MainGameScene"); 
+    }
+
+    public void PlayButtonClickSound()
+    {
+        if (SFXManager.Instance != null)
+        {
+            SFXManager.Instance.Play("buttonClick0");
+        }
+    }
 }

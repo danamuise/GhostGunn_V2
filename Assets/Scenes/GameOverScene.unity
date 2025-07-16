@@ -653,7 +653,7 @@ GameObject:
   - component: {fileID: 837540615}
   - component: {fileID: 837540617}
   m_Layer: 0
-  m_Name: Square
+  m_Name: GameOverMgr
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1221,7 +1221,19 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 837540617}
         m_TargetAssemblyTypeName: GameOver, Assembly-CSharp
-        m_MethodName: OnPlayAgainPressed
+        m_MethodName: PlayButtonClickSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 837540617}
+        m_TargetAssemblyTypeName: GameOver, Assembly-CSharp
+        m_MethodName: setFlag
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
