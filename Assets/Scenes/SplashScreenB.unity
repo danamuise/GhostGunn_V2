@@ -616,7 +616,7 @@ GameObject:
   - component: {fileID: 1208040076}
   - component: {fileID: 1208040075}
   m_Layer: 0
-  m_Name: Ghost_title0
+  m_Name: Ghost_title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1220,7 +1220,7 @@ GameObject:
   - component: {fileID: 2078249863}
   - component: {fileID: 2078249862}
   m_Layer: 0
-  m_Name: Gunner_title01
+  m_Name: Gunner_title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

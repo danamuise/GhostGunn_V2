@@ -323,7 +323,7 @@ Material:
     - _PixelPerfectSpace: 0
     - _PixelPerfectUV: 0
     - _PixelateFade: 0.47
-    - _PixelatePixelDensity: -4.3
+    - _PixelatePixelDensity: -8.23
     - _PixelatePixelsPerUnit: 93.9
     - _PixelsPerUnit: 100
     - _PoisonDensity: 3
