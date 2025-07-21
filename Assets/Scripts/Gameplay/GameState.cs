@@ -101,5 +101,12 @@ public class GameState : MonoBehaviour
         Debug.Log($"📦 GameState loaded — Health: {SavedTargetHealth}, Bullets: {SavedBulletCount}, Score: {CurrentScore}");
     }
 
+    public void PlayButtonClickSound()
+    {
+        if (SFXManager.Instance != null)
+        {
+            SFXManager.Instance.Play("buttonClick0");
+        }
+    }
 
 }
