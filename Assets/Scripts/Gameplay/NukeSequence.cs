@@ -16,8 +16,11 @@ public class NukeSequence : MonoBehaviour
     void Start()
     {
         SFXManager.Instance.StopMusic();
-        // 🎵 Play the NukeSequence SFX at the start
         SFXManager.Instance.PlayMusic("NukeSequenceSFX", 0.25f);
+
+        // 🔒 Prevent enemies from advancing during the Nuke sequence
+        TargetManager.blockAdvance = true;
+        Debug.Log("🚫 Target advance blocked — Nuke sequence started!");
 
         if (gun != null)
         {
@@ -25,13 +28,13 @@ public class NukeSequence : MonoBehaviour
             Debug.Log("🔫 Gun disabled at the start of the Nuke Sequence!");
         }
 
-        // Shake the camera for dramatic effect
         if (CameraShaker.Instance != null)
         {
-            CameraShaker.Instance.Shake(10f, 0.05f); // 💥 Adjust duration/magnitude as needed
+            CameraShaker.Instance.Shake(10f, 0.05f);
             Debug.Log("💥 Camera shake triggered by Nuke Sequence!");
         }
     }
+
     public void InstantiateExplosions()
     {
        

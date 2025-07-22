@@ -4,8 +4,10 @@ using System.Collections.Generic;
 
 public class TargetManager : MonoBehaviour
 {
+    public static bool blockAdvance = false; // 🚫 Prevents targets from advancing
+
     [Header("Scene References")]
-    public Transform targetsParent; // Assign the "Targets" container in the scene
+    public Transform targetsParent;
 
     [Header("Animation Settings")]
     public float moveDuration = 0.35f;
@@ -14,11 +16,22 @@ public class TargetManager : MonoBehaviour
     [Header("Game Over Settings")]
     public float gameOverY = -3.0f;
 
+    private void Start()
+    {
+        blockAdvance = false; // Reset on scene load
+    }
+
     /// <summary>
     /// Moves all targets down by a fixed distance (typically row height).
     /// </summary>
     public IEnumerator MoveTargetsDown(float rowSpacing)
     {
+        if (blockAdvance)
+        {
+            Debug.Log("🚫 Target advance blocked by Nuke!");
+            yield break;
+        }
+
         List<Transform> targets = new List<Transform>();
         foreach (Transform child in targetsParent)
         {
@@ -71,6 +84,4 @@ public class TargetManager : MonoBehaviour
                 Destroy(t.gameObject);
         }
     }
-
-
 }
