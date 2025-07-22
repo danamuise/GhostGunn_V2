@@ -1780,7 +1780,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
       - m_Target: {fileID: 3771111335560658314}
         m_TargetAssemblyTypeName: Book, Assembly-CSharp
         m_MethodName: NextLevel
@@ -1792,7 +1792,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
 --- !u!114 &600312436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2135,6 +2135,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 1296308370423334366, guid: 47445f11e0526e046b91ce3354590c28, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 400183652}
     - target: {fileID: 1296308370423334366, guid: 47445f11e0526e046b91ce3354590c28, type: 3}
       propertyPath: m_RenderMode
       value: 2
@@ -4142,6 +4146,14 @@ PrefabInstance:
     - target: {fileID: 4561078721059378674, guid: 47ceb2708e492834f91ee2b36ea76f1c, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4561078721059378674, guid: 47ceb2708e492834f91ee2b36ea76f1c, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4561078721059378674, guid: 47ceb2708e492834f91ee2b36ea76f1c, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1751379425
       objectReference: {fileID: 0}
     - target: {fileID: 5934049193928151795, guid: 47ceb2708e492834f91ee2b36ea76f1c, type: 3}
       propertyPath: m_LocalScale.x

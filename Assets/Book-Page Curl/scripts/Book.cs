@@ -845,6 +845,7 @@ public class Book : MonoBehaviour
     public void NextLevel()
     {
         GameState.Instance.ContinueFromLastSave = true;
+        Debug.Log("➡️ Advance to LEVEL 2 (mainGameScene).");
         SceneManager.LoadScene("MainGameScene"); // If playing again from the start
     }
 }
