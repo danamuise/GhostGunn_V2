@@ -243,6 +243,13 @@ MonoBehaviour:
   nukeChargeBar: {fileID: 1934761908}
   NukeFullCharge: 1000
   nukeOutline: {fileID: 281938772}
+  soundUI: {fileID: 1137979492}
+  moveUIoutButton: {fileID: 1995136401}
+  moveUIinButton: {fileID: 1778598148}
+  soundOffButton: {fileID: 1334313964}
+  soundOnButton: {fileID: 2068925525}
+  musicOnButton: {fileID: 885331502}
+  musicOffButton: {fileID: 1362854295}
 --- !u!4 &81249632
 Transform:
   m_ObjectHideFlags: 0
@@ -3582,6 +3589,10 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: 130303049
       objectReference: {fileID: 0}
+    - target: {fileID: 1676359591499884051, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.288
+      objectReference: {fileID: 0}
     - target: {fileID: 2215428545392780581, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
       propertyPath: m_SortingLayer
       value: 2
@@ -5689,7 +5700,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1190482125691038494, guid: e3ec47eece7d61c46965251a7ede497a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 1190482125691038494, guid: e3ec47eece7d61c46965251a7ede497a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5730,6 +5741,10 @@ PrefabInstance:
     - target: {fileID: 3484144675269225601, guid: e3ec47eece7d61c46965251a7ede497a, type: 3}
       propertyPath: m_Name
       value: iphoneFrame
+      objectReference: {fileID: 0}
+    - target: {fileID: 3484144675269225601, guid: e3ec47eece7d61c46965251a7ede497a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8047,91 +8062,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1001 &3408617717600381192
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3653369773944519428, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.9483719
-      objectReference: {fileID: 0}
-    - target: {fileID: 3653369773944519428, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 5.8862433
-      objectReference: {fileID: 0}
-    - target: {fileID: 3653369773944519428, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.12749217
-      objectReference: {fileID: 0}
-    - target: {fileID: 3653369773944519428, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3653369773944519428, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3653369773944519428, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3653369773944519428, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3653369773944519428, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3653369773944519428, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3653369773944519428, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4373345726625825309, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: m_Name
-      value: SFXmanager
-      objectReference: {fileID: 0}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: soundUI
-      value: 
-      objectReference: {fileID: 1137979492}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: musicOnButton
-      value: 
-      objectReference: {fileID: 885331502}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: soundOnButton
-      value: 
-      objectReference: {fileID: 2068925525}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: moveUIinButton
-      value: 
-      objectReference: {fileID: 1778598148}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: musicOffButton
-      value: 
-      objectReference: {fileID: 1362854295}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: soundOffButton
-      value: 
-      objectReference: {fileID: 1334313964}
-    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
-      propertyPath: moveUIoutButton
-      value: 
-      objectReference: {fileID: 1995136401}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c8d68a943f40e77479382f501574572d, type: 3}
 --- !u!1001 &4005948852339486016
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8446,7 +8376,6 @@ SceneRoots:
   - {fileID: 299981599}
   - {fileID: 9030041201025415379}
   - {fileID: 1870886502}
-  - {fileID: 3408617717600381192}
   - {fileID: 838446862}
   - {fileID: 871060448084940849}
   - {fileID: 721010758}

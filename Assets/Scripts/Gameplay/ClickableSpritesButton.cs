@@ -12,25 +12,39 @@ public class ClickableSpriteButton : MonoBehaviour
 
     public ButtonAction action;
 
-    private void OnMouseDown()
+    private GameManager gameManager;
+
+    private void Start()
     {
-        switch (action)
+        gameManager = FindObjectOfType<GameManager>();
+        if (gameManager == null)
         {
-            case ButtonAction.MoveUIOut:
-                SFXManager.Instance.MoveUIOut();
-                break;
-            case ButtonAction.MoveUIIn:
-                SFXManager.Instance.MoveUIIn();
-                break;
-            case ButtonAction.ToggleMusic:
-                Debug.Log("Toggle Music");
-                SFXManager.Instance.ToggleMusic();
-                break;
-            case ButtonAction.ToggleSFX:
-                Debug.Log("Toggle SFX");
-                SFXManager.Instance.ToggleSFX(); // 👈 New case
-                break;
+            Debug.LogError("ClickableSpriteButton: GameManager not found in scene!");
         }
     }
 
+    private void OnMouseDown()
+    {
+        if (gameManager == null) return;
+
+        switch (action)
+        {
+            case ButtonAction.MoveUIOut:
+                gameManager.MoveUIOut();
+                Debug.Log("Move sound control out");
+                break;
+            case ButtonAction.MoveUIIn:
+                gameManager.MoveUIIn();
+                Debug.Log("Move sound control in");
+                break;
+            case ButtonAction.ToggleMusic:
+                Debug.Log("Toggle Music");
+                gameManager.ToggleMusic();
+                break;
+            case ButtonAction.ToggleSFX:
+                Debug.Log("Toggle SFX");
+                gameManager.ToggleSFX();
+                break;
+        }
+    }
 }

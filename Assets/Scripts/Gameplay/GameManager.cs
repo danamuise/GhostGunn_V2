@@ -18,6 +18,17 @@ public class GameManager : MonoBehaviour
     private float nukeChargeProgress = 0f;
     private bool nukeArmed = false;
 
+    [Header("Sound Control Panel")]
+    public GameObject soundUI;
+    public GameObject moveUIoutButton;
+    public GameObject moveUIinButton;
+    public GameObject soundOffButton;
+    public GameObject soundOnButton;
+    public GameObject musicOnButton;
+    public GameObject musicOffButton;
+    private bool isSFXOn = true;
+    private bool isMusicOn = true;
+
     private SpriteRenderer nukeIconSR;
     private Material nukeIconMaterial;
     private readonly Color dimColor = new Color32(164, 164, 164, 255);
@@ -26,6 +37,7 @@ public class GameManager : MonoBehaviour
     private bool roundInProgress;
     private int moveCount = 0;
     private int totalScore = 0;
+
 
     private void Awake()
     {
@@ -83,6 +95,23 @@ public class GameManager : MonoBehaviour
         if (GameState.Instance.ContinueFromLastSave)
         {
             StartCoroutine(ResetContinueFlag());
+        }
+
+        // Load saved toggle preferences
+        isSFXOn = PlayerPrefs.GetInt("SFX_ENABLED", 1) == 1;
+        isMusicOn = PlayerPrefs.GetInt("MUSIC_ENABLED", 1) == 1;
+
+        soundOnButton?.SetActive(isSFXOn);
+        soundOffButton?.SetActive(!isSFXOn);
+        musicOnButton?.SetActive(isMusicOn);
+        musicOffButton?.SetActive(!isMusicOn);
+
+        moveUIoutButton?.SetActive(true);
+        moveUIinButton?.SetActive(false);
+
+        if (!isMusicOn)
+        {
+            SFXManager.Instance.StopMusic();
         }
     }
 
@@ -289,4 +318,74 @@ public class GameManager : MonoBehaviour
         Debug.Log("🧹 Resetting ContinueFromLastSave = false");
         //GameState.Instance.ContinueFromLastSave = false;
     }
+
+    public void MoveUIOut()
+    {
+        Debug.Log("MoveUIOut() called!");
+        StartCoroutine(MoveSoundUI(2.606f, 1.69f));
+        moveUIoutButton.SetActive(false);
+        moveUIinButton.SetActive(true);
+        Invoke(nameof(MoveUIIn), 10f); // Auto-close
+    }
+
+    public void MoveUIIn()
+    {
+        Debug.Log("MoveUIIn() called!");
+        StartCoroutine(MoveSoundUI(1.69f, 2.606f));
+        moveUIinButton.SetActive(false);
+        moveUIoutButton.SetActive(true);
+        CancelInvoke(nameof(MoveUIIn));
+    }
+
+    private IEnumerator MoveSoundUI(float startX, float endX, float duration = 0.3f)
+    {
+        Vector3 startPos = new Vector3(startX, soundUI.transform.position.y, soundUI.transform.position.z);
+        Vector3 endPos = new Vector3(endX, soundUI.transform.position.y, soundUI.transform.position.z);
+
+        float time = 0f;
+        while (time < 1f)
+        {
+            time += Time.deltaTime / duration;
+            float t = Mathf.Pow(time, 2); // ease-in
+            soundUI.transform.position = Vector3.Lerp(startPos, endPos, t);
+            yield return null;
+        }
+        soundUI.transform.position = endPos;
+    }
+
+    public void ToggleMusic()
+    {
+        isMusicOn = !isMusicOn;
+        PlayerPrefs.SetInt("MUSIC_ENABLED", isMusicOn ? 1 : 0);
+        PlayerPrefs.Save();
+
+        if (isMusicOn)
+        {
+            SFXManager.Instance.PlayMusic("mainBGmusic", 0.3f);
+            Debug.Log("🎵 Music ON");
+        }
+        else
+        {
+            SFXManager.Instance.StopMusic();
+            Debug.Log("🔇 Music OFF");
+        }
+
+        musicOnButton.SetActive(isMusicOn);
+        musicOffButton.SetActive(!isMusicOn);
+        MoveUIIn();
+    }
+
+    public void ToggleSFX()
+    {
+        isSFXOn = !isSFXOn;
+        PlayerPrefs.SetInt("SFX_ENABLED", isSFXOn ? 1 : 0);
+        PlayerPrefs.Save();
+
+        soundOnButton.SetActive(isSFXOn);
+        soundOffButton.SetActive(!isSFXOn);
+
+        Debug.Log(isSFXOn ? "🔊 SFX ON" : "🔇 SFX OFF");
+        MoveUIIn();
+    }
+
 }
