@@ -28,7 +28,9 @@ public class GameOver : MonoBehaviour
 
     public void OnPlayAgainPressed()
     {
-        SceneManager.LoadScene("MainGameScene"); // If playing again from the start
+        GameState.Instance.LevelNumber = 1;
+        GameState.Instance.ContinueFromLastSave = false;
+        SceneManager.LoadScene("MainGameScene"); // play again from the start
     }
 
     public void OnContinueClicked()
@@ -36,12 +38,6 @@ public class GameOver : MonoBehaviour
         SceneManager.LoadScene("AdsScene"); // If continuing game after an ad
     }
 
-    public void setFlag ()
-    {
-        // If playing again from the start
-        GameState.Instance.ContinueFromLastSave = false;
-        SceneManager.LoadScene("MainGameScene"); 
-    }
 
     public void PlayButtonClickSound()
     {

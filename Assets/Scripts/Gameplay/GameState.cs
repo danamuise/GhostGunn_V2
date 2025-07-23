@@ -14,6 +14,9 @@ public class GameState : MonoBehaviour
     public int[] HighScores { get; private set; } = new int[5];
     public int SavedBulletCount { get; set; } = -1;
     public bool ContinueFromLastSave { get; set; } = false; // are we starting fresh or are we continuing a game?
+
+    public int LevelNumber = 1; // Default to Level 1
+
     private void Awake()
     {
         if (Instance != null && Instance != this)

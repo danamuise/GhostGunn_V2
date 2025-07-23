@@ -4975,8 +4975,8 @@ MonoBehaviour:
   gravityStrength: 10
   bulletSize: 0.15
   rescueBounceForce: 5
-  wallDropSpeed: 25
-  wallDropDuration: 0.4
+  wallDropSpeed: 60
+  wallDropDuration: 0.25
   floatMagnitude: 0.11
   floatSpeed: 2
   jitterAmount: 0.1

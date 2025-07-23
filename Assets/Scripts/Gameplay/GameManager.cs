@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     private bool isSFXOn = true;
     private bool isMusicOn = true;
 
-    private SpriteRenderer nukeIconSR;
+    private SpriteRenderer nukeIconSW;
     private Material nukeIconMaterial;
     private readonly Color dimColor = new Color32(164, 164, 164, 255);
     private readonly Color brightColor = new Color32(255, 255, 255, 255);
@@ -76,10 +76,10 @@ public class GameManager : MonoBehaviour
         GameObject nukeIcon = GameObject.Find("NukeIcon");
         if (nukeIcon != null)
         {
-            nukeIconSR = nukeIcon.GetComponent<SpriteRenderer>();
-            if (nukeIconSR != null)
+            nukeIconSW = nukeIcon.GetComponent<SpriteRenderer>();
+            if (nukeIconSW != null)
             {
-                nukeIconMaterial = nukeIconSR.material;
+                nukeIconMaterial = nukeIconSW.material;
                 nukeIconMaterial.color = dimColor;
             }
             else
@@ -155,7 +155,7 @@ public class GameManager : MonoBehaviour
         totalScore += amount;
         uiManager.UpdateScoreDisplay(totalScore);
 
-        if (nukeIconSR != null && nukeIconSR.enabled)
+        if (nukeIconSW != null && nukeIconSW.enabled)
         {
             nukeChargeProgress += amount / NukeFullCharge;
             nukeChargeProgress = Mathf.Clamp01(nukeChargeProgress);

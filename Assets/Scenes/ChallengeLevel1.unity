@@ -4895,11 +4895,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 658462829164695922, guid: 74283f92fc75a43458c12929c191acda, type: 3}
       propertyPath: m_Name
-      value: FirePUicon
+      value: FireSWicon
       objectReference: {fileID: 0}
     - target: {fileID: 658462829164695922, guid: 74283f92fc75a43458c12929c191acda, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
