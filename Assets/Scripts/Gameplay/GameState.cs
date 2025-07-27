@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+
 public class GameState : MonoBehaviour
 {
     // Singleton instance
@@ -10,12 +11,16 @@ public class GameState : MonoBehaviour
     public int CurrentLevel { get; set; }
     public int AvailableSpecialWeapons { get; set; }
     public int SavedTargetHealth { get; set; } = -1;
-
-    public int[] HighScores { get; private set; } = new int[5];
     public int SavedBulletCount { get; set; } = -1;
-    public bool ContinueFromLastSave { get; set; } = false; // are we starting fresh or are we continuing a game?
+    public bool ContinueFromLastSave { get; set; } = false; // are we starting fresh or continuing a game?
 
     public int LevelNumber = 1; // Default to Level 1
+
+    // Special Weapons (for in-session use only)
+    public SpecialWeaponType SpecialWeaponUnlocked { get; set; } = SpecialWeaponType.None;
+    public bool IsSpecialWeaponCharged = false;
+
+    public int[] HighScores { get; private set; } = new int[5];
 
     private void Awake()
     {
@@ -29,7 +34,7 @@ public class GameState : MonoBehaviour
 
         LoadHighScores();
 
-        // only reset if you are actually starting a new game
+        // Only reset if starting a new game
         // ResetGameState();
     }
 
@@ -38,6 +43,12 @@ public class GameState : MonoBehaviour
         CurrentScore = 0;
         CurrentLevel = 1;
         AvailableSpecialWeapons = 0;
+        SavedTargetHealth = -1;
+        SavedBulletCount = -1;
+        ContinueFromLastSave = false;
+        LevelNumber = 1;
+        SpecialWeaponUnlocked = SpecialWeaponType.None;
+        IsSpecialWeaponCharged = false;
     }
 
     // Load high scores from PlayerPrefs
@@ -111,5 +122,4 @@ public class GameState : MonoBehaviour
             SFXManager.Instance.Play("buttonClick0");
         }
     }
-
 }

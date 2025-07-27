@@ -4865,7 +4865,7 @@ GameObject:
   - component: {fileID: 2817225086329085217}
   - component: {fileID: 2297655370963473631}
   m_Layer: 0
-  m_Name: NukeSkull
+  m_Name: NukeSymbol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4949,7 +4949,7 @@ GameObject:
   - component: {fileID: 7481822606721297260}
   - component: {fileID: 8623090581696117888}
   m_Layer: 0
-  m_Name: CoinSHeet_0
+  m_Name: CoinSheet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5033,9 +5033,9 @@ GameObject:
   - component: {fileID: 719882935562587007}
   - component: {fileID: 8897784278200671190}
   - component: {fileID: 7217119290920716025}
-  - component: {fileID: -3139545047966589941}
+  - component: {fileID: 5473915948721944521}
   m_Layer: 0
-  m_Name: NukePU
+  m_Name: NukeSWtarget
   m_TagString: PowerUp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5104,7 +5104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18438d49ab702b4458990d09a093ca56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-3139545047966589941
+--- !u!114 &5473915948721944521
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5113,10 +5113,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7329726899166178089}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e44a8133516bb2e4b852080631906e79, type: 3}
+  m_Script: {fileID: 11500000, guid: 0cae34485c354cd4aa855bed9c4ee573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nukeHitVFXPrefab: {fileID: 6008419087115266581, guid: bb2c76f06627ef7448261228d7d49779, type: 3}
-  wordBalloon0: {fileID: 8246163543328364006, guid: 44c4b10a0a5cb284cb484ab1c496b684, type: 3}
-  coinSheet0: {fileID: 6355327929970411081}
-  powerUpData: {fileID: 11400000, guid: e01a7cddd95b85249ad821c8d47dd4ad, type: 2}
+  weaponType: 1

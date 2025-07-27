@@ -11,13 +11,6 @@ public class GameManager : MonoBehaviour
     public GhostShooter gun;
     public UIManager uiManager;
 
-    [Header("NukePU Charging")]
-    public GameObject nukeChargeBar;
-    public float NukeFullCharge = 1000f;
-    public SpriteRenderer nukeOutline;
-    private float nukeChargeProgress = 0f;
-    private bool nukeArmed = false;
-
     [Header("Sound Control Panel")]
     public GameObject soundUI;
     public GameObject moveUIoutButton;
@@ -29,15 +22,9 @@ public class GameManager : MonoBehaviour
     private bool isSFXOn = true;
     private bool isMusicOn = true;
 
-    private SpriteRenderer nukeIconSW;
-    private Material nukeIconMaterial;
-    private readonly Color dimColor = new Color32(164, 164, 164, 255);
-    private readonly Color brightColor = new Color32(255, 255, 255, 255);
-
     private bool roundInProgress;
     private int moveCount = 0;
     private int totalScore = 0;
-
 
     private void Awake()
     {
@@ -73,31 +60,11 @@ public class GameManager : MonoBehaviour
         gun.EnableGun(true);
         uiManager?.InitializeUI();
 
-        GameObject nukeIcon = GameObject.Find("NukeIcon");
-        if (nukeIcon != null)
-        {
-            nukeIconSW = nukeIcon.GetComponent<SpriteRenderer>();
-            if (nukeIconSW != null)
-            {
-                nukeIconMaterial = nukeIconSW.material;
-                nukeIconMaterial.color = dimColor;
-            }
-            else
-            {
-                Debug.LogWarning("⚠️ NukeIcon found but has no SpriteRenderer.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("⚠️ NukeIcon not found in scene!");
-        }
-
         if (GameState.Instance.ContinueFromLastSave)
         {
             StartCoroutine(ResetContinueFlag());
         }
 
-        // Load saved toggle preferences
         isSFXOn = PlayerPrefs.GetInt("SFX_ENABLED", 1) == 1;
         isMusicOn = PlayerPrefs.GetInt("MUSIC_ENABLED", 1) == 1;
 
@@ -115,73 +82,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (nukeChargeProgress >= 1f && nukeIconMaterial != null)
-        {
-            float loopDuration = 2.0f;
-            float timeInLoop = Time.time % loopDuration;
-            Color newColor;
-
-            if (timeInLoop < 0.5f)
-            {
-                float t = timeInLoop / 0.5f;
-                newColor = Color.Lerp(dimColor, brightColor, t);
-            }
-            else if (timeInLoop < 1.5f)
-            {
-                newColor = brightColor;
-            }
-            else
-            {
-                float t = (timeInLoop - 1.5f) / 0.5f;
-                newColor = Color.Lerp(brightColor, dimColor, t);
-            }
-
-            nukeIconMaterial.color = newColor;
-
-            if (nukeOutline != null)
-            {
-                float blinkFrequency = 10f;
-                bool shouldShow = Mathf.PingPong(Time.time * blinkFrequency, 1f) > 0.5f;
-                nukeOutline.enabled = shouldShow;
-            }
-        }
-    }
-
     public void AddScore(int amount)
     {
         Debug.Log($"➕ Adding {amount} points to score. New total: {totalScore + amount}");
         totalScore += amount;
         uiManager.UpdateScoreDisplay(totalScore);
 
-        if (nukeIconSW != null && nukeIconSW.enabled)
+        SpecialWeapons sw = FindObjectOfType<SpecialWeapons>();
+        if (sw != null)
         {
-            nukeChargeProgress += amount / NukeFullCharge;
-            nukeChargeProgress = Mathf.Clamp01(nukeChargeProgress);
-
-            if (nukeChargeBar != null)
-            {
-                nukeChargeBar.transform.localScale = new Vector3(1f, nukeChargeProgress, 1f);
-                Debug.Log($"🔋 NukeChargeBar Y Scale: {nukeChargeProgress:F3}");
-            }
-
-            if (!nukeArmed && nukeChargeProgress >= 1f)
-            {
-                nukeArmed = true;
-                Debug.Log("💣 Nuke is fully charged!");
-
-                GameObject nukeIcon = GameObject.Find("NukeIcon");
-                if (nukeIcon != null)
-                {
-                    NukeTarget nukeTarget = nukeIcon.GetComponent<NukeTarget>();
-                    if (nukeTarget != null)
-                    {
-                        nukeTarget.ArmNuke();
-                        Debug.Log("NukeTarget armed and ready for collision.");
-                    }
-                }
-            }
+            sw.AddCharge(amount);
         }
     }
 
@@ -272,19 +182,6 @@ public class GameManager : MonoBehaviour
         return leadRow;
     }
 
-    public void ResetNukeChargeBar()
-    {
-        nukeChargeProgress = 0f;
-        nukeArmed = false;
-        if (nukeChargeBar != null)
-            nukeChargeBar.transform.localScale = new Vector3(1f, 0f, 1f);
-
-        if (nukeIconMaterial != null)
-            nukeIconMaterial.color = dimColor;
-
-        Debug.Log("🔄 Nuke charge bar reset.");
-    }
-
     private bool HasTargetsInRow(int rowIndex)
     {
         int cols = grid.GetColumnCount();
@@ -314,9 +211,8 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator ResetContinueFlag()
     {
-        yield return new WaitForSeconds(1.5f); // ⏳ Wait for everything to spawn
+        yield return new WaitForSeconds(1.5f);
         Debug.Log("🧹 Resetting ContinueFromLastSave = false");
-        //GameState.Instance.ContinueFromLastSave = false;
     }
 
     public void MoveUIOut()
@@ -325,7 +221,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(MoveSoundUI(2.606f, 1.69f));
         moveUIoutButton.SetActive(false);
         moveUIinButton.SetActive(true);
-        Invoke(nameof(MoveUIIn), 10f); // Auto-close
+        Invoke(nameof(MoveUIIn), 10f);
     }
 
     public void MoveUIIn()
@@ -346,7 +242,7 @@ public class GameManager : MonoBehaviour
         while (time < 1f)
         {
             time += Time.deltaTime / duration;
-            float t = Mathf.Pow(time, 2); // ease-in
+            float t = Mathf.Pow(time, 2);
             soundUI.transform.position = Vector3.Lerp(startPos, endPos, t);
             yield return null;
         }
@@ -387,5 +283,4 @@ public class GameManager : MonoBehaviour
         Debug.Log(isSFXOn ? "🔊 SFX ON" : "🔇 SFX OFF");
         MoveUIIn();
     }
-
 }
