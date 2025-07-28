@@ -155,7 +155,8 @@ public class SpecialWeapons : MonoBehaviour
     {
         if (chargeBar != null)
         {
-            chargeBar.localScale = new Vector3(1f, percent, 1f);
+            float scaledY = Mathf.Lerp(0.00001f, 0.01f, percent);
+            chargeBar.localScale = new Vector3(1f, scaledY, 1f);
             Debug.Log($"🔋 Charge bar updated to {percent * 100:F0}%");
         }
     }
