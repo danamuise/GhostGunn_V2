@@ -909,8 +909,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6803244797375503701, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
     - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
+      propertyPath: musicLibrary.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
       propertyPath: soundLibrary.Array.size
-      value: 20
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
       propertyPath: soundLibrary.Array.data[14].clip
@@ -959,6 +963,14 @@ PrefabInstance:
     - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
       propertyPath: soundLibrary.Array.data[19].name
       value: buttonClick0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
+      propertyPath: soundLibrary.Array.data[20].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 14d8e4d6d2a2b5d43ab2113a89e25de7, type: 3}
+    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
+      propertyPath: soundLibrary.Array.data[20].name
+      value: NukeSequenceSFX
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

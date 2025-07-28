@@ -16,7 +16,7 @@ public class NukeSequence : MonoBehaviour
     void Start()
     {
         SFXManager.Instance.StopMusic();
-        SFXManager.Instance.PlayMusic("NukeSequenceSFX", 0.25f);
+        SFXManager.Instance.Play("NukeSequenceSFX", 1.0f, 1.0f, 1.0f);
 
         // 🔒 Prevent enemies from advancing during the Nuke sequence
         TargetManager.blockAdvance = true;

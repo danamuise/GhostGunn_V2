@@ -131,6 +131,7 @@ public class SpecialWeapons : MonoBehaviour
         float percent = currentCharge / currentWeapon.chargeRequired;
         UpdateChargeBar(percent);
 
+        // Update icon tint
         if (currentWeapon.icon != null)
         {
             SWIconTarget iconTarget = currentWeapon.icon.GetComponent<SWIconTarget>();
@@ -140,16 +141,21 @@ public class SpecialWeapons : MonoBehaviour
             }
         }
 
+        // When fully charged
         if (currentCharge >= currentWeapon.chargeRequired)
         {
             isArmed = true;
 
             if (currentWeapon.outline != null)
-                currentWeapon.outline.enabled = true;
+            {
+                currentWeapon.outline.gameObject.SetActive(true); // ✅ Make sure the GameObject is active
+                currentWeapon.outline.enabled = true;             // ✅ Keep the SpriteRenderer enabled too
+            }
 
             Debug.Log($"🚀 {currentWeapon.type} is fully charged and armed.");
         }
     }
+
 
     private void UpdateChargeBar(float percent)
     {
