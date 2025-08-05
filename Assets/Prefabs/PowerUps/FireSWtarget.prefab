@@ -5034,7 +5034,7 @@ GameObject:
   - component: {fileID: 719882935562587007}
   - component: {fileID: 8897784278200671190}
   - component: {fileID: 7217119290920716025}
-  - component: {fileID: -2923387573221575176}
+  - component: {fileID: -547476380562977702}
   m_Layer: 0
   m_Name: FireSWtarget
   m_TagString: PowerUp
@@ -5105,7 +5105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18438d49ab702b4458990d09a093ca56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-2923387573221575176
+--- !u!114 &-547476380562977702
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5114,14 +5114,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7329726899166178089}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28adc0b8b28816044a7c34f74e61a2c0, type: 3}
+  m_Script: {fileID: 11500000, guid: 0cae34485c354cd4aa855bed9c4ee573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkRadius: 0.1
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  powerUpData: {fileID: 11400000, guid: 8374684ae25bcfc479276b501be673fa, type: 2}
+  weaponType: 2
 --- !u!1 &7842483927478078189
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,6 +16,8 @@ public class PowerUpManager : MonoBehaviour
     private int totalTargetSpawnCycles = 0;
     private bool hasSpawnedNukePU = false;
 
+    private bool hasSpawnedFirePU = false; // 🔥 New tracker for FireSWtarget
+
     public void TrySpawnPowerUp(int move)
     {
         if (powerUps == null || powerUps.Count == 0)
@@ -37,13 +39,29 @@ public class PowerUpManager : MonoBehaviour
         PowerUpData selectedPU = null;
         GameManager gm = FindObjectOfType<GameManager>();
 
-        // 🧨 NukePU logic — spawns only once after score threshold
-        //*************************************************************************************
-        if (!hasSpawnedNukePU && gm != null && gm.GetScore() >= 2000 && powerUps.Count > 2)
+        //+++++++++++++++++++++++++++++++++++++++++++ for testing
+        Debug.Log($"🔥 hasSpawnedFirePU = {hasSpawnedFirePU}");
+        Debug.Log($"🔥 gm = {(gm != null ? "valid" : "null")}");
+        Debug.Log($"🔥 gm.GetScore() = {gm?.GetScore()}");
+        Debug.Log($"🔥 GameState.LevelNumber = {GameState.Instance.LevelNumber}");
+        Debug.Log($"🔥 powerUps.Count = {powerUps.Count}");
+        //+++++++++++++++++++++++++++++++++++++++++++ for testing
+
+        // 🧨 NukePU logic
+        if (!hasSpawnedNukePU && gm != null && GameState.Instance.LevelNumber == 1 && gm.GetScore() >= 2000 && powerUps.Count > 2)
         {
-            Debug.Log("✅ SCORE IS OVER 2000 — Spawning NukePU");
+            Debug.Log("✅ LEVEL 1 && SCORE ≥ 2000 — Spawning NukePU");
             selectedPU = powerUps[2]; // Assumes NukePU is third in list
             hasSpawnedNukePU = true;
+        }
+            // 🔥 FirePU logic
+        else if (!hasSpawnedFirePU && gm != null &&
+                 gm.GetScore() >= 3200 && GameState.Instance.LevelNumber == 2 &&
+                 powerUps.Count > 3)
+        {
+            Debug.Log("🔥 SCORE IS OVER 3200 — Spawning FireSWtarget");
+            selectedPU = powerUps[3]; // Assumes FireSWtarget is 4th in list
+            hasSpawnedFirePU = true;
         }
         // ➕ AddBulletPU logic (every 2nd move)
         else if (bulletPool.GetEnabledBulletCount() < bulletPool.GetTotalBulletCount())
@@ -68,12 +86,6 @@ public class PowerUpManager : MonoBehaviour
         if (selectedPU == null || selectedPU.powerUpPrefab == null)
         {
             Debug.Log("🛑 No eligible power-up selected.");
-            return;
-        }
-
-        if (availableCols == null || availableCols.Count == 0)
-        {
-            Debug.LogWarning($"⚠️ No available columns to spawn {selectedPU?.powerUpName ?? "Unknown PU"}");
             return;
         }
 

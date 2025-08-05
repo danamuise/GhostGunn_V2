@@ -34,6 +34,7 @@ public class SpecialWeapons : MonoBehaviour
     private float currentCharge = 0f;
     private bool isArmed = false;
     private GameObject balloonInstance;
+    private int targetHitScore = -1; //for target hit
 
     private void Start()
     {
@@ -49,9 +50,14 @@ public class SpecialWeapons : MonoBehaviour
     public void OnSpecialWeaponCollected(SpecialWeaponType type, GameObject pickupObject)
     {
         Debug.Log($"💡 Special Weapon Collected: {type}");
+
+        targetHitScore = GameState.Instance.CurrentScore;
+        Debug.Log($"🎯 Target {type} was hit at score {targetHitScore}");
+
         ActivateWeapon(type, pickupObject);
         SFXManager.Instance.Play("PUCollect");
     }
+
 
     public void ActivateWeapon(SpecialWeaponType type, GameObject pickupObject)
     {
@@ -142,14 +148,15 @@ public class SpecialWeapons : MonoBehaviour
         }
 
         // When fully charged
-        if (currentCharge >= currentWeapon.chargeRequired)
+        if (!isArmed && targetHitScore >= 0 && GameState.Instance.CurrentScore >= targetHitScore + currentWeapon.chargeRequired)
+
         {
             isArmed = true;
 
             if (currentWeapon.outline != null)
             {
-                currentWeapon.outline.gameObject.SetActive(true); // ✅ Make sure the GameObject is active
-                currentWeapon.outline.enabled = true;             // ✅ Keep the SpriteRenderer enabled too
+                currentWeapon.outline.gameObject.SetActive(true);
+                currentWeapon.outline.enabled = true;
             }
 
             Debug.Log($"🚀 {currentWeapon.type} is fully charged and armed.");
