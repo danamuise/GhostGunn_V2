@@ -2952,6 +2952,7 @@ MonoBehaviour:
   offsetXRange: 0.1
   offsetYRange: 0.1
   rotationZRange: 0.03
+  maxHealthClamp: 60
 --- !u!4 &1086136299
 Transform:
   m_ObjectHideFlags: 0

@@ -41,29 +41,10 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"[Init] Rebinding scene refs: Grid={grid}, TargetMgr={targetManager}, Gun={gun}, UIManager={uiManager}");
 
-        if (GameState.Instance.ContinueFromLastSave)
-        {
-            Debug.Log("🔁 Continuing from saved state…");
-            Debug.Log($"Health base: {GameState.Instance.SavedTargetHealth}");
-            Debug.Log($"Bullets: {GameState.Instance.SavedBulletCount}");
-
-            totalScore = GameState.Instance.CurrentScore;
-            uiManager.UpdateScoreDisplay(totalScore);
-        }
-        else
-        {
-            Debug.Log("🆕 Starting fresh — new level, no saved data.");
-        }
-
         SFXManager.Instance.PlayMusic("mainBGmusic", 0.3f);
         grid.InitializeGrid();
         gun.EnableGun(true);
         uiManager?.InitializeUI();
-
-        if (GameState.Instance.ContinueFromLastSave)
-        {
-            StartCoroutine(ResetContinueFlag());
-        }
 
         isSFXOn = PlayerPrefs.GetInt("SFX_ENABLED", 1) == 1;
         isMusicOn = PlayerPrefs.GetInt("MUSIC_ENABLED", 1) == 1;
@@ -80,7 +61,26 @@ public class GameManager : MonoBehaviour
         {
             SFXManager.Instance.StopMusic();
         }
+
+        // ✅ DO THIS LAST: Apply saved game data
+        if (GameState.Instance.ContinueFromLastSave)
+        {
+            Debug.Log("🔁 Continuing from saved state…");
+            Debug.Log($"Health base: {GameState.Instance.SavedTargetHealth}");
+            Debug.Log($"Bullets: {GameState.Instance.SavedBulletCount}");
+            Debug.Log($"Saved Score: {GameState.Instance.CurrentScore}");
+
+            totalScore = GameState.Instance.CurrentScore;
+            uiManager.UpdateScoreDisplay(totalScore);
+
+            StartCoroutine(ResetContinueFlag());
+        }
+        else
+        {
+            Debug.Log("🆕 Starting fresh — new level, no saved data.");
+        }
     }
+
 
     public void AddScore(int amount)
     {

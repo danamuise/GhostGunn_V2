@@ -31,11 +31,13 @@ public class GridTargetSpawner : MonoBehaviour
     [Range(0f, 0.2f)] public float offsetYRange = 0.1f;
     [Range(0f, 0.5f)] public float rotationZRange = 0.1f;
 
+    [Header("Health Clamp")]
+    public int maxHealthClamp = 40;
+
     private Transform targetParent;
     private int lastEmptyColumn = -1;
     private int targetIdCounter = 0;
-
-    private int spawnRowCounter = 0; // 🆕 Sorting order depth tracker
+    private int spawnRowCounter = 0;
 
     private class TargetMeta
     {
@@ -72,10 +74,12 @@ public class GridTargetSpawner : MonoBehaviour
         lastEmptyColumn = emptyCol;
 
         int baseHealth;
+
         if (GameState.Instance.ContinueFromLastSave && GameState.Instance.SavedTargetHealth > 0)
         {
-            baseHealth = GameState.Instance.SavedTargetHealth;
-            Debug.Log($"📥 Using saved health from GameState: {baseHealth}");
+            int ddaHealth = targetHealthCurve != null ? targetHealthCurve.GetHealthForMove(moveCount) : 1;
+            baseHealth = Mathf.Min(GameState.Instance.SavedTargetHealth + ddaHealth - 1, maxHealthClamp);
+            Debug.Log($"📥 Using DDA adjusted saved health: {baseHealth} (Saved={GameState.Instance.SavedTargetHealth}, DDA={ddaHealth})");
         }
         else
         {
@@ -106,23 +110,18 @@ public class GridTargetSpawner : MonoBehaviour
             var anim = newTarget.GetComponent<TargetBehavior>();
             if (anim != null)
             {
-                Debug.Log($"📦 ContinueFromLastSave={GameState.Instance.ContinueFromLastSave}, SavedHealth={GameState.Instance.SavedTargetHealth}");
-                int finalHealth = GameState.Instance.ContinueFromLastSave? GameState.Instance.SavedTargetHealth: CalculateTargetHealth(baseHealth, moveCount);
-
+                int finalHealth = CalculateTargetHealth(baseHealth, moveCount);
                 anim.SetHealth(finalHealth);
-                Debug.Log($"🧬 SetHealth({finalHealth}) called on {newTarget.name}");
-
+                Debug.Log($"🧬 SetHealth({finalHealth}) on {newTarget.name}");
                 anim.AnimateToPosition(spawnPos, 0.5f, fromEndzone: true);
             }
 
             targetMetaMap[newTarget] = new TargetMeta { offset = offset, rotationZ = rotation };
-
-            AssignSortingOrderByRow(newTarget, spawnRowCounter, moveCount); // 🧠 Use spawnRowCounter
-
+            AssignSortingOrderByRow(newTarget, spawnRowCounter, moveCount);
             grid.MarkCellOccupied(col, areaIndex, true);
         }
 
-        spawnRowCounter++; // ⬆️ Increment sorting depth
+        spawnRowCounter++;
 
         if (moveCount >= 5 && areaIndex % 2 == 1)
             SpawnPowerUpInRow(areaIndex, moveCount);
@@ -177,49 +176,25 @@ public class GridTargetSpawner : MonoBehaviour
 
             grid.MarkCellOccupied(col, newRow, true);
 
-            // ✅ DEBUG + OUTLINE effect when reaching Area 8
             if (newRow == 8)
             {
-                Debug.Log($"<color=red>⚠️ {obj.name} has reached Area 8!</color>");
-
+                Debug.Log($"<color=red>⚠️ {obj.name} reached Area 8!</color>");
                 SpriteRenderer sr = obj.GetComponentInChildren<SpriteRenderer>();
-                if (sr != null)
-                {
-                    // Clone the material to avoid affecting shared instances
-                    sr.material = new Material(sr.material);
-                }
-
-                // Enable blinking outline effect
+                if (sr != null) sr.material = new Material(sr.material);
                 OutlineBlinker blinker = obj.GetComponentInChildren<OutlineBlinker>();
-                if (blinker != null)
-                {
-                    blinker.enabled = true;
-                    Debug.Log($"🧠 Enabled OutlineBlinker on {obj.name}");
-                }
-                else
-                {
-                    Debug.LogWarning($"⚠️ No OutlineBlinker found on {obj.name}");
-                }
+                if (blinker != null) blinker.enabled = true;
             }
         }
 
-        int moveCount = dummyMoveCount; // ← use the parameter you already have
-
-        SpawnTargetsInArea(0, moveCount);
-        powerUpManager.TrySpawnPowerUp(moveCount);
+        SpawnTargetsInArea(0, dummyMoveCount);
+        powerUpManager.TrySpawnPowerUp(dummyMoveCount);
         grid.AnnounceAvailableSpacesInRow(0);
     }
-
 
     private void SpawnPowerUpInRow(int rowIndex, int moveCount)
     {
         BulletPool bulletPool = FindObjectOfType<BulletPool>();
-        if (bulletPool == null || bulletPool.GetActiveBulletCount() >= bulletPool.GetTotalBulletCount())
-        {
-            Debug.Log("🛑 Maximum bullets reached. No more AddBulletPU will be spawned.");
-            return;
-        }
-
+        if (bulletPool == null || bulletPool.GetActiveBulletCount() >= bulletPool.GetTotalBulletCount()) return;
         if (moveCount < 2 || moveCount % 2 != 1) return;
         if (powerUps == null || powerUps.Count == 0) return;
 
@@ -229,10 +204,7 @@ public class GridTargetSpawner : MonoBehaviour
         int columns = grid.GetColumnCount();
         List<int> emptyCols = new();
         for (int col = 0; col < columns; col++)
-        {
-            if (!grid.IsCellOccupied(col, rowIndex))
-                emptyCols.Add(col);
-        }
+            if (!grid.IsCellOccupied(col, rowIndex)) emptyCols.Add(col);
 
         if (emptyCols.Count == 0) return;
 
@@ -241,8 +213,7 @@ public class GridTargetSpawner : MonoBehaviour
 
         GameObject pu = Instantiate(puData.powerUpPrefab, spawnPos, Quaternion.identity);
         var mover = pu.GetComponent<PowerUpMover>();
-        if (mover != null)
-            mover.AnimateToPosition(spawnPos, 0.5f, fromEndzone: true);
+        if (mover != null) mover.AnimateToPosition(spawnPos, 0.5f, true);
 
         grid.MarkCellOccupied(colIndex, rowIndex, true);
         puData.lastUsedMove = moveCount;
@@ -262,9 +233,6 @@ public class GridTargetSpawner : MonoBehaviour
 
     private int CalculateTargetHealth(int baseHealth, int moveCount)
     {
-        if (moveCount <= 5)
-            return 1;
-
         bool isSpikeMove = (moveCount % 10 == 0);
         if (isSpikeMove)
             return baseHealth;
@@ -273,10 +241,11 @@ public class GridTargetSpawner : MonoBehaviour
         int lowerRange = Mathf.CeilToInt(baseHealth * healthRandomLowerPercent);
 
         int min = Mathf.Max(1, baseHealth - lowerRange);
-        int max = baseHealth + upperRange;
+        int max = Mathf.Min(baseHealth + upperRange, maxHealthClamp);
 
         return Random.Range(min, max + 1);
     }
+
 
     public void AssignSortingOrderByRow(GameObject target, int rowIndex, int moveNumber, int baseOrder = 1000)
     {
@@ -287,15 +256,11 @@ public class GridTargetSpawner : MonoBehaviour
         {
             sg.sortingLayerName = "foreground";
             sg.sortingOrder = sortingOrder;
-            Debug.Log($"🧟 Move {moveNumber} — Row {rowIndex + 1} → SortingGroup order: {sortingOrder}");
         }
 
-        // ✅ Set canvas layer order inside TargetBehavior
         TargetBehavior tb = target.GetComponent<TargetBehavior>();
         if (tb != null)
-        {
-            tb.SetCanvasSortingOrder(sortingOrder + 1); // ensure it's rendered above main sprite
-        }
+            tb.SetCanvasSortingOrder(sortingOrder + 1);
     }
 
     public void ResetSpawnRowCounter()
@@ -303,5 +268,4 @@ public class GridTargetSpawner : MonoBehaviour
         spawnRowCounter = 0;
         Debug.Log("🔄 Target sorting row counter reset.");
     }
-
 }
