@@ -17,6 +17,14 @@ public class SWTarget : MonoBehaviour
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
 
+        // Enable and play optional PickupVFX if present
+        Transform vfx = transform.Find("PickupVFX");
+        if (vfx != null)
+        {
+            vfx.gameObject.SetActive(true);
+            Destroy(vfx.gameObject, 2f); // optional cleanup
+        }
+
         // Play pickup sound
         SFXManager.Instance.Play("PUCollect");
 

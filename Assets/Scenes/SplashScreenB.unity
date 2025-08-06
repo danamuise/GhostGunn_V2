@@ -703,7 +703,7 @@ GameObject:
   - component: {fileID: 1385426035}
   - component: {fileID: 1385426034}
   - component: {fileID: 1385426037}
-  - component: {fileID: 1385426038}
+  - component: {fileID: 1385426039}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -829,7 +829,7 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &1385426038
+--- !u!114 &1385426039
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -838,12 +838,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1385426033}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8243fd54fa011fc4fab7267b8f5723e4, type: 3}
+  m_Script: {fileID: 11500000, guid: dbb4e48fa394c4a4e8299c46efb1cd9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mockScore: 3175
-  mockHealth: 10
+  mockScore: 2999
+  mockHealth: 20
   mockBulletCount: 20
+  level: 2
   autoStart: 1
 --- !u!1001 &1459488847
 PrefabInstance:

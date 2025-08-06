@@ -51,12 +51,16 @@ public class SpecialWeapons : MonoBehaviour
     {
         Debug.Log($"💡 Special Weapon Collected: {type}");
 
-        targetHitScore = GameState.Instance.CurrentScore;
-        Debug.Log($"🎯 Target {type} was hit at score {targetHitScore}");
+        if (targetHitScore < 0)
+        {
+            targetHitScore = GameState.Instance.CurrentScore;
+            Debug.Log($"🎯 Target {type} was hit at score {targetHitScore}");
+        }
 
         ActivateWeapon(type, pickupObject);
         SFXManager.Instance.Play("PUCollect");
     }
+
 
 
     public void ActivateWeapon(SpecialWeaponType type, GameObject pickupObject)
@@ -113,7 +117,7 @@ public class SpecialWeapons : MonoBehaviour
             sr.enabled = false;
         }
 
-        Destroy(pickupObject, 3f);
+        Destroy(pickupObject, 0f);
     }
 
     private IEnumerator HideWordBalloonAfterDelay(float delay)
@@ -128,6 +132,7 @@ public class SpecialWeapons : MonoBehaviour
 
     public void AddCharge(float amount)
     {
+        Debug.Log($"⚡ AddCharge called: +{amount}");
         if (isArmed || currentWeapon == null)
             return;
 
@@ -146,10 +151,11 @@ public class SpecialWeapons : MonoBehaviour
                 iconTarget.SetChargeProgress(percent);
             }
         }
+        Debug.Log($"🧪 Check Charge: score={GameState.Instance.CurrentScore}, hitScore={targetHitScore}, required={currentWeapon.chargeRequired}");
 
         // When fully charged
-        if (!isArmed && targetHitScore >= 0 && GameState.Instance.CurrentScore >= targetHitScore + currentWeapon.chargeRequired)
-
+        //if (!isArmed && targetHitScore >= 0 && GameState.Instance.CurrentScore >= targetHitScore + currentWeapon.chargeRequired)
+        if (!isArmed && currentCharge >= currentWeapon.chargeRequired)
         {
             isArmed = true;
 

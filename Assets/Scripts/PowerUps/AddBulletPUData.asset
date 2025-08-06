@@ -16,7 +16,7 @@ MonoBehaviour:
   powerUpPrefab: {fileID: 7329726899166178089, guid: df1c9451c1f3f264abb4d3bd18179b23, type: 3}
   priority: 1
   cooldown: 0
-  pickupVFX: {fileID: 4515118019402398087, guid: 862e41c19f422834885d76a3aa4c4ea5, type: 3}
+  pickupVFX: {fileID: 809694007750273945, guid: 190adb9d99eea5345a3d3afa20aab50b, type: 3}
   pickupSFX: PUCollect
   probability: 1
   timesUsed: 0

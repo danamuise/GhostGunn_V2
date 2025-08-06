@@ -114,7 +114,7 @@ public class PowerUpManager : MonoBehaviour
             Vector2 vfxPos = position + vfxOffset;
             Vector3 worldPos = new Vector3(position.x, position.y, 0f);
             GameObject vfx = Instantiate(powerUpData.pickupVFX, worldPos, Quaternion.identity);
-            vfx.transform.localScale = Vector3.one * 0.6f;
+            //vfx.transform.localScale = Vector3.one * 0.03f;
             Destroy(vfx, 2f);
         }
 
