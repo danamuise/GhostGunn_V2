@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4373345726625825309
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3653369773944519428}
+  - component: {fileID: 5543647455297851351}
+  m_Layer: 0
+  m_Name: SFXmanager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3653369773944519428
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4373345726625825309}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.9483719, y: 5.8862433, z: -0.12749217}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5543647455297851351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4373345726625825309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a778c58fb0baf840860e163c292ea1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundUI: {fileID: -8653719598885068355, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+  moveUIoutButton: {fileID: 6803244797375503701, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+  moveUIinButton: {fileID: -2446894718060042417, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+  soundOffButton: {fileID: 4069514448366513052, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+  soundOnButton: {fileID: 2472733510164913061, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+  musicOnButton: {fileID: 2472733510164913061, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+  musicOffButton: {fileID: 7152835125427472410, guid: 778c250e161831f478a5f3c11beb99e5, type: 3}
+  soundLibrary:
+  - name: BulletShoot
+    clip: {fileID: 8300000, guid: e77648cf6951dbb4d90a0ac4f841ef2a, type: 3}
+  - name: GhostSound
+    clip: {fileID: 8300000, guid: 3ae8bc37dd08f384e9e199205f0ff7d5, type: 3}
+  - name: TargetCollision
+    clip: {fileID: 8300000, guid: f0b77efdb1fbf8a448abb2026f15a5c9, type: 3}
+  - name: ZombieDie1
+    clip: {fileID: 8300000, guid: 59239e4889a4c2442af483d3e21916ed, type: 3}
+  - name: ZombieDie2
+    clip: {fileID: 8300000, guid: 69e010393ab55da4f897eb4c0c6ae7a8, type: 3}
+  - name: ZombieDie3
+    clip: {fileID: 8300000, guid: 2b14df76ece36e5479d707dffba8fde5, type: 3}
+  - name: PUCollect
+    clip: {fileID: 8300000, guid: 80613f24af950744f83ae0186195116e, type: 3}
+  - name: Grunt0
+    clip: {fileID: 8300000, guid: 3836c8996fda66d44b8772d27c2a24ea, type: 3}
+  - name: Grunt1
+    clip: {fileID: 8300000, guid: 7058c3b804b83bc45980a3540f00a417, type: 3}
+  - name: Grunt2
+    clip: {fileID: 8300000, guid: 067439fd1dace294596c12f38c6cafb7, type: 3}
+  - name: Grunt3
+    clip: {fileID: 8300000, guid: 8f34c09f9451d434ea1d3ebafbfc6362, type: 3}
+  - name: Grunt4
+    clip: {fileID: 8300000, guid: 2330c6db03eacb04ba1d4e07e156d148, type: 3}
+  - name: Grunt5
+    clip: {fileID: 8300000, guid: 130dad800f9e02e40adce3aa94951026, type: 3}
+  - name: explosion0
+    clip: {fileID: 8300000, guid: 58f43fad931827248b158ca664f98d18, type: 3}
+  - name: NukePUhit
+    clip: {fileID: 8300000, guid: 77a8387af7d3e1c45841e9d118ac3641, type: 3}
+  - name: NukeIconLand
+    clip: {fileID: 8300000, guid: 9c5ccdf99c446324c8427a5e072c21c2, type: 3}
+  - name: FoundStampSFX
+    clip: {fileID: 8300000, guid: 5c9e75e0a79c1084eb35a6ad17a8a65d, type: 3}
+  - name: buttonBoing
+    clip: {fileID: 8300000, guid: 6d21d27c426aa574184526764146fc4b, type: 3}
+  - name: correctAnswer
+    clip: {fileID: 8300000, guid: 0d49c5529e19a724cbf0715bbf8c1407, type: 3}
+  - name: incorrectAnswer
+    clip: {fileID: 8300000, guid: a7629b555b17d5f478e2f55f6590de85, type: 3}
+  - name: buttonClick0
+    clip: {fileID: 8300000, guid: df6e68f8f9471664bbcd83331e2a3dea, type: 3}
+  musicLibrary:
+  - name: mainBGmusic
+    clip: {fileID: 8300000, guid: 90b1bd647c6c59c489e60caa4d377d08, type: 3}
+  - name: IntroMusic
+    clip: {fileID: 8300000, guid: 87e44cc4d46d05d4caffdf52030c07ed, type: 3}
+  - name: challengeZone1
+    clip: {fileID: 8300000, guid: b10bc9e52305ef84f9212a346a7e3f6d, type: 3}
+  - name: GameOver
+    clip: {fileID: 8300000, guid: 92144c77a4b93e24682c5cb6351e877b, type: 3}
+  - name: NukeSequenceSFX
+    clip: {fileID: 8300000, guid: 14d8e4d6d2a2b5d43ab2113a89e25de7, type: 3}
