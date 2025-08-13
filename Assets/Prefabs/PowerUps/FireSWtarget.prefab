@@ -9921,7 +9921,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cae34485c354cd4aa855bed9c4ee573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponType: 1
+  weaponType: 2
+  pickupVFXChildName: PickupVFX
+  pickupVFXLifetime: 2
+  detachVFX: 1
+  pickupSFX: PUCollect
+  sfxVolume: 1
+  hideSpritesImmediately: 0
 --- !u!1 &7842483927478078189
 GameObject:
   m_ObjectHideFlags: 0

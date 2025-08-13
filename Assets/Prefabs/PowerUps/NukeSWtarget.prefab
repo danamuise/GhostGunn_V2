@@ -10006,3 +10006,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponType: 1
+  pickupVFXChildName: PickupVFX
+  pickupVFXLifetime: 2
+  detachVFX: 1
+  pickupSFX: PUCollect
+  sfxVolume: 1
+  hideSpritesImmediately: 0

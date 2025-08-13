@@ -20,7 +20,7 @@ public class SpecialWeapons : MonoBehaviour
         public GameObject icon;
         public GameObject wordBalloon;
         public GameObject hitVFX;
-        public SpriteRenderer outline;
+        public SpriteRenderer outline;     // Assign the outline SpriteRenderer (e.g., ChargedOutline) in Inspector
         public float chargeRequired = 1000f;
     }
 
@@ -34,14 +34,15 @@ public class SpecialWeapons : MonoBehaviour
     private float currentCharge = 0f;
     private bool isArmed = false;
     private GameObject balloonInstance;
-    private int targetHitScore = -1; //for target hit
+    private int targetHitScore = -1; // snapshot score when SW target is hit
 
     private void Start()
     {
+        // Ensure everything starts hidden/disabled consistently
         foreach (var weapon in specialWeapons)
         {
             if (weapon.icon != null) weapon.icon.SetActive(false);
-            if (weapon.outline != null) weapon.outline.enabled = false;
+            SetOutlineVisible(weapon, false); // hides entire outline object and all child SpriteRenderers
         }
 
         UpdateChargeBar(0f);
@@ -51,6 +52,7 @@ public class SpecialWeapons : MonoBehaviour
     {
         Debug.Log($"💡 Special Weapon Collected: {type}");
 
+        // Snapshot score at the moment the SW target was hit (first time only)
         if (targetHitScore < 0)
         {
             targetHitScore = GameState.Instance.CurrentScore;
@@ -60,8 +62,6 @@ public class SpecialWeapons : MonoBehaviour
         ActivateWeapon(type, pickupObject);
         SFXManager.Instance.Play("PUCollect");
     }
-
-
 
     public void ActivateWeapon(SpecialWeaponType type, GameObject pickupObject)
     {
@@ -112,11 +112,13 @@ public class SpecialWeapons : MonoBehaviour
             StartCoroutine(HideWordBalloonAfterDelay(3f));
         }
 
+        // Hide visuals on the pickup and let GC clean it up
         foreach (var sr in pickupObject.GetComponentsInChildren<SpriteRenderer>())
         {
             sr.enabled = false;
         }
 
+        // Destroy immediately so it doesn't linger
         Destroy(pickupObject, 0f);
     }
 
@@ -142,7 +144,7 @@ public class SpecialWeapons : MonoBehaviour
         float percent = currentCharge / currentWeapon.chargeRequired;
         UpdateChargeBar(percent);
 
-        // Update icon tint
+        // Update icon tint / arm icon when full
         if (currentWeapon.icon != null)
         {
             SWIconTarget iconTarget = currentWeapon.icon.GetComponent<SWIconTarget>();
@@ -151,24 +153,20 @@ public class SpecialWeapons : MonoBehaviour
                 iconTarget.SetChargeProgress(percent);
             }
         }
+
         Debug.Log($"🧪 Check Charge: score={GameState.Instance.CurrentScore}, hitScore={targetHitScore}, required={currentWeapon.chargeRequired}");
 
-        // When fully charged
-        //if (!isArmed && targetHitScore >= 0 && GameState.Instance.CurrentScore >= targetHitScore + currentWeapon.chargeRequired)
+        // Full charge check (progress-based)
         if (!isArmed && currentCharge >= currentWeapon.chargeRequired)
         {
             isArmed = true;
 
-            if (currentWeapon.outline != null)
-            {
-                currentWeapon.outline.gameObject.SetActive(true);
-                currentWeapon.outline.enabled = true;
-            }
+            // Show the outline clearly when armed
+            SetOutlineVisible(currentWeapon, true);
 
             Debug.Log($"🚀 {currentWeapon.type} is fully charged and armed.");
         }
     }
-
 
     private void UpdateChargeBar(float percent)
     {
@@ -201,21 +199,53 @@ public class SpecialWeapons : MonoBehaviour
         if (type == SpecialWeaponType.Nuke)
         {
             Debug.Log("🚨 Activating Nuke Sequence...");
-
             GameState.Instance.SaveState();
-            GameState.Instance.SpecialWeaponUnlocked = SpecialWeaponType.Fire;
-
-            SceneManager.LoadScene("ChallengeLevel1");
         }
 
+        // Reset armed/charge state and UI
         isArmed = false;
         currentCharge = 0f;
         UpdateChargeBar(0f);
 
-        if (weaponToTrigger.outline != null)
-            weaponToTrigger.outline.enabled = false;
+        // Hide outline and icon when the sequence launches
+        SetOutlineVisible(weaponToTrigger, false);
 
         if (weaponToTrigger.icon != null)
             weaponToTrigger.icon.SetActive(false);
+
+        // Hide outline and icon when the sequence launches
+        SetOutlineVisible(weaponToTrigger, false);
+        if (weaponToTrigger.icon != null) weaponToTrigger.icon.SetActive(false);
+
+        // ✨ Add this:
+        currentWeapon = null;   // prevents AddCharge from running again
+
+    }
+
+    // Single, unified method (remove duplicates!)
+    public bool IsArmedFor(SpecialWeaponType type)
+    {
+        return isArmed && currentWeapon != null && currentWeapon.type == type;
+    }
+
+    // ----------------- Helpers -----------------
+
+    /// <summary>
+    /// Toggles an outline completely: the GameObject itself and all child SpriteRenderers.
+    /// This keeps behavior consistent across weapons (Nuke, Fire, etc.).
+    /// </summary>
+    private static void SetOutlineVisible(SpecialWeapon w, bool on)
+    {
+        if (w == null || w.outline == null) return;
+
+        // Toggle the root outline object
+        if (w.outline.gameObject.activeSelf != on)
+            w.outline.gameObject.SetActive(on);
+
+        // Also toggle its own renderer and any child renderers for safety
+        w.outline.enabled = on;
+        var childRenderers = w.outline.GetComponentsInChildren<SpriteRenderer>(true);
+        foreach (var sr in childRenderers)
+            sr.enabled = on;
     }
 }

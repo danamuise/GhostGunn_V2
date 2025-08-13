@@ -2,6 +2,13 @@
 using TMPro;
 using System.Collections;
 
+/// <summary>
+/// Identifies what dealt the damage so we can apply correct scoring rules.
+/// - Bullet: +1 per hit (legacy behavior)
+/// - ProximityBomb / FireSW: on kill, +remaining HP as bonus
+/// </summary>
+public enum DamageSource { Bullet, ProximityBomb, FireSW, Other }
+
 public class TargetBehavior : MonoBehaviour
 {
     [Header("Target Settings")]
@@ -12,8 +19,7 @@ public class TargetBehavior : MonoBehaviour
     public SpriteRenderer zombieSprite;
     public Transform scoreText;
     [SerializeField] private GameObject hitParticles;
-    private bool isDying = false; // fpr hitParticle instantiation
-
+    private bool isDying = false; // for hitParticle instantiation
 
     // Animation
     private Animator zombieAnimator;
@@ -52,7 +58,6 @@ public class TargetBehavior : MonoBehaviour
         {
             canvas.renderMode = RenderMode.WorldSpace;
             canvas.sortingLayerName = "foreground";
-            
         }
 
         UpdateVisuals();
@@ -64,19 +69,36 @@ public class TargetBehavior : MonoBehaviour
         UpdateVisuals();
     }
 
+    /// <summary>
+    /// Legacy bullet path entry point. Keeps existing behavior: +1 score per hit.
+    /// Other systems should call ApplyDamage(amount, source) to specify scoring.
+    /// </summary>
     public void TakeDamage(int amount)
     {
-        if (isDying) return; // ✅ Already dying — ignore further hits
+        ApplyDamage(amount, DamageSource.Bullet);
+    }
 
+    /// <summary>
+    /// Centralized damage handler. Applies damage, triggers SFX/anim, and
+    /// awards score based on DamageSource. On kill by FireSW or ProximityBomb,
+    /// awards the target's remaining HP as a bonus.
+    /// </summary>
+    public void ApplyDamage(int amount, DamageSource source)
+    {
+        if (isDying) return;
+
+        int preHP = health;
         health -= amount;
-        Debug.Log($"{name} | Took {amount} damage — new health: {health}");
+        Debug.Log($"{name} | Took {amount} damage from {source} — new health: {health}");
 
         GameManager gm = FindObjectOfType<GameManager>();
         if (gm != null)
         {
-            string[] grunts = { "Grunt0", "Grunt1", "Grunt2", "Grunt3", "Grunt4", "Grunt5" };
-            SFXManager.Instance.PlayRandom(grunts, 0.5f, 0.6f, 1.3f);
-            gm.AddScore(1);
+            // Bullets: +1 per hit (legacy)
+            if (source == DamageSource.Bullet)
+            {
+                gm.AddScore(1);
+            }
         }
 
         if (zombieAnimator != null)
@@ -87,9 +109,20 @@ public class TargetBehavior : MonoBehaviour
 
         if (health <= 0)
         {
-            isDying = true; // ✅ Mark as dying
+            isDying = true;
 
-            zombieSprite.enabled = false;
+            // 🔥💣 On kill by Fire or ProximityBomb: add remaining HP as bonus
+            if (gm != null && (source == DamageSource.FireSW || source == DamageSource.ProximityBomb))
+            {
+                int bonus = Mathf.Max(0, preHP);
+                if (bonus > 0)
+                {
+                    gm.AddScore(bonus);
+                    Debug.Log($"+{bonus} score for {source} kill on {name}");
+                }
+            }
+
+            if (zombieSprite != null) zombieSprite.enabled = false;
 
             if (scoreText != null)
                 scoreText.gameObject.SetActive(false);
@@ -101,9 +134,12 @@ public class TargetBehavior : MonoBehaviour
                 Destroy(fx, 1.5f);
             }
 
-            DissolveAndDisable dissolver = dizzolveTarget.GetComponent<DissolveAndDisable>();
-            if (dissolver != null)
-                dissolver.BeginDissolve();
+            if (dizzolveTarget != null)
+            {
+                DissolveAndDisable dissolver = dizzolveTarget.GetComponent<DissolveAndDisable>();
+                if (dissolver != null)
+                    dissolver.BeginDissolve();
+            }
 
             StartCoroutine(DestroyAfterDelay(0.4f));
         }
@@ -112,7 +148,6 @@ public class TargetBehavior : MonoBehaviour
             UpdateVisuals();
         }
     }
-
 
     private void ResetDamageAnimation()
     {
@@ -123,10 +158,9 @@ public class TargetBehavior : MonoBehaviour
     private IEnumerator DestroyAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        zombieSprite.enabled = true;
+        if (zombieSprite != null) zombieSprite.enabled = true;
         Debug.Log("Destroying " + gameObject.name);
         Destroy(gameObject);
-
     }
 
     private void UpdateVisuals()
@@ -198,7 +232,6 @@ public class TargetBehavior : MonoBehaviour
 
     public int GetCurrentHealth()
     {
-        return health; // assuming `health` is your private/int field
+        return health; // private int field
     }
-
 }

@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+﻿// ProximityBombPU.cs
+using UnityEngine;
 using System.Collections.Generic;
 
 public class ProximityBombPU : MonoBehaviour
 {
+    [Header("Detection (optional/legacy)")]
     public float checkRadius = 0.1f;
     public LayerMask targetLayer;
+
+    [Header("VFX/SFX")]
     public PowerUpData powerUpData;
 
     private TargetGridManager gridManager;
@@ -51,35 +55,48 @@ public class ProximityBombPU : MonoBehaviour
             if (dy != 0) affectedCells.Add((col, row + dy));
         }
 
+        int destroyed = 0;
+
         foreach (var (c, r) in affectedCells)
         {
-            if (gridManager.IsCellInBounds(c, r))
+            if (!gridManager.IsCellInBounds(c, r)) continue;
+
+            GameObject target = gridManager.GetTargetAt(c, r);
+            if (target != null && target.CompareTag("Target"))
             {
-                GameObject target = gridManager.GetTargetAt(c, r);
-                if (target != null && target.CompareTag("Target"))
+                TargetBehavior tb = target.GetComponentInParent<TargetBehavior>();
+                if (tb != null)
                 {
-                    TargetBehavior tb = target.GetComponentInParent<TargetBehavior>();
-                    if (tb != null)
+                    int hp = tb.GetCurrentHealth();
+                    if (hp > 0)
                     {
-                        int hp = tb.GetCurrentHealth();
-                        tb.TakeDamage(hp);
-                        Debug.Log($"💣 ProximityBomb destroyed target at col={c} row={r}");
+                        // ✅ Award score via TargetBehavior using DamageSource.ProximityBomb
+                        tb.ApplyDamage(hp, DamageSource.ProximityBomb);
+                        destroyed++;
+                        Debug.Log($"💣 ProximityBomb destroyed target at col={c} row={r} (HP={hp})");
                     }
+                }
+                else
+                {
+                    // No TargetBehavior path (won’t award score)
+                    Destroy(target);
+                    destroyed++;
+                    Debug.LogWarning($"💣 ProximityBomb destroyed target without TargetBehavior at col={c} row={r}");
                 }
             }
         }
 
-        // Trigger camera shake
+        // Camera shake
         CameraShaker.Instance?.Shake(0.2f, 0.15f);
 
-        // Trigger pickup VFX/SFX
+        // Pickup VFX/SFX
         PowerUpManager manager = FindObjectOfType<PowerUpManager>();
         if (manager != null && powerUpData != null)
         {
             manager.PlayPickupEffects(transform.position, powerUpData);
         }
 
+        Debug.Log($"💣 ProximityBombPU finished. Destroyed {destroyed} targets.");
         Destroy(gameObject);
     }
-
 }
