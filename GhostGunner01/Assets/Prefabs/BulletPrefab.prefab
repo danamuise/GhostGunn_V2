@@ -76,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 627c10ab9b129f44d8c9a82dc8391820, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -148,6 +148,9 @@ MonoBehaviour:
   floatSpeed: 2
   jitterAmount: 0.1
   verticalOffset: -0.08
+  ceilingYThreshold: 4.9
+  wallXThreshold: 2.7
+  stuckCheckTime: 3
 --- !u!96 &4696288291118276324
 TrailRenderer:
   serializedVersion: 3
@@ -190,7 +193,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.25
+  m_Time: 0.6
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -200,21 +203,21 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.4241916
-        inSlope: -2.5007935
-        outSlope: -2.5007935
+        value: 0.28669158
+        inSlope: -1.6834581
+        outSlope: -1.6834581
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.48487863
+        outWeight: 0.50819623
       - serializedVersion: 3
-        time: 0.2285478
+        time: 0.39354873
         value: 0
-        inSlope: -0.10222061
-        outSlope: -0.10222061
+        inSlope: -0.18618596
+        outSlope: -0.18618596
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.50357664
+        inWeight: 0.68237734
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2

@@ -1,12 +1,17 @@
 ﻿using UnityEngine;
 using TMPro;
 using System.Collections;
+
 public class TargetBehavior : MonoBehaviour
 {
     [Header("Target Settings")]
-    public int health = 20;
+    private int health;
     public SpriteRenderer targetSprite;
     public TextMeshProUGUI label;
+
+    // Persistent visual variation
+    private Vector2 persistentOffset = Vector2.zero;
+    private float persistentZRotation = 0f;
 
     private void Awake()
     {
@@ -31,29 +36,38 @@ public class TargetBehavior : MonoBehaviour
         UpdateVisuals();
     }
 
-    /*
     public void SetHealth(int value)
     {
         health = value;
         UpdateVisuals();
     }
 
-    */
     public void TakeDamage(int amount)
     {
         health -= amount;
         Debug.Log($"{name} | Took {amount} damage — new health: {health}");
-
+        GameManager gm = FindObjectOfType<GameManager>();
+        if (gm != null)
+        {
+            gm.AddScore(1); // ✅ Add 1 point on every hit
+        }
         if (health <= 0)
         {
-            Destroy(gameObject);
+            StartCoroutine(DestroyAfterDelay(0.1f));  // ⏱ Delay destruction
         }
         else
         {
             UpdateVisuals();
         }
     }
-    
+
+    private IEnumerator DestroyAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(gameObject);
+    }
+
+
     private void UpdateVisuals()
     {
         if (label != null)
@@ -66,16 +80,30 @@ public class TargetBehavior : MonoBehaviour
         }
     }
 
-    public void AnimateToPosition(Vector2 targetPosition, float duration = 0.5f)
+    /// <summary>
+    /// Call once on spawn to define the persistent visual offset/rotation.
+    /// </summary>
+    public void SetOffsetAndRotation(Vector2 offset, float zRotation)
     {
-        Vector2 startPosition = new Vector2(targetPosition.x, 5.35f);
-        transform.position = startPosition;
-        StartCoroutine(SlideToPosition(targetPosition, duration));
+        persistentOffset = offset;
+        persistentZRotation = zRotation;
+        transform.rotation = Quaternion.Euler(0f, 0f, persistentZRotation);
     }
 
-    private IEnumerator SlideToPosition(Vector2 endPos, float duration)
+    public void AnimateToPosition(Vector2 gridAlignedPosition, float duration = 0.5f, bool fromEndzone = false)
     {
-        Vector2 startPos = transform.position;
+        Vector2 startPosition = fromEndzone
+            ? new Vector2(gridAlignedPosition.x, 5.35f)
+            : (Vector2)transform.position;
+
+        Vector2 endPosition = gridAlignedPosition + persistentOffset;
+
+        StopAllCoroutines();
+        StartCoroutine(SlideToPosition(startPosition, endPosition, duration));
+    }
+
+    private IEnumerator SlideToPosition(Vector2 startPos, Vector2 endPos, float duration)
+    {
         float elapsed = 0f;
 
         while (elapsed < duration)
@@ -87,5 +115,4 @@ public class TargetBehavior : MonoBehaviour
 
         transform.position = endPos;
     }
-
 }

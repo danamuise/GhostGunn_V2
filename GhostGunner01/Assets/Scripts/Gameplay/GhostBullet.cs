@@ -20,6 +20,12 @@ public class GhostBullet : MonoBehaviour
     public float jitterAmount = 0.05f;
     public float verticalOffset = 0f;
 
+    [Header("Corner Stuck Detection")]
+    public float ceilingYThreshold = 4.9f;
+    public float wallXThreshold = 2.7f;
+    public float stuckCheckTime = 0.1f;
+    private float stuckTimer = 0f;
+
     private Rigidbody2D rb;
     private Vector2 laserDirection;
 
@@ -42,6 +48,8 @@ public class GhostBullet : MonoBehaviour
     private GameManager gameManager;
     private float bulletLifeTimer = 0f;
     private const float maxLifeTime = 8f;
+    private bool justEnteredGhostMode = false;
+
     public bool IsInTank => isInTank;
 
     public void Fire(Vector2 direction)
@@ -77,6 +85,7 @@ public class GhostBullet : MonoBehaviour
 
     private void FixedUpdate()
     {
+        justEnteredGhostMode = false; // ✅ reset after one frame
         if (isInLaserMode)
         {
             float stepDistance = laserSpeed * Time.fixedDeltaTime;
@@ -85,14 +94,13 @@ public class GhostBullet : MonoBehaviour
 
             if (hit.collider != null)
             {
-                // 🔁 Replace this block:
                 if (hit.collider.CompareTag("Target"))
                 {
                     TargetBehavior tb = hit.collider.GetComponentInParent<TargetBehavior>();
-                    if (tb != null)
+                    if (tb != null && !inGhostMode)
                     {
                         tb.TakeDamage(1);
-                        Debug.Log($"{name} hit {hit.collider.name} — health reduced");
+                        Debug.Log($"{name} | Laser Mode hit: {hit.collider.name} — health reduced");
                     }
 
                     EnterGhostMode();
@@ -174,15 +182,28 @@ public class GhostBullet : MonoBehaviour
             }
         }
 
+        if (IsStuckInCorner())
+        {
+            stuckTimer += Time.deltaTime;
+
+            if (stuckTimer >= stuckCheckTime)
+            {
+                Debug.Log($"🔄 Bullet stuck in corner for {stuckCheckTime}s — forcing return to tank.");
+                EnterTank();
+            }
+        }
+        else
+        {
+            stuckTimer = 0f;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // For ghost-mode target hits
-        if (inGhostMode && collision.gameObject.CompareTag("Target"))
+        if (inGhostMode && !justEnteredGhostMode && collision.gameObject.CompareTag("Target"))
         {
             TargetBehavior tb = collision.gameObject.GetComponentInParent<TargetBehavior>();
-            if (tb != null)
+            if (tb != null && !isInLaserMode)
             {
                 tb.TakeDamage(1);
                 Debug.Log($"{name} | Ghost Mode hit: {collision.gameObject.name} — health reduced");
@@ -199,7 +220,7 @@ public class GhostBullet : MonoBehaviour
 
         if (inGhostMode && collision.gameObject.CompareTag("Endzone"))
         {
-            Debug.Log(name + " | ?? Hit Endzone during Ghost Mode � start return path");
+            Debug.Log(name + " | ?? Hit Endzone during Ghost Mode — start return path");
 
             rb.bodyType = RigidbodyType2D.Dynamic;
             rb.gravityScale = 0f;
@@ -216,10 +237,38 @@ public class GhostBullet : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("CornerOverride"))
+        {
+            if (!isInTank && !isSlidingToWall && !isDroppingDown)
+            {
+               
+
+                rb.bodyType = RigidbodyType2D.Dynamic;
+                rb.gravityScale = 0f;
+                rb.velocity = Vector2.zero;
+
+                isInLaserMode = false;
+                inGhostMode = false;
+
+                // Determine wall direction based on position
+                float distToLeft = Mathf.Abs(transform.position.x - GetWallX("Wall_Left"));
+                float distToRight = Mathf.Abs(transform.position.x - GetWallX("Wall_Right"));
+                wallSlideDirection = distToLeft < distToRight ? Vector2.left : Vector2.right;
+
+                isSlidingToWall = false;
+                isDroppingDown = true;
+                Debug.Log($"⚠️ {name} collided with CornerOverride — initiating slide to wall: " + isSlidingToWall);
+            }
+        }
+    }
+
     private void EnterGhostMode()
     {
         isInLaserMode = false;
         inGhostMode = true;
+        justEnteredGhostMode = true; // 🛡 prevent immediate ghost hit
 
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = 0f;
@@ -267,11 +316,8 @@ public class GhostBullet : MonoBehaviour
 
                 if (pool.AllBulletsReturned())
                 {
-                    if (pool != null && pool.AllBulletsReturned())
-                    {
-                        Debug.Log($"⚠️ {name} is calling OnShotComplete() from GhostBullet.cs at {Time.time:F2} BEFORE firing.");
-                        gameManager.OnShotComplete();
-                    }
+                    Debug.Log($"⚠️ {name} is calling OnShotComplete() from GhostBullet.cs at {Time.time:F2} BEFORE firing.");
+                    gameManager.OnShotComplete();
                 }
             }
             else
@@ -287,7 +333,6 @@ public class GhostBullet : MonoBehaviour
         bulletLifeTimer = 0f;
     }
 
-
     private void ExitTank()
     {
         isInTank = false;
@@ -301,5 +346,17 @@ public class GhostBullet : MonoBehaviour
     {
         GameObject wall = GameObject.FindGameObjectWithTag(tag);
         return wall != null ? wall.transform.position.x : 0f;
+    }
+
+    private bool IsStuckInCorner()
+    {
+        float x = transform.position.x;
+        float y = transform.position.y;
+
+        bool nearCeiling = y >= ceilingYThreshold;
+        bool nearLeftWall = x <= -wallXThreshold;
+        bool nearRightWall = x >= wallXThreshold;
+
+        return nearCeiling && (nearLeftWall || nearRightWall);
     }
 }
