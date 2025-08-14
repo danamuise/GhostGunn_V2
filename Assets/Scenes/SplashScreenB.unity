@@ -842,7 +842,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mockScore: 3200
-  mockHealth: 20
+  mockHealth: 100
   mockBulletCount: 20
   level: 2
   autoStart: 1
@@ -932,7 +932,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
       propertyPath: soundLibrary.Array.size
-      value: 21
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
       propertyPath: soundLibrary.Array.data[14].clip
@@ -989,6 +989,14 @@ PrefabInstance:
     - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
       propertyPath: soundLibrary.Array.data[20].name
       value: NukeSequenceSFX
+      objectReference: {fileID: 0}
+    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
+      propertyPath: soundLibrary.Array.data[21].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 2137475de801eba4893b01ddf89eb461, type: 3}
+    - target: {fileID: 5543647455297851351, guid: c8d68a943f40e77479382f501574572d, type: 3}
+      propertyPath: soundLibrary.Array.data[21].name
+      value: FireSequenceSFX
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

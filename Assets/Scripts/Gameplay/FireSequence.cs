@@ -5,18 +5,17 @@ using UnityEngine;
 public class FireSequence : MonoBehaviour
 {
     [Header("Timing")]
-    public float targetDelayTime = 0.25f;  // [0, 0, 1×, 2×, ...] row stagger
-    public float postHold = 0.35f;         // pause after last row
+    [Tooltip("Delay before ANY targets begin to be destroyed (lets flames pass over first).")]
+    public float targetDestroyDelay = 0.5f;
+    public float targetDelayTime = 0.25f;   // [0, 0, 1×, 2×, ...] row stagger
+    public float postHold = 0.35f;          // pause after last row
 
     [Header("Grid / Targets")]
-    public string targetTag = "Target";    // kept for consistency (not required by this impl)
+    public string targetTag = "Target";     // kept for consistency (not required by this impl)
     private TargetGridManager grid;
 
     [Header("Gun (match NukeSequence)")]
     public GhostShooter gun;
-
-    [Header("Audio")]
-    public string fireSequenceSfx = "FireSequenceSFX";
 
     private bool running;
 
@@ -32,9 +31,9 @@ public class FireSequence : MonoBehaviour
     {
         grid = FindObjectOfType<TargetGridManager>();
 
+        // Stop music and play the FireSequenceSFX with NO pitch variation
         SFXManager.Instance?.StopMusic();
-        if (!string.IsNullOrEmpty(fireSequenceSfx))
-            SFXManager.Instance?.Play(fireSequenceSfx, 1f, 1f, 1f);
+        SFXManager.Instance?.Play("FireSequenceSFX", 1f, 1f, 1f);
 
         TargetManager.blockAdvance = true;
         Debug.Log("🔥 FireSequence: advance BLOCKED.");
@@ -45,7 +44,7 @@ public class FireSequence : MonoBehaviour
             Debug.Log("🔫 Gun disabled at start of FireSequence.");
         }
 
-        CameraShaker.Instance?.Shake(6f, 0.05f);
+        // CameraShaker.Instance?.Shake(6f, 0.05f);
 
         // Let any just-enabled targets register in grid
         yield return null;
@@ -66,6 +65,10 @@ public class FireSequence : MonoBehaviour
         }
 
         Debug.Log($"🔥 Bounds cols[{minCol}..{maxCol}] rows[{minRow}..{maxRow}]");
+
+        // Global pre-delay so flames pass over before destruction starts
+        if (targetDestroyDelay > 0f)
+            yield return new WaitForSeconds(targetDestroyDelay);
 
         // Clear rows top→down with delay pattern [0, 0, 1×, 2×, ...]
         int idxFromTop = 0;

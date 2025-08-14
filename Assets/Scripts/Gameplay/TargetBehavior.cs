@@ -28,6 +28,11 @@ public class TargetBehavior : MonoBehaviour
     private Vector2 persistentOffset = Vector2.zero;
     private float persistentZRotation = 0f;
 
+    [Header("Burn VFX")]
+    public GameObject zombieBurnPrefab; // assign in Inspector
+    [Tooltip("Seconds the ZombieBurn prefab stays alive before auto-destroy.")]
+    public float zombieBurnLifetime = 5f;
+
     private void Awake()
     {
         // Auto-assign SpriteRenderer if missing
@@ -109,6 +114,29 @@ public class TargetBehavior : MonoBehaviour
 
         if (health <= 0)
         {
+            // 🔥 Log world position specifically for Fire Special Weapon kills
+            if (source == DamageSource.FireSW)
+            {
+                Vector3 p = transform.position;
+                Debug.Log($"🔥 FireSW kill @ {p.x:F2}, {p.y:F2}, {p.z:F2} | target={name}");
+
+                // 🔥 Spawn ZombieBurn prefab at this position, parent under "Targets" if present
+                if (zombieBurnPrefab != null)
+                {
+                    Transform parent = null;
+                    GameObject targetsGO = GameObject.Find("Targets");
+                    if (targetsGO != null) parent = targetsGO.transform;
+
+                    GameObject burn = Instantiate(zombieBurnPrefab, p, Quaternion.identity, parent);
+
+                    // NEW: log the spawn position & lifetime
+                    Debug.Log($"🕯️ Spawned ZombieBurn '{burn.name}' @ {p.x:F2}, {p.y:F2}, {p.z:F2} (lifetime {zombieBurnLifetime:F1}s)");
+
+                    // NEW: longer lifetime (configurable)
+                    Destroy(burn, Mathf.Max(0.1f, zombieBurnLifetime));
+                }
+            }
+
             isDying = true;
 
             // 🔥💣 On kill by Fire or ProximityBomb: add remaining HP as bonus
