@@ -421,7 +421,7 @@ Material:
     - _ShineWidth: 0.1
     - _SineGlowContrast: 1
     - _SineGlowFade: 1
-    - _SineGlowFrequency: 4
+    - _SineGlowFrequency: 4.76
     - _SineGlowMaskToggle: 0
     - _SineGlowMax: 1
     - _SineGlowMin: 0
@@ -493,7 +493,7 @@ Material:
     - _ToggleTimeFrequency: 0
     - _ToggleTimeSpeed: 0
     - _ToggleUnscaledTime: 0
-    - _UVDistortFade: 1
+    - _UVDistortFade: 0.29
     - _UVDistortMaskToggle: 0
     - _UVRotateSpeed: 1
     - _UVSec: 0
@@ -608,7 +608,7 @@ Material:
     - _PingPongGlowTo: {r: 0.1882353, g: 0.1882353, b: 5.992157, a: 0}
     - _PixelOutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _PixelOutlineTextureSpeed: {r: 0.5, g: 0, b: 0, a: 0}
-    - _PoisonColor: {r: 0.3137255, g: 2.996078, b: 0.3137255, a: 0}
+    - _PoisonColor: {r: 0, g: 3.2639368, b: 3.9999998, a: 0}
     - _PoisonNoiseScale: {r: 0.2, g: 0.2, b: 0, a: 0}
     - _PoisonNoiseSpeed: {r: 0, g: -0.2, b: 0, a: 0}
     - _RainbowCenter: {r: 0, g: 0, b: 0, a: 0}
@@ -655,7 +655,7 @@ Material:
     - _TextureLayer2ScrollSpeed: {r: 0, g: 1, b: 0, a: 0}
     - _UVDistortFrom: {r: -0.1, g: -0.1, b: 0, a: 0}
     - _UVDistortNoiseScale: {r: 0.07, g: 0.07, b: 0, a: 0}
-    - _UVDistortSpeed: {r: 2, g: 2, b: 0, a: 0}
+    - _UVDistortSpeed: {r: 1, g: 1, b: 0, a: 0}
     - _UVDistortTo: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _UVRotatePivot: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _UVScalePivot: {r: 0.5, g: 0.5, b: 0, a: 0}
